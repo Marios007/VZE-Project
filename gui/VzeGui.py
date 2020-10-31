@@ -7,8 +7,8 @@ class VzeGui(QtWidgets.QMainWindow):
     def __init__(self, logicInterface):
         QtWidgets.QMainWindow.__init__(self)
         print ("loadgig UI")
+       
         self.logic = logicInterface
-
         # Setting Window Title and Icon
         self.setWindowTitle("VerkehrsZeichenErkennung VZE")
         self.setWindowIcon(QtGui.QIcon("gui/pics/Logo_Schild_v1_2020-08-10_TB.png"))
@@ -22,7 +22,8 @@ class VzeGui(QtWidgets.QMainWindow):
         window.setStyleSheet("background-color: rgb(0, 0, 0);")
         self.setCentralWidget(window)
         window.setObjectName("window")
-
+        
+        # Set vertical layout for main window
         self.verticalLayout = QtWidgets.QVBoxLayout(window)
         self.verticalLayout.setObjectName("verticalLayout")
         
@@ -31,7 +32,16 @@ class VzeGui(QtWidgets.QMainWindow):
         self.stackedWidget.setStyleSheet("background-color: rgb(0, 0, 0);")
         self.stackedWidget.setObjectName("stackedWidget")
         
-        # Start Screen
+        #Build UI
+        self.ui_startscreen()
+        self.ui_demoscreen()
+        self.ui_button_handler(self.logic)
+
+        self.stackedWidget.setCurrentIndex(0)
+        QtCore.QMetaObject.connectSlotsByName(window)
+
+    # Start Screen
+    def ui_startscreen(self):
         self.StartScreen = QtWidgets.QWidget()
         self.StartScreen.setStatusTip("")
         self.StartScreen.setWhatsThis("")
@@ -40,7 +50,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.StartScreen.setObjectName("StartScreen")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.StartScreen)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-       
+    
         self.lyth_headline = QtWidgets.QHBoxLayout()
         self.lyth_headline.setContentsMargins(20, -1, 20, 0)
         self.lyth_headline.setObjectName("lyth_headline")
@@ -69,7 +79,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.btn_info_startscreen.setStyleSheet("QPushButton:hover{\n""    border-radius:5px;\n""    border: 2px solid rgb(255, 255, 255)\n""\n""}")
         self.btn_info_startscreen.setText("")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("C:\\Users\\Mario\\AppData\\Local\\Programs\\Python\\Python38\\Lib\\site-packages\\QtDesigner\\../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/pics/info_logo.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("gui/pics/info_logo.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_info_startscreen.setIcon(icon)
         self.btn_info_startscreen.setIconSize(QtCore.QSize(130, 30))
         self.btn_info_startscreen.setCheckable(False)
@@ -151,8 +161,9 @@ class VzeGui(QtWidgets.QMainWindow):
         self.btn_info_startscreen.setText((""))
         self.btn_loadFile.setText(("Datei auswählen"))
         self.btn_demoToDemo.setText(("Demo auswählen"))
-        # Demo Screen
 
+    # Demo Screen
+    def ui_demoscreen(self):
         self.DemoScreen = QtWidgets.QWidget()
         self.DemoScreen.setObjectName("DemoScreen")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.DemoScreen)
@@ -188,6 +199,8 @@ class VzeGui(QtWidgets.QMainWindow):
         self.btn_info_demoscreen.setAccessibleDescription("")
         self.btn_info_demoscreen.setStyleSheet("QPushButton:hover{\n""    border-radius:5px;\n""    border: 2px solid rgb(255, 255, 255)\n""\n""}")
         self.btn_info_demoscreen.setText("")
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("gui/pics/info_logo.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_info_demoscreen.setIcon(icon)
         self.btn_info_demoscreen.setIconSize(QtCore.QSize(130, 30))
         self.btn_info_demoscreen.setObjectName("btn_info_demoscreen")
@@ -338,7 +351,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.verticalLayout.addWidget(self.stackedWidget)
     
 
-        self.stackedWidget.setCurrentIndex(0)
+        
 
 
         self.lbl_demo.setText(("Demo"))
@@ -350,8 +363,8 @@ class VzeGui(QtWidgets.QMainWindow):
         self.btn_dataRegen.setText((""))
         self.btn_back_demoscreen.setText((""))
 
-
-        QtCore.QMetaObject.connectSlotsByName(window)
+        
+       
         
 
 
@@ -360,8 +373,8 @@ class VzeGui(QtWidgets.QMainWindow):
         ###################
         styleButton= "QPushButton{\n""    font: 75 26pt \"MS Shell Dlg 2\" ;\n""    background-color: #1C4481;\n""    border-radius: 20px;\n""    color:white\n""}\n""\n""QPushButton:hover{\n""    border: 2px solid rgb(255, 255, 255)\n""}"
 
-
-        
+    # Button handler with interface
+    def ui_button_handler(self, logicInterface):
         self.btn_loadFile.setToolTip('Laden eines Videos oder Bildes')
         self.btn_loadFile.clicked.connect(lambda:logicInterface.loadFile())
         
@@ -375,7 +388,7 @@ class VzeGui(QtWidgets.QMainWindow):
 
 
         #self.btn_file.clicked.connect(lambda:logicInterface.loadFile(self.text.text()))
-    
+        
       
 
 

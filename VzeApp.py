@@ -7,7 +7,7 @@ class GuiInterface:
     def doSomething(self):
         return
 
-    def loadFile(self, file):
+    def loadFile(self):
         return
 
 class MyLogic(GuiInterface):
@@ -18,11 +18,11 @@ class MyLogic(GuiInterface):
     def doSomething(self):
         print("We are doing something")
 
-    def loadFile(self, file):
-        print("loading file: " + file)
+    def loadFile(self):
+        print("loading file method")
 
 
-class VzeApp(QApplication):
+class VzeApp(QtWidgets.QApplication):
 
     mainWidget = None
     mainLogic = None

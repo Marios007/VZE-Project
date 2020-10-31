@@ -1,7 +1,6 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-
 class VzeGui(QtWidgets.QMainWindow):
 
     def __init__(self, logicInterface):

@@ -1,6 +1,6 @@
-import sys
-from PyQt5 import QtCore, QtGui, QtWidgets
 
+from PyQt5 import QtCore, QtGui, QtWidgets
+import gui.styles as styles
 
 class VzeGui(QtWidgets.QMainWindow):
 
@@ -22,7 +22,7 @@ class VzeGui(QtWidgets.QMainWindow):
         window.setStyleSheet("background-color: rgb(0, 0, 0);")
         self.setCentralWidget(window)
         window.setObjectName("window")
-        
+
         # Set vertical layout for main window
         self.verticalLayout = QtWidgets.QVBoxLayout(window)
         self.verticalLayout.setObjectName("verticalLayout")
@@ -119,7 +119,7 @@ class VzeGui(QtWidgets.QMainWindow):
         font.setItalic(False)
         font.setWeight(9)
         self.btn_loadFile.setFont(font)
-        self.btn_loadFile.setStyleSheet("QPushButton{\n""    font: 75 26pt \"MS Shell Dlg 2\" ;\n""    background-color: #1C4481;\n""    border-radius: 5px;\n""    color:white\n""}\n""\n""QPushButton:hover{\n""    border: 2px solid rgb(255, 255, 255)\n""}")
+        self.btn_loadFile.setStyleSheet(styles.styleBluebutton)
         self.btn_loadFile.setCheckable(False)
         self.btn_loadFile.setFlat(False)
         self.btn_loadFile.setObjectName("btn_loadFile")
@@ -136,7 +136,7 @@ class VzeGui(QtWidgets.QMainWindow):
         
         self.btn_demoToDemo.setSizePolicy(sizePolicy)
         self.btn_demoToDemo.setMinimumSize(QtCore.QSize(350, 220))
-        self.btn_demoToDemo.setStyleSheet("QPushButton{\n""    font: 75 26pt \"MS Shell Dlg 2\" ;\n""    background-color: #1C4481;\n""    border-radius: 5px;\n""    color:white\n""}\n""\n""QPushButton:hover{\n""    border: 2px solid rgb(255, 255, 255)\n""}")
+        self.btn_demoToDemo.setStyleSheet(styles.styleBluebutton)
         self.btn_demoToDemo.setObjectName("btn_demoToDemo")
         self.lyth_bigBtn.addWidget(self.btn_demoToDemo)
         spacerItem6 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -371,7 +371,6 @@ class VzeGui(QtWidgets.QMainWindow):
         ###################
         ##### Styles ######
         ###################
-        styleButton= "QPushButton{\n""    font: 75 26pt \"MS Shell Dlg 2\" ;\n""    background-color: #1C4481;\n""    border-radius: 20px;\n""    color:white\n""}\n""\n""QPushButton:hover{\n""    border: 2px solid rgb(255, 255, 255)\n""}"
 
     # Button handler with interface
     def ui_button_handler(self, logicInterface):

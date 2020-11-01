@@ -208,14 +208,17 @@ class VzeGui(QtWidgets.QMainWindow):
         self.verticalLayout_3.addLayout(self.lyth_headline_demoscreen)
         
         
-        
+        # Layout big center
         self.lytv_bigCenter_demoScreen = QtWidgets.QVBoxLayout()
         self.lytv_bigCenter_demoScreen.setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
         self.lytv_bigCenter_demoScreen.setContentsMargins(0, -1, 0, -1)
         self.lytv_bigCenter_demoScreen.setObjectName("lytv_bigCenter_demoScreen")
+        
         self.lyth_smallText_Demo = QtWidgets.QHBoxLayout()
         self.lyth_smallText_Demo.setContentsMargins(20, 0, -1, -1)
         self.lyth_smallText_Demo.setObjectName("lyth_smallText_Demo")
+
+        # Label Text and spacer
         self.label_demotext = QtWidgets.QLabel(self.DemoScreen)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -239,6 +242,8 @@ class VzeGui(QtWidgets.QMainWindow):
         spacerItem12 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.lyth_smallText_Demo.addItem(spacerItem12)
         self.lytv_bigCenter_demoScreen.addLayout(self.lyth_smallText_Demo)
+
+        # Layout big in big center layout with the 2 buttons
         self.lyth_bigBtn_Demo = QtWidgets.QHBoxLayout()
         self.lyth_bigBtn_Demo.setObjectName("lyth_bigBtn_Demo")
         spacerItem13 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -352,7 +357,7 @@ class VzeGui(QtWidgets.QMainWindow):
     
 
         
-
+        # Set texts
 
         self.lbl_demo.setText(("Demo"))
         self.btn_info_demoscreen.setText((""))
@@ -362,15 +367,6 @@ class VzeGui(QtWidgets.QMainWindow):
         self.btn_dataSonne.setText((""))
         self.btn_dataRegen.setText((""))
         self.btn_back_demoscreen.setText((""))
-
-        
-       
-        
-
-
-        ###################
-        ##### Styles ######
-        ###################
 
     # Button handler with interface
     def ui_button_handler(self, logicInterface):

@@ -6,7 +6,7 @@ class VzeGui(QtWidgets.QMainWindow):
 
     def __init__(self, logicInterface):
         QtWidgets.QMainWindow.__init__(self)
-        print ("loadgig UI")
+        print ("loading UI")
        
         self.logic = logicInterface
         # Setting Window Title and Icon

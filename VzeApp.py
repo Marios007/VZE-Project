@@ -1,7 +1,6 @@
 import sys
 from gui.VzeGui import *
 
-
 class GuiInterface:
 
     def doSomething(self):
@@ -20,6 +19,9 @@ class MyLogic(GuiInterface):
 
     def loadFile(self):
         print("loading file method")
+        fileName, _ = QFileDialog.getOpenFileName(None, 'Open file',"C:\\", "Image files(*.jpg *.svg *.png);;Video files(*.mp4)")
+        if fileName:
+            print(fileName)
 
 
 class VzeApp(QtWidgets.QApplication):

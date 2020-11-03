@@ -1,5 +1,6 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QFileDialog
 import gui.styles as styles
 
 class VzeGui(QtWidgets.QMainWindow):

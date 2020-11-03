@@ -1,6 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import gui.styles as styles
 
+
 class VzeGui(QtWidgets.QMainWindow):
 
     def __init__(self, logicInterface):

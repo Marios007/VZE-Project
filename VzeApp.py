@@ -10,8 +10,9 @@ class GuiInterface:
     def loadFile(self):
         return
 
-    def processCV(self):
+    def processCV(self, filename):
         return
+
 
 class openCV_Interface:
 
@@ -26,19 +27,21 @@ class openCvController(openCV_Interface):
 
     logic = None
 
-    def __init__(self, logic):
-        self.logic = logic
+    def __init__(self):
+        m_var = None
 
     def openCVMethod(self):
+        self.print("openCVMethod")
         return
 
     def loadFile1(self):
         return
 
+
 class VzeController(GuiInterface):
 
     logic = None
-    opencv = openCV_Interface()
+    opencv = openCvController()
 
     def __init__(self, logic):
         self.logic = logic
@@ -51,10 +54,10 @@ class VzeController(GuiInterface):
         fileName, _ = QFileDialog.getOpenFileName(None, 'Open file',"C:\\", "Image files(*.jpg *.svg *.png);;Video files(*.mp4)")
         if fileName:
             print(fileName)
-            self.logic.openCVMethod()
-
-    def processCV(self, filename):
-        self.opencv.doSomething1()
+            self.opencv.openCVMethod()
+            
+    def processCV(self):
+        self.opencv.openCVMethod()
 
 class VzeApp(QtWidgets.QApplication):
 

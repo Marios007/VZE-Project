@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QFileDialog
 from gui.VzeGui import *
 
+
 class GuiInterface:
 
     def doSomething(self):

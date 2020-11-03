@@ -5,3 +5,6 @@ __pycache__/VzeApp.cpython-38.pyc
 gui/__pycache__/styles.cpython-38.pyc
 tempCodeRunnerFile.py
 ki/yolo/yolov3_ts.weights
+__pycache__/GuiInterface.cpython-38.pyc
+.vscode/.ropeproject/objectdb
+.vscode/.ropeproject/config.py

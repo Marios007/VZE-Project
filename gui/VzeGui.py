@@ -1,6 +1,4 @@
-
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QFileDialog
 import gui.styles as styles
 
 class VzeGui(QtWidgets.QMainWindow):
@@ -16,7 +14,7 @@ class VzeGui(QtWidgets.QMainWindow):
        
        # Size of window is always half size of availabe window
         size = QtWidgets.QDesktopWidget().availableGeometry()
-        self.setMinimumSize( size.width() * 0.65, size.height() * 0.65)
+        self.setMinimumSize( size.width() * 0.5, size.height() * 0.5)
 
         # Main widget
         window = QtWidgets.QWidget()
@@ -36,7 +34,7 @@ class VzeGui(QtWidgets.QMainWindow):
         #Build UI
         self.ui_startscreen()
         self.ui_demoscreen()
-        self.ui_button_handler(self.logic)
+        self.ui_button_handler()
 
         self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(window)
@@ -370,13 +368,13 @@ class VzeGui(QtWidgets.QMainWindow):
         self.btn_back_demoscreen.setText((""))
 
     # Button handler with interface
-    def ui_button_handler(self, logicInterface):
+    def ui_button_handler(self):
         self.btn_loadFile.setToolTip('Laden eines Videos oder Bildes')
-        self.btn_loadFile.clicked.connect(lambda:logicInterface.loadFile())
+        self.btn_loadFile.clicked.connect(lambda: self.logic.loadFile())
         
         
         self.btn_demoToDemo.setToolTip('Demo Videos wählen')
-        self.btn_demoToDemo.clicked.connect(lambda:logicInterface.doSomething())
+        self.btn_demoToDemo.clicked.connect(lambda:self.logic.doSomething())
         self.btn_demoToDemo.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(1))
 
 

@@ -1,3 +1,16 @@
+"""
+done:
+changed box_size for cnn input by factor 1.35
+print boxes and labels after feeding all captured signs to the cnn
+if the cnn probability is low (maybe <=65%) dont show box and label
+
+to do:
+play with probability mininimum and threshold
+"""
+
+
+
+
 import numpy as np
 import pandas as pd
 import cv2
@@ -67,8 +80,8 @@ def yolo_detection(image, dnn_dim, layers_names_output):
     output_from_yolo_network = yolo_network.forward(layers_names_output)
     return output_from_yolo_network
 
-def calculate_time(frames_count, start_time, end_time):
-    estimated_time = (end_time - start_time)/cv2.getTickFrequency()
+def calculate_time(estimated_time, frames_count, start_time, end_time):
+    estimated_time += (end_time - start_time)/cv2.getTickFrequency()
     fps = round((frames_count / estimated_time), 1)
     print("calculating time {0:.3f} seconds - FPS: {1}".format(estimated_time, fps))
     #print('FPS:', round((frames_count / estimated_time), 1))
@@ -89,7 +102,7 @@ def equalize_histogram(image):
 
 def preprocessing_images(image):
     """
-    maybe we shpuld use variables instead of constants
+    maybe we should use variables instead of constants
     """
     image = cv2.resize(image, (32,32), interpolation = cv2.INTER_AREA) 
     image = convert_grayscale(image)
@@ -121,6 +134,9 @@ def detect_signs(image, height, width, labels, model, yolo_network, mean, layers
                 # Scaling bounding box coordinates to the initial frame size and get top left coordinates
                 box_current = detected_objects[0:4] * np.array([width, height, width, height])
                 x_center, y_center, box_width, box_height = box_current
+                # offsets for bounding boxes
+                box_width*=1.35
+                box_height*=1.35
                 x_min = int(x_center - (box_width / 2))
                 y_min = int(y_center - (box_height / 2))
 
@@ -134,16 +150,15 @@ def detect_signs(image, height, width, labels, model, yolo_network, mean, layers
     # non-maximum suppression of given bounding boxes, deletes duplicates
     results = cv2.dnn.NMSBoxes(bounding_boxes, confidences, probability_minimum, threshold)
 
-    box_color = [0, 0, 255]
-    text_color = [0, 255, 0]
+    sign_data = np.array([])
+    #box_color = [0, 0, 255]
+    #text_color = [0, 255, 0]
 
     if len(results) > 0:
         for i in results.flatten():
             x_min, y_min = bounding_boxes[i][0], bounding_boxes[i][1]
             box_width, box_height = bounding_boxes[i][2], bounding_boxes[i][3]
             
-            """
-            """
             # checkpoint for future cnn
             captured_sign = image[y_min:y_min+int(box_height), x_min:x_min+int(box_width), :]
             #checkpoint
@@ -166,25 +181,43 @@ def detect_signs(image, height, width, labels, model, yolo_network, mean, layers
                 probability = probabilities[0,prediction]*100
                 # checkpoint
                 print("class: {0} - predict: {1} - probability: {2:.2f}%".format(prediction, name , float(probability)))
-                print()
-
-                # Preparing text with label and confidence for current bounding box
-                text_box_sign = '{}: {:.2f}'.format(name, float(probability))
             
-                # Putting text with label and probability on the original image
-                print_text_on_image(image, text_box_sign, x_min, y_min-5, 0.6, text_color, 1)
+                # to prevent boxes and texts from beeing drawn if probability is low
+                if probability > 65:
+                    # Preparing text with label and confidence for current bounding box
+                    text_box_sign = '{}: {:.2f}'.format(name, float(probability))
+                    # store data of each captured sign to draw boxes and text after all detected signs are feeded in the cnn
+                    sign_data = np.append(sign_data, [x_min, y_min, box_width, box_height, text_box_sign])
 
-
-
-            """
-            """
+                    # Putting text with label and probability on the original image
+                    #print_text_on_image(image, text_box_sign, x_min, y_min-5, 0.6, text_color, 1)
 
             # Drawing bounding box on the original current frame
-            cv2.rectangle(image, (x_min, y_min), (x_min + int(box_width), y_min + int(box_height)), box_color, 2)
+            #cv2.rectangle(image, (x_min, y_min), (x_min + int(box_width), y_min + int(box_height)), box_color, 2)
 
     # Checkpoint
     #print("detected_objects:", count)
 
+    image = print_boxes_on_image(sign_data, image)
+    print()
+
+    return image
+
+def print_boxes_on_image(sign_data, image):
+    box_color = [0, 0, 255]
+    text_color = [0, 255, 0]
+
+    for i in range(0,len(sign_data), 5):
+        x_min = int(sign_data[i])
+        y_min = int(sign_data[i+1])
+        box_width = int(sign_data[i+2])
+        box_height = int(sign_data[i+3])
+        text_box_sign = str(sign_data[i+4])
+
+        font_size = box_width/100*0.9
+    
+        cv2.rectangle(image, (x_min, y_min), (x_min + int(box_width), y_min + int(box_height)), box_color, 2)
+        print_text_on_image(image, text_box_sign, x_min, y_min-5, font_size, text_color, 1)
     return image
 
 
@@ -198,7 +231,7 @@ estimated_time = 0
 
 #path_image = "C:/Users/Aqua/Desktop/yolo_object_detection/yolo-traffic-signs/Traffic_signs_data/00039.jpg"
 path_image = "./test_rl.jpg"
-path_video = "./input/ts_test_vid.mp4"
+path_video = "./input/Ausschnitt_5.mp4"
 path_yolo_weights = "./input/yolo/yolov3_ts.weights"
 path_yolo_config = "./input/yolo/yolov3_ts.cfg"
 #path_yolo_weights = "./input/yolo_tiny/yolov3-spp.weights"
@@ -211,7 +244,7 @@ dnn_dim = (416, 416)
 """
 image
 """
-
+"""
 image = read_image(path_image)
 # checkpoint
 # show_image("image", image)
@@ -224,7 +257,7 @@ image = detect_signs(image, height, width, labels, model, yolo_network, mean, la
 end_time = cv2.getTickCount()
 
 # time and text processing
-estimated_time, fps = calculate_time(frames_count, start_time, end_time)
+estimated_time, fps = calculate_time(estimated_time, frames_count, start_time, end_time)
 text_info = "time {0:.3f} s - fps: {1}".format(estimated_time, fps)
 image = print_text_on_image(image, text_info, 20, 20, 0.7, [0,255,0], 1)
 
@@ -234,12 +267,20 @@ cv2.destroyAllWindows()
 
 # saves image
 cv2.imwrite("yolo_image.jpg", image)
-
+"""
 """
 video
 """
-"""
+
 cap, height, width = read_video(path_video)
+
+# to save the video
+frame_width = int(cap.get(3)/2)
+frame_height = int(cap.get(4)/2)
+print(frame_width, frame_height)
+#out = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (frame_width,frame_height))
+out = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc(*"MJPG"), 10, (frame_width,frame_height))
+
 while(cap.isOpened()):
     # start timer for fps calculation
     start_time = cv2.getTickCount()
@@ -248,22 +289,23 @@ while(cap.isOpened()):
     if not ret:
         break
 
+    frame = resize_image(frame, 50)
+
     if width is None or height is None:
         height, width = get_dimensions(frame)
 
-    detect_signs(frame, height, width, labels, model, yolo_network, mean, layers_names_output, probability_minimum, threshold)
+    frame = detect_signs(frame, height, width, labels, model, yolo_network, mean, layers_names_output, probability_minimum, threshold)
     end_time = cv2.getTickCount()
     
-    estimated_time += (end_time - start_time)/cv2.getTickFrequency()
-    calculate_time(frames_count, estimated_time)
+    estimated_time, fps = calculate_time(estimated_time, frames_count, start_time, end_time)
     text_info = "time {0:.3f} s - fps: {1}".format(estimated_time, fps)
-    image = print_text_on_image(image, text_info, 20, 20, 0.5, [0,0,255], 2)
-
-    show_image("bounding_boxes", image)
+    frame = print_text_on_image(frame, text_info, 20, 20, 0.5, [0,0,255], 2)
+    out.write(frame)
+    show_image("bounding_boxes", frame)
     frames_count+=1
     if cv2.waitKey(10) & 0xFF ==ord("q"):
         break
 
 cap.release()
+out.release()
 cv2.destroyAllWindows()
-"""

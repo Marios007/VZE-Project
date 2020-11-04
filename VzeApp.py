@@ -42,6 +42,7 @@ class VzeController(GuiInterface):
 
     logic = None
     opencv = openCvController()
+    fileName = None
 
     def __init__(self, logic):
         self.logic = logic
@@ -51,9 +52,9 @@ class VzeController(GuiInterface):
 
     def loadFile(self):
         print("loading file method")
-        fileName, _ = QFileDialog.getOpenFileName(None, 'Open file',"C:\\", "Image files(*.jpg *.svg *.png);;Video files(*.mp4)")
-        if fileName:
-            print(fileName)
+        self.fileName, _ = QFileDialog.getOpenFileName(None, 'Open file',"C:\\", "Image files(*.jpg *.svg *.png);;Video files(*.mp4)")
+        if self.fileName:
+            print(self.fileName)
             self.opencv.openCVMethod()
             
     def processCV(self):

@@ -15,7 +15,7 @@ class VzeGui(QtWidgets.QMainWindow):
        
        # Size of window is always half size of availabe window
         size = QtWidgets.QDesktopWidget().availableGeometry()
-        self.setMinimumSize( size.width() * 0.5, size.height() * 0.5)
+        self.setMinimumSize( size.width() * 0.65, size.height() * 0.65)
 
         # Main widget
         window = QtWidgets.QWidget()
@@ -32,30 +32,45 @@ class VzeGui(QtWidgets.QMainWindow):
         self.stackedWidget.setStyleSheet("background-color: rgb(0, 0, 0);")
         self.stackedWidget.setObjectName("stackedWidget")
         
-        #Build UI
-        self.ui_startscreen()
-        self.ui_demoscreen()
-        self.ui_button_handler()
+        #Build UI with each screen
+        print ("Build screens")
+        self.startscreen = ui_startscreen(self.logic, self)
+        self.stackedWidget.addWidget(self.startscreen)
+
+        self.demoscreen = ui_demoscreen(self.logic, self)
+        self.stackedWidget.addWidget(self.demoscreen)
+
+        self.verticalLayout.addWidget(self.stackedWidget)
 
         self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(window)
 
+    def switchToScreen(self):
+        self.stackedWidget.setCurrentIndex(1)
+
+        #self.btn_file.clicked.connect(lambda:logicInterface.loadFile(self.text.text()))
+
     # Start Screen
-    def ui_startscreen(self):
-        self.StartScreen = QtWidgets.QWidget()
-        self.StartScreen.setStatusTip("")
-        self.StartScreen.setWhatsThis("")
-        self.StartScreen.setAccessibleName("")
-        self.StartScreen.setAccessibleDescription("")
-        self.StartScreen.setObjectName("StartScreen")
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.StartScreen)
+class ui_startscreen(QtWidgets.QWidget):
+
+    def __init__(self, LogicInterface, Gui):
+        super(ui_startscreen, self).__init__()
+
+        self.logic = LogicInterface
+        self.gui = Gui
+        self.setStatusTip("")
+        self.setWhatsThis("")
+        self.setAccessibleName("")
+        self.setAccessibleDescription("")
+        self.setObjectName("StartScreen")
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
     
         self.lyth_headline = QtWidgets.QHBoxLayout()
         self.lyth_headline.setContentsMargins(20, -1, 20, 0)
         self.lyth_headline.setObjectName("lyth_headline")
         
-        self.lbl_willkommen = QtWidgets.QLabel(self.StartScreen)
+        self.lbl_willkommen = QtWidgets.QLabel(self)
         font = QtGui.QFont()
         font.setPointSize(24)
         font.setBold(True)
@@ -69,7 +84,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.lyth_headline.addItem(spacerItem)
         
         # Button Info Startscreen
-        self.btn_info_startscreen = QtWidgets.QPushButton(self.StartScreen)
+        self.btn_info_startscreen = QtWidgets.QPushButton(self)
         self.btn_info_startscreen.setMinimumSize(QtCore.QSize(140, 45))
         self.btn_info_startscreen.setMaximumSize(QtCore.QSize(140, 45))
         self.btn_info_startscreen.setStatusTip("")
@@ -105,7 +120,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.lyth_bigBtn.setObjectName("lyth_bigBtn")
         spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.lyth_bigBtn.addItem(spacerItem3)
-        self.btn_loadFile = QtWidgets.QPushButton(self.StartScreen)
+        self.btn_loadFile = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -128,7 +143,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.lyth_bigBtn.addItem(spacerItem4)
         spacerItem5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.lyth_bigBtn.addItem(spacerItem5)
-        self.btn_demoToDemo = QtWidgets.QPushButton(self.StartScreen)
+        self.btn_demoToDemo = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -155,24 +170,37 @@ class VzeGui(QtWidgets.QMainWindow):
         spacerItem9 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.lyth_bottom.addItem(spacerItem9)
         self.verticalLayout_2.addLayout(self.lyth_bottom)
-        self.stackedWidget.addWidget(self.StartScreen)
+        #self.stackedWidget.addWidget(self)
 
         self.lbl_willkommen.setText(("Willkommen"))
         self.btn_info_startscreen.setText((""))
         self.btn_loadFile.setText(("Datei auswählen"))
         self.btn_demoToDemo.setText(("Demo auswählen"))
 
+        
+        self.btn_loadFile.setToolTip('Laden eines Videos oder Bildes')
+        self.btn_loadFile.clicked.connect(lambda: self.logic.loadFile())
+
+        self.btn_demoToDemo.setToolTip('Demo Videos wählen')
+        self.btn_demoToDemo.clicked.connect(lambda: self.logic.doSomething())
+        self.btn_demoToDemo.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(1))
+
     # Demo Screen
-    def ui_demoscreen(self):
-        self.DemoScreen = QtWidgets.QWidget()
-        self.DemoScreen.setObjectName("DemoScreen")
-        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.DemoScreen)
+class ui_demoscreen(QtWidgets.QWidget):
+    def __init__(self, LogicInterface, Gui):
+        super(ui_demoscreen, self).__init__()
+
+        self.logic = LogicInterface
+        self.gui = Gui
+
+        self.setObjectName("DemoScreen")
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.lyth_headline_demoscreen = QtWidgets.QHBoxLayout()
         self.lyth_headline_demoscreen.setContentsMargins(20, 0, 20, 0)
         self.lyth_headline_demoscreen.setSpacing(6)
         self.lyth_headline_demoscreen.setObjectName("lyth_headline_demoscreen")
-        self.lbl_demo = QtWidgets.QLabel(self.DemoScreen)
+        self.lbl_demo = QtWidgets.QLabel(self)
         font = QtGui.QFont()
         font.setPointSize(24)
         font.setBold(True)
@@ -185,7 +213,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.lyth_headline_demoscreen.addItem(spacerItem10)
         
         # Button Info Demoscreen
-        self.btn_info_demoscreen = QtWidgets.QPushButton(self.DemoScreen)
+        self.btn_info_demoscreen = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -219,7 +247,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.lyth_smallText_Demo.setObjectName("lyth_smallText_Demo")
 
         # Label Text and spacer
-        self.label_demotext = QtWidgets.QLabel(self.DemoScreen)
+        self.label_demotext = QtWidgets.QLabel(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -248,7 +276,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.lyth_bigBtn_Demo.setObjectName("lyth_bigBtn_Demo")
         spacerItem13 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.lyth_bigBtn_Demo.addItem(spacerItem13)
-        self.btn_demoSonne = QtWidgets.QPushButton(self.DemoScreen)
+        self.btn_demoSonne = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -271,7 +299,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.lyth_bigBtn_Demo.addItem(spacerItem14)
         spacerItem15 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.lyth_bigBtn_Demo.addItem(spacerItem15)
-        self.btn_demoRegen = QtWidgets.QPushButton(self.DemoScreen)
+        self.btn_demoRegen = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -293,7 +321,7 @@ class VzeGui(QtWidgets.QMainWindow):
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap("gui/pics/data-icon.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 
-        self.btn_dataSonne = QtWidgets.QPushButton(self.DemoScreen)
+        self.btn_dataSonne = QtWidgets.QPushButton(self)
         self.btn_dataSonne.setMinimumSize(QtCore.QSize(55, 55))
         self.btn_dataSonne.setMaximumSize(QtCore.QSize(55, 55))
         self.btn_dataSonne.setStyleSheet("QPushButton:hover{\n""    border-radius:5px;\n""    border: 2px solid rgb(255, 255, 255)\n""\n""}")
@@ -306,7 +334,7 @@ class VzeGui(QtWidgets.QMainWindow):
         spacerItem18 = QtWidgets.QSpacerItem(370, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.lyth_smallBtn_demoscreen.addItem(spacerItem18)
         
-        self.btn_dataRegen = QtWidgets.QPushButton(self.DemoScreen)
+        self.btn_dataRegen = QtWidgets.QPushButton(self)
         self.btn_dataRegen.setMinimumSize(QtCore.QSize(55, 55))
         self.btn_dataRegen.setMaximumSize(QtCore.QSize(55, 55))
         self.btn_dataRegen.setStyleSheet("QPushButton:hover{\n""    border-radius:5px;\n""    border: 2px solid rgb(255, 255, 255)\n""\n""}")
@@ -328,7 +356,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.lyth_bottom_demoscreen.setObjectName("lyth_bottom_demoscreen")
         
         # Button Back in Demoscreen
-        self.btn_back_demoscreen = QtWidgets.QPushButton(self.DemoScreen)
+        self.btn_back_demoscreen = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -352,8 +380,8 @@ class VzeGui(QtWidgets.QMainWindow):
         self.lyth_bottom_demoscreen.addItem(spacerItem23)
         self.verticalLayout_3.addLayout(self.lyth_bottom_demoscreen)
 
-        self.stackedWidget.addWidget(self.DemoScreen)
-        self.verticalLayout.addWidget(self.stackedWidget)
+        #self.stackedWidget.addWidget(self)
+        
     
 
         
@@ -369,20 +397,10 @@ class VzeGui(QtWidgets.QMainWindow):
         self.btn_back_demoscreen.setText((""))
 
     # Button handler with interface
-    def ui_button_handler(self):
-        self.btn_loadFile.setToolTip('Laden eines Videos oder Bildes')
-        self.btn_loadFile.clicked.connect(lambda: self.logic.loadFile())
         
-        
-        self.btn_demoToDemo.setToolTip('Demo Videos wählen')
-        self.btn_demoToDemo.clicked.connect(lambda:self.logic.doSomething())
-        self.btn_demoToDemo.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(1))
+        print ("Demo screen built")
 
-
-        self.btn_back_demoscreen.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(0))
-
-
-        #self.btn_file.clicked.connect(lambda:logicInterface.loadFile(self.text.text()))
+        self.btn_back_demoscreen.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(0))
         
       
 

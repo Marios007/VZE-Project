@@ -31,7 +31,7 @@ class openCvController(openCV_Interface):
         m_var = None
 
     def openCVMethod(self):
-        self.print("openCVMethod")
+        print("openCVMethod")
         return
 
     def loadFile1(self):

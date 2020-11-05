@@ -19,7 +19,7 @@ class VzeGui(QtWidgets.QMainWindow):
 
         # Main widget
         window = QtWidgets.QWidget()
-        window.setStyleSheet("background-color: rgb(0, 0, 0);")
+        window.setStyleSheet(styles.styleBackground)
         self.setCentralWidget(window)
         window.setObjectName("window")
 
@@ -29,7 +29,7 @@ class VzeGui(QtWidgets.QMainWindow):
         
         # Set stacked widget
         self.stackedWidget = QtWidgets.QStackedWidget(window)
-        self.stackedWidget.setStyleSheet("background-color: rgb(0, 0, 0);")
+        self.stackedWidget.setStyleSheet(styles.styleBackground)
         self.stackedWidget.setObjectName("stackedWidget")
         
         #Build UI with each screen
@@ -40,12 +40,15 @@ class VzeGui(QtWidgets.QMainWindow):
         self.demoscreen = ui_demoscreen(self.logic, self)
         self.stackedWidget.addWidget(self.demoscreen)
 
+        self.previewscreen = ui_previewscreen(self.logic, self)
+        self.stackedWidget.addWidget(self.previewscreen)
+
         self.verticalLayout.addWidget(self.stackedWidget)
 
         self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(window)
 
-        #self.btn_file.clicked.connect(lambda:logicInterface.loadFile(self.text.text()))
+       
 
     # Start Screen
 class ui_startscreen(QtWidgets.QWidget):
@@ -55,6 +58,7 @@ class ui_startscreen(QtWidgets.QWidget):
 
         self.logic = LogicInterface
         self.gui = Gui
+
         self.setStatusTip("")
         self.setWhatsThis("")
         self.setAccessibleName("")
@@ -167,7 +171,7 @@ class ui_startscreen(QtWidgets.QWidget):
         spacerItem9 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.lyth_bottom.addItem(spacerItem9)
         self.verticalLayout_2.addLayout(self.lyth_bottom)
-        #self.stackedWidget.addWidget(self)
+        
 
         self.lbl_willkommen.setText(("Willkommen"))
         self.btn_info_startscreen.setText((""))
@@ -177,6 +181,7 @@ class ui_startscreen(QtWidgets.QWidget):
         
         self.btn_loadFile.setToolTip('Laden eines Videos oder Bildes')
         self.btn_loadFile.clicked.connect(lambda: self.logic.loadFile())
+        self.btn_loadFile.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(2))
 
         self.btn_demoToDemo.setToolTip('Demo Videos wählen')
         self.btn_demoToDemo.clicked.connect(lambda: self.logic.doSomething())
@@ -377,10 +382,7 @@ class ui_demoscreen(QtWidgets.QWidget):
         self.lyth_bottom_demoscreen.addItem(spacerItem23)
         self.verticalLayout_3.addLayout(self.lyth_bottom_demoscreen)
 
-        #self.stackedWidget.addWidget(self)
-        
     
-
         
         # Set texts
 
@@ -393,13 +395,179 @@ class ui_demoscreen(QtWidgets.QWidget):
         self.btn_dataRegen.setText((""))
         self.btn_back_demoscreen.setText((""))
 
-    # Button handler with interface
-        
-        print ("Demo screen built")
-
+        # Button handler with interface
         self.btn_back_demoscreen.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(0))
         
-      
+class ui_previewscreen(QtWidgets.QWidget):
+    def __init__(self, LogicInterface, Gui):
+        super(ui_previewscreen, self).__init__()
 
+        self.logic = LogicInterface
+        self.gui = Gui
 
-    
+        self.setObjectName("PreviewScreen")
+        self.verticalLayout_4 = QtWidgets.QVBoxLayout(self)
+        self.verticalLayout_4.setObjectName("verticalLayout_4")
+        self.lyth_headline_previewScreen = QtWidgets.QHBoxLayout()
+        self.lyth_headline_previewScreen.setContentsMargins(20, 0, 20, 0)
+        self.lyth_headline_previewScreen.setSpacing(6)
+        self.lyth_headline_previewScreen.setObjectName("lyth_headline_previewScreen")
+        self.lbl_headline_preview = QtWidgets.QLabel(self)
+        font = QtGui.QFont()
+        font.setPointSize(24)
+        font.setBold(True)
+        font.setWeight(75)
+        self.lbl_headline_preview.setFont(font)
+        self.lbl_headline_preview.setStyleSheet("color: rgb(242, 141, 27);")
+        self.lbl_headline_preview.setObjectName("lbl_headline_preview")
+        self.lyth_headline_previewScreen.addWidget(self.lbl_headline_preview)
+        spacerItem24 = QtWidgets.QSpacerItem(10, 10, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.lyth_headline_previewScreen.addItem(spacerItem24)
+
+        # Button Info preview screen
+        self.btn_info_previewScreen = QtWidgets.QPushButton(self)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.btn_info_previewScreen.sizePolicy().hasHeightForWidth())
+        self.btn_info_previewScreen.setSizePolicy(sizePolicy)
+        self.btn_info_previewScreen.setMinimumSize(QtCore.QSize(140, 45))
+        self.btn_info_previewScreen.setMaximumSize(QtCore.QSize(140, 45))
+        self.btn_info_previewScreen.setBaseSize(QtCore.QSize(0, 0))
+        self.btn_info_previewScreen.setStatusTip("")
+        self.btn_info_previewScreen.setWhatsThis("")
+        self.btn_info_previewScreen.setAccessibleName("")
+        self.btn_info_previewScreen.setAccessibleDescription("")
+        self.btn_info_previewScreen.setStyleSheet("QPushButton:hover{\n""    border-radius:5px;\n""    border: 2px solid rgb(255, 255, 255)\n""\n""}")
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("gui/pics/info_logo.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.btn_info_previewScreen.setIcon(icon)
+        self.btn_info_previewScreen.setIconSize(QtCore.QSize(130, 30))
+        self.btn_info_previewScreen.setObjectName("btn_info_previewScreen")
+        self.lyth_headline_previewScreen.addWidget(self.btn_info_previewScreen)
+        self.verticalLayout_4.addLayout(self.lyth_headline_previewScreen)
+        self.lytv_bigCenter_previewScreen = QtWidgets.QVBoxLayout()
+        self.lytv_bigCenter_previewScreen.setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
+        self.lytv_bigCenter_previewScreen.setContentsMargins(0, -1, 0, -1)
+        self.lytv_bigCenter_previewScreen.setObjectName("lytv_bigCenter_previewScreen")
+        self.lyth_smallText_previewScreen = QtWidgets.QHBoxLayout()
+        self.lyth_smallText_previewScreen.setContentsMargins(20, 0, -1, -1)
+        self.lyth_smallText_previewScreen.setObjectName("lyth_smallText_previewScreen")
+        self.label_preview = QtWidgets.QLabel(self)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label_preview.sizePolicy().hasHeightForWidth())
+        self.label_preview.setSizePolicy(sizePolicy)
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_preview.setFont(font)
+        self.label_preview.setStatusTip("")
+        self.label_preview.setWhatsThis("")
+        self.label_preview.setAccessibleName("")
+        self.label_preview.setAccessibleDescription("")
+        self.label_preview.setStyleSheet("color: rgb(255, 255, 255);")
+        self.label_preview.setObjectName("label_preview")
+        self.lyth_smallText_previewScreen.addWidget(self.label_preview, 0, QtCore.Qt.AlignTop)
+        spacerItem25 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.lyth_smallText_previewScreen.addItem(spacerItem25)
+        spacerItem26 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.lyth_smallText_previewScreen.addItem(spacerItem26)
+        self.lytv_bigCenter_previewScreen.addLayout(self.lyth_smallText_previewScreen)
+        self.lyth_centerBig = QtWidgets.QHBoxLayout()
+        self.lyth_centerBig.setObjectName("lyth_centerBig")
+        spacerItem27 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.lyth_centerBig.addItem(spacerItem27)
+
+        # graphics view to add a picture
+        self.graphicsPreview = QtWidgets.QGraphicsView(self)
+        self.graphicsPreview.setMinimumSize(QtCore.QSize(800, 420))
+        self.graphicsPreview.setMaximumSize(QtCore.QSize(800, 420))
+        self.graphicsPreview.setObjectName("graphicsPreview")
+        self.lyth_centerBig.addWidget(self.graphicsPreview)
+        spacerItem28 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.lyth_centerBig.addItem(spacerItem28)
+        spacerItem29 = QtWidgets.QSpacerItem(0, 450, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.lyth_centerBig.addItem(spacerItem29)
+        self.lytv_bigCenter_previewScreen.addLayout(self.lyth_centerBig)
+        self.lyth_blwCenter = QtWidgets.QHBoxLayout()
+        self.lyth_blwCenter.setObjectName("lyth_blwCenter")
+        self.lytv_bigCenter_previewScreen.addLayout(self.lyth_blwCenter)
+        spacerItem30 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.lytv_bigCenter_previewScreen.addItem(spacerItem30)
+        self.label_loadSuccess = QtWidgets.QLabel(self)
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_loadSuccess.setFont(font)
+        self.label_loadSuccess.setStyleSheet("color: rgb(255, 255, 255);")
+        self.label_loadSuccess.setObjectName("label_loadSuccess")
+        self.lytv_bigCenter_previewScreen.addWidget(self.label_loadSuccess, 0, QtCore.Qt.AlignHCenter)
+        self.verticalLayout_4.addLayout(self.lytv_bigCenter_previewScreen)
+        self.lyth_bottom_previewScreen = QtWidgets.QHBoxLayout()
+        self.lyth_bottom_previewScreen.setContentsMargins(-1, -1, 20, -1)
+        self.lyth_bottom_previewScreen.setObjectName("lyth_bottom_previewScreen")
+        
+
+        # Button back
+        self.btn_back_previewScreen = QtWidgets.QPushButton(self)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.btn_back_previewScreen.sizePolicy().hasHeightForWidth())
+        self.btn_back_previewScreen.setSizePolicy(sizePolicy)
+        self.btn_back_previewScreen.setMinimumSize(QtCore.QSize(0, 0))
+        self.btn_back_previewScreen.setMaximumSize(QtCore.QSize(40, 40))
+        font = QtGui.QFont()
+        font.setFamily("Segoe UI")
+        font.setBold(False)
+        font.setWeight(50)
+        self.btn_back_previewScreen.setFont(font)
+        self.btn_back_previewScreen.setStatusTip("")
+        self.btn_back_previewScreen.setWhatsThis("")
+        self.btn_back_previewScreen.setAccessibleName("")
+        self.btn_back_previewScreen.setAccessibleDescription("")
+        self.btn_back_previewScreen.setStyleSheet("QPushButton:hover{\n""    border-radius:5px;\n""    border: 2px solid rgb(255, 255, 255)\n""\n""}")
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap("gui/pics/back_icon.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.btn_back_previewScreen.setIcon(icon2)
+        self.btn_back_previewScreen.setIconSize(QtCore.QSize(20, 20))
+        self.btn_back_previewScreen.setObjectName("btn_back_previewScreen")
+        self.lyth_bottom_previewScreen.addWidget(self.btn_back_previewScreen)
+        spacerItem31 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.lyth_bottom_previewScreen.addItem(spacerItem31)
+        spacerItem32 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
+        self.lyth_bottom_previewScreen.addItem(spacerItem32)
+        self.btn_next_preview = QtWidgets.QPushButton(self)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.btn_next_preview.sizePolicy().hasHeightForWidth())
+        self.btn_next_preview.setSizePolicy(sizePolicy)
+        self.btn_next_preview.setMinimumSize(QtCore.QSize(200, 40))
+        font = QtGui.QFont()
+        font.setFamily("MS Shell Dlg 2")
+        font.setPointSize(26)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(9)
+        self.btn_next_preview.setFont(font)
+        self.btn_next_preview.setStyleSheet(styles.styleBluebutton)
+        self.btn_next_preview.setCheckable(False)
+        self.btn_next_preview.setFlat(False)
+        self.btn_next_preview.setObjectName("btn_next_preview")
+        self.lyth_bottom_previewScreen.addWidget(self.btn_next_preview)
+        self.verticalLayout_4.addLayout(self.lyth_bottom_previewScreen)
+        
+
+        self.lbl_headline_preview.setText("Datei Analyze")
+        self.btn_info_previewScreen.setText("")
+        self.label_preview.setText("Vorschau")
+        self.label_loadSuccess.setText("Datei erfolgreich geladen. ")
+        self.btn_back_previewScreen.setText("")
+        self.btn_next_preview.setText("Weiter")
+
+        self.btn_back_previewScreen.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(0))

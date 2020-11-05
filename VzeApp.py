@@ -55,7 +55,11 @@ class VzeController(GuiInterface):
         self.fileName, _ = QFileDialog.getOpenFileName(None, 'Open file',"C:\\", "Image files(*.jpg *.svg *.png);;Video files(*.mp4)")
         if self.fileName:
             print(self.fileName)
-            self.opencv.openCVMethod()
+            return self.fileName
+        
+            
+            
+            #self.opencv.openCVMethod()
             
     def processCV(self):
         self.opencv.openCVMethod()

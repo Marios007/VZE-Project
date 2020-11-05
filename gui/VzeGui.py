@@ -45,9 +45,6 @@ class VzeGui(QtWidgets.QMainWindow):
         self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(window)
 
-    def switchToScreen(self):
-        self.stackedWidget.setCurrentIndex(1)
-
         #self.btn_file.clicked.connect(lambda:logicInterface.loadFile(self.text.text()))
 
     # Start Screen

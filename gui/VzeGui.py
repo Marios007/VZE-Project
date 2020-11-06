@@ -1,5 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import gui.styles as styles
+import gui.image_ressources as image_ressources
 
 
 class VzeGui(QtWidgets.QMainWindow):
@@ -11,8 +12,13 @@ class VzeGui(QtWidgets.QMainWindow):
         self.logic = logicInterface
         # Setting Window Title and Icon
         self.setWindowTitle("VerkehrsZeichenErkennung VZE")
-        self.setWindowIcon(QtGui.QIcon("gui/pics/Logo_Schild_v1_2020-08-10_TB.png"))
-       
+        #self.setWindowIcon(QtGui.QIcon("gui/pics/Logo_Schild_v1_2020-08-10_TB.png"))
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/icons/logo_schild"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.setWindowIcon(icon)
+    
+
+
        # Size of window is always half size of availabe window
         size = QtWidgets.QDesktopWidget().availableGeometry()
         self.setMinimumSize( size.width() * 0.65, size.height() * 0.65)
@@ -95,7 +101,8 @@ class ui_startscreen(QtWidgets.QWidget):
         self.btn_info_startscreen.setStyleSheet("QPushButton:hover{\n""    border-radius:5px;\n""    border: 2px solid rgb(255, 255, 255)\n""\n""}")
         self.btn_info_startscreen.setText("")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("gui/pics/info_logo.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        #icon.addPixmap(QtGui.QPixmap("gui/pics/info_logo.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/icons/info_logo"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_info_startscreen.setIcon(icon)
         self.btn_info_startscreen.setIconSize(QtCore.QSize(130, 30))
         self.btn_info_startscreen.setCheckable(False)
@@ -230,7 +237,8 @@ class ui_demoscreen(QtWidgets.QWidget):
         self.btn_info_demoscreen.setStyleSheet("QPushButton:hover{\n""    border-radius:5px;\n""    border: 2px solid rgb(255, 255, 255)\n""\n""}")
         self.btn_info_demoscreen.setText("")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("gui/pics/info_logo.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        #icon.addPixmap(QtGui.QPixmap("gui/pics/info_logo.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/icons/info_logo"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_info_demoscreen.setIcon(icon)
         self.btn_info_demoscreen.setIconSize(QtCore.QSize(130, 30))
         self.btn_info_demoscreen.setObjectName("btn_info_demoscreen")
@@ -321,7 +329,8 @@ class ui_demoscreen(QtWidgets.QWidget):
         self.lyth_smallBtn_demoscreen.addItem(spacerItem17)
         
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("gui/pics/data-icon.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        #icon1.addPixmap(QtGui.QPixmap("gui/pics/data-icon.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/icons/data_icon"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 
         self.btn_dataSonne = QtWidgets.QPushButton(self)
         self.btn_dataSonne.setMinimumSize(QtCore.QSize(55, 55))
@@ -369,7 +378,8 @@ class ui_demoscreen(QtWidgets.QWidget):
         self.btn_back_demoscreen.setStyleSheet("QPushButton:hover{\n""    border-radius:5px;\n""    border: 2px solid rgb(255, 255, 255)\n""\n""}")
         self.btn_back_demoscreen.setText("")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("gui/pics/back_icon.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        #icon2.addPixmap(QtGui.QPixmap("gui/pics/back_icon.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(":/icons/back_icon"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_back_demoscreen.setIcon(icon2)
         self.btn_back_demoscreen.setIconSize(QtCore.QSize(20, 20))
         self.btn_back_demoscreen.setObjectName("btn_back_demoscreen")
@@ -440,7 +450,8 @@ class ui_previewscreen(QtWidgets.QWidget):
         self.btn_info_previewScreen.setAccessibleDescription("")
         self.btn_info_previewScreen.setStyleSheet("QPushButton:hover{\n""    border-radius:5px;\n""    border: 2px solid rgb(255, 255, 255)\n""\n""}")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("gui/pics/info_logo.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        #icon.addPixmap(QtGui.QPixmap("gui/pics/info_logo.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/icons/info_logo"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_info_previewScreen.setIcon(icon)
         self.btn_info_previewScreen.setIconSize(QtCore.QSize(130, 30))
         self.btn_info_previewScreen.setObjectName("btn_info_previewScreen")
@@ -532,7 +543,8 @@ class ui_previewscreen(QtWidgets.QWidget):
         self.btn_back_previewScreen.setAccessibleDescription("")
         self.btn_back_previewScreen.setStyleSheet("QPushButton:hover{\n""    border-radius:5px;\n""    border: 2px solid rgb(255, 255, 255)\n""\n""}")
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("gui/pics/back_icon.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        #icon2.addPixmap(QtGui.QPixmap("gui/pics/back_icon.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(":/icons/back_icon"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_back_previewScreen.setIcon(icon2)
         self.btn_back_previewScreen.setIconSize(QtCore.QSize(20, 20))
         self.btn_back_previewScreen.setObjectName("btn_back_previewScreen")

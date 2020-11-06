@@ -52,7 +52,7 @@ class VzeController(GuiInterface):
 
     def loadFile(self):
         print("loading file method")
-        self.fileName, _ = QFileDialog.getOpenFileName(None, 'Open file',"C:\\", "Image files(*.jpg *.svg *.png);;Video files(*.mp4)")
+        self.fileName, _ = QFileDialog.getOpenFileName(None, 'Open file',"C:\\", "Usable files (*.jpg *.svg *.png *.mp4)")
         if self.fileName:
             print(self.fileName)
             return self.fileName

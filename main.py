@@ -1,5 +1,5 @@
 import sys
-from VzeApp import *
+from VzeApp import VzeApp
 
 def main(*args, **kwargs):
     print ("Starting VZE")

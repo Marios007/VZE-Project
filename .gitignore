@@ -8,3 +8,4 @@ ki/yolo/yolov3_ts.weights
 __pycache__/GuiInterface.cpython-38.pyc
 .vscode/.ropeproject/objectdb
 .vscode/.ropeproject/config.py
+gui/__pycache__/image_ressources.cpython-38.pyc

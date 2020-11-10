@@ -49,7 +49,7 @@ def resize_image(image, scale):
     return resized
 
 def load_models(path_yolo_weights, path_yolo_config):
-    labels = pd.read_csv("./input/labels/signnames.csv", sep=";")
+    labels = pd.read_csv("./input/labels/signnames.csv", sep=";", encoding="mac_latin2")
     # checkpoint
     # print(labels.head())
 
@@ -177,7 +177,7 @@ def detect_signs(image, height, width, labels, model, yolo_network, mean, layers
                 # feeding th cnn and get prediction and probability
                 probabilities = model.predict_proba(captured_sign_pcd)
                 prediction = np.argmax(probabilities, axis = 1)
-                name = labels.iat[int(prediction), 1]
+                name = labels.iat[int(prediction), 2]
                 probability = probabilities[0,prediction]*100
                 # checkpoint
                 print("class: {0} - predict: {1} - probability: {2:.2f}%".format(prediction, name , float(probability)))

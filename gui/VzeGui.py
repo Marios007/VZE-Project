@@ -187,7 +187,7 @@ class ui_startscreen(QtWidgets.QWidget):
 
         
         self.btn_loadFile.setToolTip('Laden eines Videos oder Bildes')
-        self.btn_loadFile.clicked.connect(lambda: self.logic.loadFile())
+        self.btn_loadFile.released.connect(self.logic.loadFile)
         self.btn_loadFile.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(2))
 
         self.btn_demoToDemo.setToolTip('Demo Videos wählen')

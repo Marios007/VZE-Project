@@ -68,10 +68,7 @@ class ui_startscreen(QtWidgets.QWidget):
         self.logic = LogicInterface
         self.gui = Gui
 
-        self.setStatusTip("")
-        self.setWhatsThis("")
-        self.setAccessibleName("")
-        self.setAccessibleDescription("")
+        
         self.setObjectName("StartScreen")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
@@ -184,7 +181,7 @@ class ui_startscreen(QtWidgets.QWidget):
         
 
         self.lbl_willkommen.setText(("Willkommen"))
-        self.btn_info_startscreen.setText((""))
+        #self.btn_info_startscreen.setText((""))
         self.btn_loadFile.setText(("Datei auswählen"))
         self.btn_demoToDemo.setText(("Demo auswählen"))
 
@@ -233,10 +230,10 @@ class ui_demoscreen(QtWidgets.QWidget):
         self.btn_info_demoscreen.setSizePolicy(sizePolicy)
         self.btn_info_demoscreen.setMinimumSize(QtCore.QSize(140, 45))
         self.btn_info_demoscreen.setMaximumSize(QtCore.QSize(140, 45))
-        self.btn_info_demoscreen.setStatusTip("")
-        self.btn_info_demoscreen.setWhatsThis("")
-        self.btn_info_demoscreen.setAccessibleName("")
-        self.btn_info_demoscreen.setAccessibleDescription("")
+        #self.btn_info_demoscreen.setStatusTip("")
+        #self.btn_info_demoscreen.setWhatsThis("")
+        #self.btn_info_demoscreen.setAccessibleName("")
+        #self.btn_info_demoscreen.setAccessibleDescription("")
         self.btn_info_demoscreen.setStyleSheet("QPushButton:hover{\n""    border-radius:5px;\n""    border: 2px solid rgb(255, 255, 255)\n""\n""}")
         self.btn_info_demoscreen.setText("")
         icon = QtGui.QIcon()
@@ -271,10 +268,10 @@ class ui_demoscreen(QtWidgets.QWidget):
         font.setBold(True)
         font.setWeight(75)
         self.label_demotext.setFont(font)
-        self.label_demotext.setStatusTip("")
-        self.label_demotext.setWhatsThis("")
-        self.label_demotext.setAccessibleName("")
-        self.label_demotext.setAccessibleDescription("")
+        #self.label_demotext.setStatusTip("")
+        #self.label_demotext.setWhatsThis("")
+        #self.label_demotext.setAccessibleName("")
+        #self.label_demotext.setAccessibleDescription("")
         self.label_demotext.setStyleSheet("color: rgb(255, 255, 255);")
         self.label_demotext.setObjectName("label_demotext")
         self.lyth_smallText_Demo.addWidget(self.label_demotext, 0, QtCore.Qt.AlignTop)
@@ -400,13 +397,13 @@ class ui_demoscreen(QtWidgets.QWidget):
         # Set texts
 
         self.lbl_demo.setText(("Demo"))
-        self.btn_info_demoscreen.setText((""))
+        #self.btn_info_demoscreen.setText((""))
         self.label_demotext.setText(("Wählen Sie ein Demovideo aus"))
         self.btn_demoSonne.setText(("Video mit Sonne"))
         self.btn_demoRegen.setText(("Video mit Regen"))
-        self.btn_dataSonne.setText((""))
-        self.btn_dataRegen.setText((""))
-        self.btn_back_demoscreen.setText((""))
+        #self.btn_dataSonne.setText((""))
+        #self.btn_dataRegen.setText((""))
+        #self.btn_back_demoscreen.setText((""))
 
         # Button handler with interface
         self.btn_back_demoscreen.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(0))

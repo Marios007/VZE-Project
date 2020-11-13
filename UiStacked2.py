@@ -24,6 +24,8 @@ class Ui_MainWindow(object):
         self.stackedWidget = QtWidgets.QStackedWidget(self.centralwidget)
         self.stackedWidget.setStyleSheet("background-color: rgb(0, 0, 0);")
         self.stackedWidget.setObjectName("stackedWidget")
+
+### DONE Start Screen
         self.StartScreen = QtWidgets.QWidget()
         self.StartScreen.setStatusTip("")
         self.StartScreen.setWhatsThis("")
@@ -146,6 +148,8 @@ class Ui_MainWindow(object):
         self.lyth_bottom.addItem(spacerItem9)
         self.verticalLayout_2.addLayout(self.lyth_bottom)
         self.stackedWidget.addWidget(self.StartScreen)
+
+### DONE Demo Screen
         self.DemoScreen = QtWidgets.QWidget()
         self.DemoScreen.setObjectName("DemoScreen")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.DemoScreen)
@@ -362,6 +366,9 @@ class Ui_MainWindow(object):
         self.lyth_bottom_demoscreen.addItem(spacerItem23)
         self.verticalLayout_3.addLayout(self.lyth_bottom_demoscreen)
         self.stackedWidget.addWidget(self.DemoScreen)
+
+
+### Preview Screen
         self.PreviewScreen = QtWidgets.QWidget()
         self.PreviewScreen.setObjectName("PreviewScreen")
         self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.PreviewScreen)
@@ -531,6 +538,9 @@ class Ui_MainWindow(object):
         self.lyth_bottom_previewScreen.addWidget(self.btn_next_preview)
         self.verticalLayout_4.addLayout(self.lyth_bottom_previewScreen)
         self.stackedWidget.addWidget(self.PreviewScreen)
+
+
+###Di Screen
         self.DIScreen = QtWidgets.QWidget()
         self.DIScreen.setObjectName("DIScreen")
         self.verticalLayout_11 = QtWidgets.QVBoxLayout(self.DIScreen)
@@ -1753,7 +1763,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_11.addLayout(self.lyth_bottom_DIScreen)
         self.stackedWidget.addWidget(self.DIScreen)
 
-        
+###DONE### AnalyzePreviewScreen
         self.AnalyzePreviewScreen = QtWidgets.QWidget()
         self.AnalyzePreviewScreen.setObjectName("AnalyzePreviewScreen")
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.AnalyzePreviewScreen)
@@ -1925,6 +1935,12 @@ class Ui_MainWindow(object):
         self.lyth_bottom_AnalyzePreview.addItem(spacerItem52)
         self.verticalLayout_5.addLayout(self.lyth_bottom_AnalyzePreview)
         self.stackedWidget.addWidget(self.AnalyzePreviewScreen)
+        
+        
+        
+        
+        
+#Analyze Screen
         self.AnalyseScreen = QtWidgets.QWidget()
         self.AnalyseScreen.setObjectName("AnalyseScreen")
         self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.AnalyseScreen)
@@ -2129,6 +2145,11 @@ class Ui_MainWindow(object):
         self.lyth_bottom_Analyze.addItem(spacerItem65)
         self.verticalLayout_6.addLayout(self.lyth_bottom_Analyze)
         self.stackedWidget.addWidget(self.AnalyseScreen)
+
+
+
+
+ ####Result Screen#       
         self.ResultScreen = QtWidgets.QWidget()
         self.ResultScreen.setObjectName("ResultScreen")
         self.verticalLayout_9 = QtWidgets.QVBoxLayout(self.ResultScreen)
@@ -2726,6 +2747,9 @@ class Ui_MainWindow(object):
         self.lyth_bottom_Result.addItem(spacerItem74)
         self.verticalLayout_9.addLayout(self.lyth_bottom_Result)
         self.stackedWidget.addWidget(self.ResultScreen)
+
+
+###Demo Data Screen
         self.DemoDataScreen = QtWidgets.QWidget()
         self.DemoDataScreen.setObjectName("DemoDataScreen")
         self.verticalLayout_8 = QtWidgets.QVBoxLayout(self.DemoDataScreen)
@@ -3310,6 +3334,8 @@ class Ui_MainWindow(object):
         self.lyth_bottom_DemoData.addItem(spacerItem82)
         self.verticalLayout_8.addLayout(self.lyth_bottom_DemoData)
         self.stackedWidget.addWidget(self.DemoDataScreen)
+
+###Info Screen
         self.InfoScreen = QtWidgets.QWidget()
         self.InfoScreen.setObjectName("InfoScreen")
         self.verticalLayout_12 = QtWidgets.QVBoxLayout(self.InfoScreen)

@@ -49,16 +49,19 @@ class VzeGui(QtWidgets.QMainWindow):
         self.previewscreen = ui_previewscreen(self.logic, self)
         self.stackedWidget.addWidget(self.previewscreen)
 
-        self.verticalLayout.addWidget(self.stackedWidget)
+        self.analyzepvscreen = ui_analyzePvScreen(self.logic, self)
+        self.stackedWidget.addWidget(self.analyzepvscreen)
 
+
+
+        self.verticalLayout.addWidget(self.stackedWidget)
         self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(window)
 
        
 
-    # Start Screen
+# Start Screen
 class ui_startscreen(QtWidgets.QWidget):
-
     def __init__(self, LogicInterface, Gui):
         super(ui_startscreen, self).__init__()
 
@@ -194,7 +197,7 @@ class ui_startscreen(QtWidgets.QWidget):
         self.btn_demoToDemo.clicked.connect(lambda: self.logic.doSomething())
         self.btn_demoToDemo.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(1))
 
-    # Demo Screen
+# Demo Screen
 class ui_demoscreen(QtWidgets.QWidget):
     def __init__(self, LogicInterface, Gui):
         super(ui_demoscreen, self).__init__()
@@ -407,7 +410,7 @@ class ui_demoscreen(QtWidgets.QWidget):
 
         # Button handler with interface
         self.btn_back_demoscreen.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(0))
-        
+# Preview Screen
 class ui_previewscreen(QtWidgets.QWidget):
     def __init__(self, LogicInterface, Gui):
         super(ui_previewscreen, self).__init__()
@@ -583,3 +586,212 @@ class ui_previewscreen(QtWidgets.QWidget):
         self.btn_next_preview.setText("Weiter")
 
         self.btn_back_previewScreen.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(0))
+
+
+
+# DI Screen
+class ui_DIScreen(QtWidgets.QWidget):
+    def __init__(self, LogicInterface, Gui):
+        super(ui_DIScreen, self).__init__()
+
+        self.logic = LogicInterface
+        self.gui = Gui
+
+
+# Analyze Preview Screen
+class ui_analyzePvScreen(QtWidgets.QWidget):
+    def __init__(self, LogicInterface, Gui):
+        super(ui_analyzePvScreen, self).__init__()
+
+        self.logic = LogicInterface
+        self.gui = Gui
+
+
+        self.setObjectName("AnalyzePreviewScreen")
+        self.verticalLayout_5 = QtWidgets.QVBoxLayout(self)
+        self.verticalLayout_5.setObjectName("verticalLayout_5")
+        self.lyth_headline_AnalyzePreview = QtWidgets.QHBoxLayout()
+        self.lyth_headline_AnalyzePreview.setContentsMargins(20, 0, 20, 0)
+        self.lyth_headline_AnalyzePreview.setSpacing(6)
+        self.lyth_headline_AnalyzePreview.setObjectName("lyth_headline_AnalyzePreview")
+        self.lbl_headline_AnalyzePreview = QtWidgets.QLabel(self)
+        font = QtGui.QFont()
+        font.setPointSize(24)
+        font.setBold(True)
+        font.setWeight(75)
+        self.lbl_headline_AnalyzePreview.setFont(font)
+        self.lbl_headline_AnalyzePreview.setStatusTip("")
+        self.lbl_headline_AnalyzePreview.setWhatsThis("")
+        self.lbl_headline_AnalyzePreview.setAccessibleName("")
+        self.lbl_headline_AnalyzePreview.setAccessibleDescription("")
+        self.lbl_headline_AnalyzePreview.setStyleSheet("color: rgb(242, 141, 27);")
+        self.lbl_headline_AnalyzePreview.setObjectName("lbl_headline_AnalyzePreview")
+        self.lyth_headline_AnalyzePreview.addWidget(self.lbl_headline_AnalyzePreview)
+        spacerItem43 = QtWidgets.QSpacerItem(10, 10, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.lyth_headline_AnalyzePreview.addItem(spacerItem43)
+        self.btn_info_AnalyzePreview = QtWidgets.QPushButton(self)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.btn_info_AnalyzePreview.sizePolicy().hasHeightForWidth())
+        self.btn_info_AnalyzePreview.setSizePolicy(sizePolicy)
+        self.btn_info_AnalyzePreview.setMinimumSize(QtCore.QSize(140, 45))
+        self.btn_info_AnalyzePreview.setMaximumSize(QtCore.QSize(140, 45))
+        self.btn_info_AnalyzePreview.setBaseSize(QtCore.QSize(0, 0))
+        self.btn_info_AnalyzePreview.setStatusTip("")
+        self.btn_info_AnalyzePreview.setWhatsThis("")
+        self.btn_info_AnalyzePreview.setAccessibleName("")
+        self.btn_info_AnalyzePreview.setAccessibleDescription("")
+        self.btn_info_AnalyzePreview.setStyleSheet("QPushButton:hover{\n""    border-radius:5px;\n""    border: 2px solid rgb(255, 255, 255)\n""\n""}")
+        self.btn_info_AnalyzePreview.setText("")
+        self.btn_info_AnalyzePreview.setIcon(':/icons/logo_schild')
+        self.btn_info_AnalyzePreview.setIconSize(QtCore.QSize(130, 30))
+        self.btn_info_AnalyzePreview.setObjectName("btn_info_AnalyzePreview")
+        self.lyth_headline_AnalyzePreview.addWidget(self.btn_info_AnalyzePreview)
+        self.verticalLayout_5.addLayout(self.lyth_headline_AnalyzePreview)
+        self.lytv_bigCenter_AnalyzePreview = QtWidgets.QVBoxLayout()
+        self.lytv_bigCenter_AnalyzePreview.setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
+        self.lytv_bigCenter_AnalyzePreview.setContentsMargins(0, -1, 0, -1)
+        self.lytv_bigCenter_AnalyzePreview.setObjectName("lytv_bigCenter_AnalyzePreview")
+        self.lyth_smallText_AnalyzePreview = QtWidgets.QHBoxLayout()
+        self.lyth_smallText_AnalyzePreview.setContentsMargins(20, 0, -1, -1)
+        self.lyth_smallText_AnalyzePreview.setObjectName("lyth_smallText_AnalyzePreview")
+        self.label_AnalyzePreview = QtWidgets.QLabel(self)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label_AnalyzePreview.sizePolicy().hasHeightForWidth())
+        self.label_AnalyzePreview.setSizePolicy(sizePolicy)
+        font = QtGui.QFont()
+        font.setPointSize(18)
+        font.setBold(False)
+        font.setWeight(50)
+        self.label_AnalyzePreview.setFont(font)
+        self.label_AnalyzePreview.setStatusTip("")
+        self.label_AnalyzePreview.setWhatsThis("")
+        self.label_AnalyzePreview.setAccessibleName("")
+        self.label_AnalyzePreview.setAccessibleDescription("")
+        self.label_AnalyzePreview.setStyleSheet("color: rgb(255, 255, 255);")
+        self.label_AnalyzePreview.setObjectName("label_AnalyzePreview")
+        self.lyth_smallText_AnalyzePreview.addWidget(self.label_AnalyzePreview, 0, QtCore.Qt.AlignTop)
+        spacerItem44 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.lyth_smallText_AnalyzePreview.addItem(spacerItem44)
+        spacerItem45 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.lyth_smallText_AnalyzePreview.addItem(spacerItem45)
+        self.lytv_bigCenter_AnalyzePreview.addLayout(self.lyth_smallText_AnalyzePreview)
+        self.lyth_centerBig_AnalyzePreview = QtWidgets.QHBoxLayout()
+        self.lyth_centerBig_AnalyzePreview.setObjectName("lyth_centerBig_AnalyzePreview")
+        spacerItem46 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.lyth_centerBig_AnalyzePreview.addItem(spacerItem46)
+        self.graphicsAnalyzePreview = QtWidgets.QGraphicsView(self)
+        self.graphicsAnalyzePreview.setMinimumSize(QtCore.QSize(800, 420))
+        self.graphicsAnalyzePreview.setMaximumSize(QtCore.QSize(800, 420))
+        self.graphicsAnalyzePreview.setObjectName("graphicsAnalyzePreview")
+        self.lyth_centerBig_AnalyzePreview.addWidget(self.graphicsAnalyzePreview)
+        spacerItem47 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.lyth_centerBig_AnalyzePreview.addItem(spacerItem47)
+        spacerItem48 = QtWidgets.QSpacerItem(0, 450, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.lyth_centerBig_AnalyzePreview.addItem(spacerItem48)
+        self.lytv_bigCenter_AnalyzePreview.addLayout(self.lyth_centerBig_AnalyzePreview)
+        self.lyth_blwCenter_AnalyzePreview = QtWidgets.QHBoxLayout()
+        self.lyth_blwCenter_AnalyzePreview.setObjectName("lyth_blwCenter_AnalyzePreview")
+        self.lytv_bigCenter_AnalyzePreview.addLayout(self.lyth_blwCenter_AnalyzePreview)
+        spacerItem49 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.lytv_bigCenter_AnalyzePreview.addItem(spacerItem49)
+        self.verticalLayout_5.addLayout(self.lytv_bigCenter_AnalyzePreview)
+        self.lyth_bottom_AnalyzePreview = QtWidgets.QHBoxLayout()
+        self.lyth_bottom_AnalyzePreview.setContentsMargins(-1, -1, 40, -1)
+        self.lyth_bottom_AnalyzePreview.setObjectName("lyth_bottom_AnalyzePreview")
+        self.btn_back_AnalyzePreview = QtWidgets.QPushButton(self)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.btn_back_AnalyzePreview.sizePolicy().hasHeightForWidth())
+        self.btn_back_AnalyzePreview.setSizePolicy(sizePolicy)
+        self.btn_back_AnalyzePreview.setMinimumSize(QtCore.QSize(0, 0))
+        self.btn_back_AnalyzePreview.setMaximumSize(QtCore.QSize(40, 40))
+        font = QtGui.QFont()
+        font.setFamily("Segoe UI")
+        font.setBold(False)
+        font.setWeight(50)
+        font.setKerning(True)
+        self.btn_back_AnalyzePreview.setFont(font)
+        self.btn_back_AnalyzePreview.setStatusTip("")
+        self.btn_back_AnalyzePreview.setWhatsThis("")
+        self.btn_back_AnalyzePreview.setAccessibleName("")
+        self.btn_back_AnalyzePreview.setAccessibleDescription("")
+        self.btn_back_AnalyzePreview.setStyleSheet("QPushButton:hover{\n""    border-radius:5px;\n""    border: 2px solid rgb(255, 255, 255)\n""\n""}")
+        self.btn_back_AnalyzePreview.setText("")
+        self.btn_back_AnalyzePreview.setIcon(':/icons/back_icon')
+        self.btn_back_AnalyzePreview.setIconSize(QtCore.QSize(20, 20))
+        self.btn_back_AnalyzePreview.setCheckable(True)
+        self.btn_back_AnalyzePreview.setObjectName("btn_back_AnalyzePreview")
+        self.lyth_bottom_AnalyzePreview.addWidget(self.btn_back_AnalyzePreview)
+        spacerItem50 = QtWidgets.QSpacerItem(0, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
+        self.lyth_bottom_AnalyzePreview.addItem(spacerItem50)
+        spacerItem51 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.lyth_bottom_AnalyzePreview.addItem(spacerItem51)
+        self.btn_startAnalyze = QtWidgets.QPushButton(self)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.btn_startAnalyze.sizePolicy().hasHeightForWidth())
+        self.btn_startAnalyze.setSizePolicy(sizePolicy)
+        self.btn_startAnalyze.setMinimumSize(QtCore.QSize(220, 40))
+        self.btn_startAnalyze.setMaximumSize(QtCore.QSize(220, 40))
+        font = QtGui.QFont()
+        font.setFamily("MS Shell Dlg 2")
+        font.setPointSize(18)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(9)
+        self.btn_startAnalyze.setFont(font)
+        self.btn_startAnalyze.setStatusTip("")
+        self.btn_startAnalyze.setWhatsThis("")
+        self.btn_startAnalyze.setAccessibleName("")
+        self.btn_startAnalyze.setAccessibleDescription("")
+        self.btn_startAnalyze.setStyleSheet("QPushButton{\n""    font: 75 18pt \"MS Shell Dlg 2\" ;\n""    background-color: #1C4481;\n""    border-radius: 5px;\n""    color:white\n""}\n""\n""QPushButton:hover{\n""    border: 2px solid rgb(255, 255, 255)\n""}")
+        self.btn_startAnalyze.setText("Analyse starten")
+        self.btn_startAnalyze.setCheckable(False)
+        self.btn_startAnalyze.setFlat(False)
+        self.btn_startAnalyze.setObjectName("btn_startAnalyze")
+        self.lyth_bottom_AnalyzePreview.addWidget(self.btn_startAnalyze)
+        spacerItem52 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.lyth_bottom_AnalyzePreview.addItem(spacerItem52)
+        self.verticalLayout_5.addLayout(self.lyth_bottom_AnalyzePreview)
+        self.stackedWidget.addWidget(self)
+
+
+# Analyze Screen
+class ui_analyzePvScreen(QtWidgets.QWidget):
+    def __init__(self, LogicInterface, Gui):
+        super(ui_analyzePvScreen, self).__init__()
+
+        self.logic = LogicInterface
+        self.gui = Gui
+
+
+# Result Screen
+class ui_ResultScreen(QtWidgets.QWidget):
+    def __init__(self, LogicInterface, Gui):
+        super(ui_ResultScreen, self).__init__()
+
+        self.logic = LogicInterface
+        self.gui = Gui
+
+# Demo Data Screen
+class ui_DemoDataScreen(QtWidgets.QWidget):
+    def __init__(self, LogicInterface, Gui):
+        super(ui_DemoDataScreen, self).__init__()
+
+        self.logic = LogicInterface
+        self.gui = Gui
+
+
+# Info Screen
+class ui_InfoScreen(QtWidgets.QWidget):
+    def __init__(self, LogicInterface, Gui):
+        super(ui_InfoScreen, self).__init__()
+
+        self.logic = LogicInterface
+        self.gui = Gui

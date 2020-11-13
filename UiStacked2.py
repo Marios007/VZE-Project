@@ -1752,6 +1752,8 @@ class Ui_MainWindow(object):
         self.lyth_bottom_DIScreen.addItem(spacerItem42)
         self.verticalLayout_11.addLayout(self.lyth_bottom_DIScreen)
         self.stackedWidget.addWidget(self.DIScreen)
+
+        
         self.AnalyzePreviewScreen = QtWidgets.QWidget()
         self.AnalyzePreviewScreen.setObjectName("AnalyzePreviewScreen")
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.AnalyzePreviewScreen)

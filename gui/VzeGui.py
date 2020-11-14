@@ -68,7 +68,16 @@ class ui_startscreen(QtWidgets.QWidget):
         self.logic = LogicInterface
         self.gui = Gui
 
-        
+    #def create_layout(self):
+    
+    #def create_button(self):
+
+    
+    #def create_label(self):
+    
+    
+    #def add_items(self):
+
         self.setObjectName("StartScreen")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self)
         self.verticalLayout_2.setObjectName("verticalLayout_2")

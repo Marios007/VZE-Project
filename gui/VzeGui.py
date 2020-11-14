@@ -213,6 +213,8 @@ class ui_startscreen(QtWidgets.QWidget):
         self.btn_demoToDemo.clicked.connect(lambda: self.logic.doSomething())
         self.btn_demoToDemo.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(1))
 
+        self.btn_info_startscreen.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(7))
+
 # Demo Screen
 class ui_demoscreen(QtWidgets.QWidget):
     def __init__(self, LogicInterface, Gui):
@@ -2771,6 +2773,10 @@ class ui_DemoDataScreen(QtWidgets.QWidget):
         spacerItem82 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.lyth_bottom_DemoData.addItem(spacerItem82)
         self.verticalLayout_8.addLayout(self.lyth_bottom_DemoData)
+
+
+        self.btn_ok_demoData.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(1))
+
 
 # Info Screen
 class ui_InfoScreen(QtWidgets.QWidget):

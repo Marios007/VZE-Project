@@ -5,6 +5,8 @@ import gui.image_ressources as image_ressources
 
 class VzeGui(QtWidgets.QMainWindow):
 
+    lastScreen = 0
+
     def __init__(self, logicInterface):
         QtWidgets.QMainWindow.__init__(self)
         print ("loading UI")
@@ -74,7 +76,15 @@ class VzeGui(QtWidgets.QMainWindow):
 
         self.verticalLayout.addWidget(self.stackedWidget)
          
-    
+    def change_screen(self, nextScreen):
+        self.set_currentScreen()
+        self.stackedWidget.setCurrentIndex(nextScreen)
+        return
+
+    def set_currentScreen(self):
+        self.lastScreen = self.stackedWidget.currentIndex()
+        print("Save last screen: " + str(self.lastScreen))
+
 # Start Screen
 class ui_startscreen(QtWidgets.QWidget):
     def __init__(self, LogicInterface, Gui):
@@ -154,7 +164,7 @@ class ui_startscreen(QtWidgets.QWidget):
         self.btn_demoToDemo.setText(("Demo auswählen"))
         self.btn_demoToDemo.setToolTip('Demo Videos wählen')
         self.btn_demoToDemo.clicked.connect(lambda: self.logic.doSomething())
-        self.btn_demoToDemo.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(1))
+        self.btn_demoToDemo.clicked.connect(lambda: self.gui.change_screen(1))
     
     def create_label(self):
 

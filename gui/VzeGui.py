@@ -5,7 +5,7 @@ import gui.image_ressources as image_ressources
 
 class VzeGui(QtWidgets.QMainWindow):
 
-    lastScreen = 0
+    stack_lastScreen = []
 
     def __init__(self, logicInterface):
         QtWidgets.QMainWindow.__init__(self)
@@ -76,17 +76,26 @@ class VzeGui(QtWidgets.QMainWindow):
 
         self.verticalLayout.addWidget(self.stackedWidget)
          
+     #    
+
+
+    #change to next screen and save last screen to stack
     def change_screen(self, nextScreen):
-        self.set_currentScreen()
+        self.set_lastScreen()
         self.stackedWidget.setCurrentIndex(nextScreen)
         return
 
-    def set_currentScreen(self):
-        self.lastScreen = self.stackedWidget.currentIndex()
-        print("Save last screen: " + str(self.lastScreen))
+    # save last screen on stack
+    def set_lastScreen(self):
+        self.stack_lastScreen.append(self.stackedWidget.currentIndex())
+        print("Save last screen: " + str(self.stackedWidget.currentIndex()))
 
-    def get_lastscreen(self):
-        return self.lastScreen
+    # go back  to last screen and remove first value from stack
+    def goBack_Screen(self):
+        print("print stack: " + str(self.stack_lastScreen))
+        self.stackedWidget.setCurrentIndex(self.stack_lastScreen.pop())
+        return 
+
 
 # Start Screen
 class ui_startscreen(QtWidgets.QWidget):
@@ -153,7 +162,7 @@ class ui_startscreen(QtWidgets.QWidget):
         self.btn_loadFile.setText(("Datei auswählen"))
         self.btn_loadFile.setToolTip('Laden eines Videos oder Bildes')
         self.btn_loadFile.clicked.connect(self.logic.loadFile)
-        self.btn_loadFile.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(2))
+        self.btn_loadFile.clicked.connect(lambda: self.gui.change_screen(2))
 
 
         self.btn_demoToDemo = QtWidgets.QPushButton(self)
@@ -280,7 +289,7 @@ class ui_demoscreen(QtWidgets.QWidget):
         self.btn_demoSonne.setMinimumSize(QtCore.QSize(350, 220))
         self.btn_demoSonne.setStyleSheet(styles.styleBluebuttonbig)
         self.btn_demoSonne.setText(("Video mit Sonne"))
-        self.btn_demoSonne.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(4))
+        self.btn_demoSonne.clicked.connect(lambda: self.gui.change_screen(4))
 
         self.btn_demoRegen = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -291,7 +300,7 @@ class ui_demoscreen(QtWidgets.QWidget):
         self.btn_demoRegen.setMinimumSize(QtCore.QSize(350, 220))
         self.btn_demoRegen.setStyleSheet(styles.styleBluebuttonbig)
         self.btn_demoRegen.setText(("Video mit Regen"))
-        self.btn_demoRegen.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(4))
+        self.btn_demoRegen.clicked.connect(lambda: self.gui.change_screen(4))
 
         self.btn_dataSonne = QtWidgets.QPushButton(self)
         self.btn_dataSonne.setMinimumSize(QtCore.QSize(55, 55))
@@ -301,7 +310,7 @@ class ui_demoscreen(QtWidgets.QWidget):
         icon1.addPixmap(QtGui.QPixmap(":/icons/data_icon"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_dataSonne.setIcon(icon1)
         self.btn_dataSonne.setIconSize(QtCore.QSize(55, 55))
-        self.btn_dataSonne.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(6))
+        self.btn_dataSonne.clicked.connect(lambda: self.gui.change_screen(6))
 
         self.btn_dataRegen = QtWidgets.QPushButton(self)
         self.btn_dataRegen.setMinimumSize(QtCore.QSize(55, 55))
@@ -309,6 +318,7 @@ class ui_demoscreen(QtWidgets.QWidget):
         self.btn_dataRegen.setStyleSheet(styles.styleSmallButton)
         self.btn_dataRegen.setIcon(icon1)
         self.btn_dataRegen.setIconSize(QtCore.QSize(55, 55))
+        self.btn_dataRegen.clicked.connect(lambda: self.gui.change_screen(6))
 
         self.btn_back_demoscreen = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -323,7 +333,7 @@ class ui_demoscreen(QtWidgets.QWidget):
         icon2.addPixmap(QtGui.QPixmap(":/icons/back_icon"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_back_demoscreen.setIcon(icon2)
         self.btn_back_demoscreen.setIconSize(QtCore.QSize(20, 20))
-        self.btn_back_demoscreen.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(0))
+        self.btn_back_demoscreen.clicked.connect(lambda: self.gui.goBack_Screen())
         
         
     
@@ -421,8 +431,6 @@ class ui_previewscreen(QtWidgets.QWidget):
         self.create_otherObjects()
         self.add_items()
 
-
-
     def create_layout(self):
         self.verticalLayout_4 = QtWidgets.QVBoxLayout(self)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
@@ -449,8 +457,6 @@ class ui_previewscreen(QtWidgets.QWidget):
         self.lyth_bottom_previewScreen = QtWidgets.QHBoxLayout()
         self.lyth_bottom_previewScreen.setContentsMargins(-1, -1, 20, -1)
         self.lyth_bottom_previewScreen.setObjectName("lyth_bottom_previewScreen")
-
-
 
     def create_button(self):
         self.btn_info_previewScreen = QtWidgets.QPushButton(self)
@@ -483,7 +489,7 @@ class ui_previewscreen(QtWidgets.QWidget):
         self.btn_back_previewScreen.setIcon(icon2)
         self.btn_back_previewScreen.setIconSize(QtCore.QSize(20, 20))
         self.btn_back_previewScreen.setObjectName("btn_back_previewScreen")
-        self.btn_back_previewScreen.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(0))
+        self.btn_back_previewScreen.clicked.connect(lambda: self.gui.goBack_Screen())
 
         self.btn_next_preview = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -496,8 +502,7 @@ class ui_previewscreen(QtWidgets.QWidget):
         self.btn_next_preview.setCheckable(False)
         self.btn_next_preview.setFlat(False)
         self.btn_next_preview.setText("Weiter")
-
-
+        self.btn_next_preview.clicked.connect(lambda: self.gui.change_screen(3))
 
     def create_label(self):
         self.lbl_headline_preview = QtWidgets.QLabel(self)
@@ -528,8 +533,7 @@ class ui_previewscreen(QtWidgets.QWidget):
         self.spacerItem30 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.spacerItem31 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.spacerItem32 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
-    
-    
+       
     def create_otherObjects(self):
         self.graphicsPreview = QtWidgets.QGraphicsView(self)
         self.graphicsPreview.setMinimumSize(QtCore.QSize(800, 420))
@@ -664,6 +668,7 @@ class ui_DIScreen(QtWidgets.QWidget):
         self.btn_back_DI.setIconSize(QtCore.QSize(20, 20))
         self.btn_back_DI.setCheckable(True)
         self.btn_back_DI.setObjectName("btn_back_DI")
+        self.btn_back_DI.clicked.connect(lambda: self.gui.goBack_Screen())
 
         self.btn_reset = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -692,6 +697,7 @@ class ui_DIScreen(QtWidgets.QWidget):
         self.btn_skip.setCheckable(False)
         self.btn_skip.setFlat(False)
         self.btn_skip.setObjectName("btn_skip")
+        self.btn_skip.clicked.connect(lambda: self.gui.change_screen(4))
 
         self.btn_DInext = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -818,7 +824,6 @@ class ui_analyzePvScreen(QtWidgets.QWidget):
         self.create_spacer()
         self.add_items()        
 
-
     def create_layout(self):
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
@@ -879,6 +884,7 @@ class ui_analyzePvScreen(QtWidgets.QWidget):
         self.btn_back_AnalyzePreview.setIconSize(QtCore.QSize(20, 20))
         self.btn_back_AnalyzePreview.setCheckable(True)
         self.btn_back_AnalyzePreview.setObjectName("btn_back_AnalyzePreview")
+        self.btn_back_AnalyzePreview.clicked.connect(lambda: self.gui.goBack_Screen())
 
         self.btn_startAnalyze = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -1473,7 +1479,7 @@ class ui_DemoDataScreen(QtWidgets.QWidget):
         self.btn_ok_demoData.setCheckable(False)
         self.btn_ok_demoData.setFlat(False)
         self.btn_ok_demoData.setObjectName("btn_ok_demoData")
-        self.btn_ok_demoData.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(1))
+        self.btn_ok_demoData.clicked.connect(lambda: self.gui.goBack_Screen())
 
 
     def create_label(self):

@@ -2760,25 +2760,18 @@ class ui_InfoScreen(QtWidgets.QWidget):
         self.btn_closeInfo.clicked.connect(lambda: self.hide())
 
     def create_label(self):
-        font = QtGui.QFont()
-        font.setPointSize(24)
-        font.setBold(True)
-        font.setWeight(75)
-
-        self.lbl_headline_Info.setFont(font)
-        self.lbl_headline_Info.setStyleSheet("color: rgb(242, 141, 27);")
+        self.lbl_headline_Info.setStyleSheet(styles.styleHeadlines)
         self.lbl_headline_Info.setText("Über Schilder Kröten")
         self.lbl_headline_Info.setObjectName("lbl_headline_Info")
 
         self.label_Logo = QtWidgets.QLabel(self)
         self.label_Logo.setMinimumSize(QtCore.QSize(500, 0))
         self.label_Logo.setMaximumSize(QtCore.QSize(500, 16777215))
-        self.label_Logo.setStyleSheet("QLabel{\n""    font: 75 18pt \"MS Shell Dlg 2\" ;\n""    color:white\n""}\n""")
-        self.label_Logo.setPixmap(QtGui.QPixmap("C:\\Users\\Mario\\AppData\\Local\\Programs\\Python\\Python38\\Lib\\site-packages\\QtDesigner\\../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/pics/LogoSK_big_1.svg"))
+        self.label_Logo.setPixmap(QtGui.QPixmap(":/icons/logoSK_big_1"))
         self.label_Logo.setObjectName("label_Logo")
 
         self.label_infoText = QtWidgets.QLabel(self)
-        self.label_infoText.setStyleSheet("QLabel{\n""    font: 75 18pt \"MS Shell Dlg 2\" ;\n""    color:white\n""}\n""")        
+        self.label_infoText.setStyleSheet(styles.styleText1)      
         self.label_infoText.setText("Schilder Kröten GmbH\n""Musterstraße 1\n""12345 Musterstadt\n""\n""Ansprechpartner:\n""Herr Mayer\n""\n""0123-456789\n""")
         self.label_infoText.setObjectName("label_infoText")
 

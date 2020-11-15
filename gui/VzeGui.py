@@ -256,6 +256,7 @@ class ui_demoscreen(QtWidgets.QWidget):
         icon.addPixmap(QtGui.QPixmap(":/icons/info_logo"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_info_demoscreen.setIcon(icon)
         self.btn_info_demoscreen.setIconSize(QtCore.QSize(130, 30))
+        self.btn_info_demoscreen.clicked.connect(lambda: self.gui.infoscreen.show())
 
         self.btn_demoSonne = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -265,6 +266,8 @@ class ui_demoscreen(QtWidgets.QWidget):
         self.btn_demoSonne.setSizePolicy(sizePolicy)
         self.btn_demoSonne.setMinimumSize(QtCore.QSize(350, 220))
         self.btn_demoSonne.setStyleSheet(styles.styleBluebuttonbig)
+        self.btn_demoSonne.setText(("Video mit Sonne"))
+        self.btn_demoSonne.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(4))
 
         self.btn_demoRegen = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -275,6 +278,7 @@ class ui_demoscreen(QtWidgets.QWidget):
         self.btn_demoRegen.setMinimumSize(QtCore.QSize(350, 220))
         self.btn_demoRegen.setStyleSheet(styles.styleBluebuttonbig)
         self.btn_demoRegen.setText(("Video mit Regen"))
+        self.btn_demoRegen.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(4))
 
         self.btn_dataSonne = QtWidgets.QPushButton(self)
         self.btn_dataSonne.setMinimumSize(QtCore.QSize(55, 55))
@@ -284,7 +288,7 @@ class ui_demoscreen(QtWidgets.QWidget):
         icon1.addPixmap(QtGui.QPixmap(":/icons/data_icon"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_dataSonne.setIcon(icon1)
         self.btn_dataSonne.setIconSize(QtCore.QSize(55, 55))
-        self.btn_demoSonne.setText(("Video mit Sonne"))
+        self.btn_dataSonne.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(6))
 
         self.btn_dataRegen = QtWidgets.QPushButton(self)
         self.btn_dataRegen.setMinimumSize(QtCore.QSize(55, 55))
@@ -306,9 +310,9 @@ class ui_demoscreen(QtWidgets.QWidget):
         icon2.addPixmap(QtGui.QPixmap(":/icons/back_icon"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_back_demoscreen.setIcon(icon2)
         self.btn_back_demoscreen.setIconSize(QtCore.QSize(20, 20))
-
         self.btn_back_demoscreen.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(0))
-        self.btn_dataSonne.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(6))
+        
+        
     
     def create_label(self):
         
@@ -450,6 +454,7 @@ class ui_previewscreen(QtWidgets.QWidget):
         icon.addPixmap(QtGui.QPixmap(":/icons/info_logo"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_info_previewScreen.setIcon(icon)
         self.btn_info_previewScreen.setIconSize(QtCore.QSize(130, 30))
+        self.btn_info_previewScreen.clicked.connect(lambda: self.gui.infoscreen.show())
 
         self.btn_back_previewScreen = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -629,6 +634,7 @@ class ui_DIScreen(QtWidgets.QWidget):
         self.btn_info_DIScreen.setIcon(icon)
         self.btn_info_DIScreen.setIconSize(QtCore.QSize(130, 30))
         self.btn_info_DIScreen.setObjectName("btn_info_DIScreen")
+        self.btn_info_DIScreen.clicked.connect(lambda: self.gui.infoscreen.show())
 
         self.btn_back_DI = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -827,7 +833,6 @@ class ui_analyzePvScreen(QtWidgets.QWidget):
         self.lyth_bottom_AnalyzePreview.setContentsMargins(-1, -1, 40, -1)
         self.lyth_bottom_AnalyzePreview.setObjectName("lyth_bottom_AnalyzePreview") 
 
-
     def create_button(self):
         self.btn_info_AnalyzePreview = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -844,6 +849,7 @@ class ui_analyzePvScreen(QtWidgets.QWidget):
         self.btn_info_AnalyzePreview.setIcon(icon)
         self.btn_info_AnalyzePreview.setIconSize(QtCore.QSize(130, 30))
         self.btn_info_AnalyzePreview.setObjectName("btn_info_AnalyzePreview")
+        self.btn_info_AnalyzePreview.clicked.connect(lambda: self.gui.infoscreen.show())
 
         self.btn_back_AnalyzePreview = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -875,7 +881,6 @@ class ui_analyzePvScreen(QtWidgets.QWidget):
         self.btn_startAnalyze.setFlat(False)
         self.btn_startAnalyze.setObjectName("btn_startAnalyze")
 
-
     def create_label(self):
         self.lbl_headline_AnalyzePreview = QtWidgets.QLabel(self)
         self.lbl_headline_AnalyzePreview.setStyleSheet(styles.styleHeadlines)
@@ -892,13 +897,11 @@ class ui_analyzePvScreen(QtWidgets.QWidget):
         self.label_AnalyzePreview.setText("Vorschau")
         self.label_AnalyzePreview.setObjectName("label_AnalyzePreview")
 
-
     def create_preview(self):
         self.graphicsAnalyzePreview = QtWidgets.QGraphicsView(self)
         self.graphicsAnalyzePreview.setMinimumSize(QtCore.QSize(800, 420))
         self.graphicsAnalyzePreview.setMaximumSize(QtCore.QSize(800, 420))
         self.graphicsAnalyzePreview.setObjectName("graphicsAnalyzePreview")
-
 
     def create_spacer(self):
         self.spacerItem43 = QtWidgets.QSpacerItem(10, 10, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -911,7 +914,6 @@ class ui_analyzePvScreen(QtWidgets.QWidget):
         self.spacerItem50 = QtWidgets.QSpacerItem(0, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.spacerItem51 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.spacerItem52 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-
 
     def add_items(self):
         self.lyth_headline_AnalyzePreview.addWidget(self.lbl_headline_AnalyzePreview)
@@ -1003,6 +1005,7 @@ class ui_analyzeScreen(QtWidgets.QWidget):
         self.btn_info_Analyze.setIcon(icon)
         self.btn_info_Analyze.setIconSize(QtCore.QSize(130, 30))
         self.btn_info_Analyze.setObjectName("btn_info_Analyze")
+        self.btn_info_Analyze.clicked.connect(lambda: self.gui.infoscreen.show())
 
         self.btn_cancelAnalyze = QtWidgets.QPushButton(self)
         self.btn_cancelAnalyze.setMinimumSize(QtCore.QSize(220, 40))
@@ -1199,6 +1202,7 @@ class ui_ResultScreen(QtWidgets.QWidget):
         self.btn_info_Result.setIcon(icon)
         self.btn_info_Result.setIconSize(QtCore.QSize(130, 30))
         self.btn_info_Result.setObjectName("btn_info_Result")
+        self.btn_info_Result.clicked.connect(lambda: self.gui.infoscreen.show())
 
         self.btn_endResult = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -1441,6 +1445,7 @@ class ui_DemoDataScreen(QtWidgets.QWidget):
         self.btn_info_DemoData.setIcon(icon)
         self.btn_info_DemoData.setIconSize(QtCore.QSize(130, 30))
         self.btn_info_DemoData.setObjectName("btn_info_DemoData")
+        self.btn_info_DemoData.clicked.connect(lambda: self.gui.infoscreen.show())
 
         self.btn_ok_demoData = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)

@@ -85,6 +85,9 @@ class VzeGui(QtWidgets.QMainWindow):
         self.lastScreen = self.stackedWidget.currentIndex()
         print("Save last screen: " + str(self.lastScreen))
 
+    def get_lastscreen(self):
+        return self.lastScreen
+
 # Start Screen
 class ui_startscreen(QtWidgets.QWidget):
     def __init__(self, LogicInterface, Gui):

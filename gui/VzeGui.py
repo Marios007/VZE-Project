@@ -10,13 +10,13 @@ class VzeGui(QtWidgets.QMainWindow):
         print ("loading UI")
        
         self.logic = logicInterface
+
         # Setting Window Title and Icon
         self.setWindowTitle("VerkehrsZeichenErkennung VZE")
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/icons/logo_schild"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.setWindowIcon(icon)
     
-
        # Size of window is always 0,65 times of availabe window
         size = QtWidgets.QDesktopWidget().availableGeometry()
         self.setMinimumSize( size.width() * 0.65, size.height() * 0.65)
@@ -36,39 +36,45 @@ class VzeGui(QtWidgets.QMainWindow):
         self.stackedWidget.setStyleSheet(styles.styleBackground)
         self.stackedWidget.setObjectName("stackedWidget")
         
+        self.build_screens()
+        #define startscreen
+        self.stackedWidget.setCurrentIndex(0)
+        QtCore.QMetaObject.connectSlotsByName(window)
+
+    def build_screens(self):
+
         #Build UI with each screen
         print ("Build screens")
+        #0
         self.startscreen = ui_startscreen(self.logic, self)
         self.stackedWidget.addWidget(self.startscreen)
-
+        #1
         self.demoscreen = ui_demoscreen(self.logic, self)
         self.stackedWidget.addWidget(self.demoscreen)
-
+        #2
         self.previewscreen = ui_previewscreen(self.logic, self)
         self.stackedWidget.addWidget(self.previewscreen)
-
+        #3
         self.diScreen = ui_DIScreen(self.logic, self)
         self.stackedWidget.addWidget(self.diScreen)
-
+        #4
         self.analyzepvscreen = ui_analyzePvScreen(self.logic, self)
         self.stackedWidget.addWidget(self.analyzepvscreen)
-
+        #5
         self.analyzescreen = ui_analyzeScreen(self.logic, self)
         self.stackedWidget.addWidget(self.analyzescreen)
-
+        #6
         self.demodatascreen = ui_DemoDataScreen(self.logic, self)
         self.stackedWidget.addWidget(self.demodatascreen)
-
+        #7
         self.resultscreen = ui_ResultScreen(self.logic, self)
         self.stackedWidget.addWidget(self.resultscreen)
-
+        #8
         self.infoscreen = ui_InfoScreen(self.logic, self)
 
         self.verticalLayout.addWidget(self.stackedWidget)
-        self.stackedWidget.setCurrentIndex(3)
-        QtCore.QMetaObject.connectSlotsByName(window)
-      
-
+         
+    
 # Start Screen
 class ui_startscreen(QtWidgets.QWidget):
     def __init__(self, LogicInterface, Gui):
@@ -477,11 +483,6 @@ class ui_previewscreen(QtWidgets.QWidget):
 
     def create_label(self):
         self.lbl_headline_preview = QtWidgets.QLabel(self)
-        font = QtGui.QFont()
-        font.setPointSize(24)
-        font.setBold(True)
-        font.setWeight(75)
-        self.lbl_headline_preview.setFont(font)
         self.lbl_headline_preview.setStyleSheet(styles.styleHeadlines)
         self.lbl_headline_preview.setText("Datei Analyze")
 
@@ -491,11 +492,6 @@ class ui_previewscreen(QtWidgets.QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_preview.sizePolicy().hasHeightForWidth())
         self.label_preview.setSizePolicy(sizePolicy)
-        font = QtGui.QFont()
-        font.setPointSize(11)
-        font.setBold(True)
-        font.setWeight(75)
-        self.label_preview.setFont(font)
         self.label_preview.setStyleSheet(styles.styleText1)
         self.label_preview.setText("Vorschau")
 
@@ -642,12 +638,6 @@ class ui_DIScreen(QtWidgets.QWidget):
         self.btn_back_DI.setSizePolicy(sizePolicy)
         self.btn_back_DI.setMinimumSize(QtCore.QSize(0, 0))
         self.btn_back_DI.setMaximumSize(QtCore.QSize(40, 40))
-        font = QtGui.QFont()
-        font.setFamily("Segoe UI")
-        font.setBold(False)
-        font.setWeight(50)
-        font.setKerning(True)
-        self.btn_back_DI.setFont(font)
         self.btn_back_DI.setStyleSheet(styles.styleSmallButton)
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap(":/icons/back_icon"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -664,13 +654,6 @@ class ui_DIScreen(QtWidgets.QWidget):
         self.btn_reset.setSizePolicy(sizePolicy)
         self.btn_reset.setMinimumSize(QtCore.QSize(220, 40))
         self.btn_reset.setMaximumSize(QtCore.QSize(220, 40))
-        font = QtGui.QFont()
-        font.setFamily("MS Shell Dlg 2")
-        font.setPointSize(18)
-        font.setBold(False)
-        font.setItalic(False)
-        font.setWeight(9)
-        self.btn_reset.setFont(font)
         self.btn_reset.setStyleSheet(styles.styleBluebuttonsmall)
         self.btn_reset.setText("Zurücksetzen")
         self.btn_reset.setCheckable(False)
@@ -685,13 +668,6 @@ class ui_DIScreen(QtWidgets.QWidget):
         self.btn_skip.setSizePolicy(sizePolicy)
         self.btn_skip.setMinimumSize(QtCore.QSize(220, 40))
         self.btn_skip.setMaximumSize(QtCore.QSize(220, 40))
-        font = QtGui.QFont()
-        font.setFamily("MS Shell Dlg 2")
-        font.setPointSize(18)
-        font.setBold(False)
-        font.setItalic(False)
-        font.setWeight(9)
-        self.btn_skip.setFont(font)
         self.btn_skip.setStyleSheet(styles.styleBluebuttonsmall)
         self.btn_skip.setText("Überspringen")
         self.btn_skip.setCheckable(False)
@@ -706,13 +682,6 @@ class ui_DIScreen(QtWidgets.QWidget):
         self.btn_DInext.setSizePolicy(sizePolicy)
         self.btn_DInext.setMinimumSize(QtCore.QSize(220, 40))
         self.btn_DInext.setMaximumSize(QtCore.QSize(220, 40))
-        font = QtGui.QFont()
-        font.setFamily("MS Shell Dlg 2")
-        font.setPointSize(18)
-        font.setBold(False)
-        font.setItalic(False)
-        font.setWeight(9)
-        self.btn_DInext.setFont(font)
         self.btn_DInext.setStyleSheet(styles.styleBluebuttonsmall)
         self.btn_DInext.setText("Weiter")
         self.btn_DInext.setCheckable(False)
@@ -721,11 +690,6 @@ class ui_DIScreen(QtWidgets.QWidget):
 
     def create_label(self):
         self.lbl_headline_DIScreen = QtWidgets.QLabel(self)
-        font = QtGui.QFont()
-        font.setPointSize(24)
-        font.setBold(True)
-        font.setWeight(75)
-        self.lbl_headline_DIScreen.setFont(font)
         self.lbl_headline_DIScreen.setStyleSheet(styles.styleHeadlines)
         self.lbl_headline_DIScreen.setText("Datei Analyse")
         self.lbl_headline_DIScreen.setObjectName("lbl_headline_DIScreen")
@@ -736,11 +700,6 @@ class ui_DIScreen(QtWidgets.QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_DIScreen_smalltext.sizePolicy().hasHeightForWidth())
         self.label_DIScreen_smalltext.setSizePolicy(sizePolicy)
-        font = QtGui.QFont()
-        font.setPointSize(18)
-        font.setBold(False)
-        font.setWeight(50)
-        self.label_DIScreen_smalltext.setFont(font)
         self.label_DIScreen_smalltext.setStyleSheet(styles.styleText1)
         self.label_DIScreen_smalltext.setText("Anzahl der Schilder eingeben (Optional)")
         self.label_DIScreen_smalltext.setObjectName("label_DIScreen_smalltext")
@@ -1256,11 +1215,6 @@ class ui_ResultScreen(QtWidgets.QWidget):
     def create_label(self):
 
         self.lbl_headline_Result = QtWidgets.QLabel(self)
-        font = QtGui.QFont()
-        font.setPointSize(24)
-        font.setBold(True)
-        font.setWeight(75)
-        self.lbl_headline_Result.setFont(font)
         self.lbl_headline_Result.setStyleSheet(styles.styleHeadlines)
         self.lbl_headline_Result.setText("Auswertung")
 

@@ -61,7 +61,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.stackedWidget.addWidget(self.demodatascreen)
 
         self.infoscreen = ui_InfoScreen(self.logic, self)
-        self.stackedWidget.addWidget(self.infoscreen)
+        #self.stackedWidget.addWidget(self.infoscreen)
 
 
         self.verticalLayout.addWidget(self.stackedWidget)
@@ -78,6 +78,7 @@ class ui_startscreen(QtWidgets.QWidget):
         self.logic = LogicInterface
         self.gui = Gui
 
+        
     #def create_layout(self):
     
     #def create_button(self):
@@ -213,7 +214,7 @@ class ui_startscreen(QtWidgets.QWidget):
         self.btn_demoToDemo.clicked.connect(lambda: self.logic.doSomething())
         self.btn_demoToDemo.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(1))
 
-        self.btn_info_startscreen.clicked.connect(lambda: self.gui.stackedWidget.setCurrentIndex(7))
+        self.btn_info_startscreen.clicked.connect(lambda: self.gui.infoscreen.show())
     def change_Widget(self):
         return
 
@@ -2756,6 +2757,11 @@ class ui_InfoScreen(QtWidgets.QWidget):
         self.gui = Gui
 
         self.setObjectName("InfoScreen")
+        self.setFixedSize(800,700)
+        self.setStyleSheet(styles.styleBackground)
+        self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint)
+        
+
         self.verticalLayout_12 = QtWidgets.QVBoxLayout(self)
         self.verticalLayout_12.setObjectName("verticalLayout_12")
         self.lyth_headline_Info = QtWidgets.QHBoxLayout()
@@ -2842,3 +2848,5 @@ class ui_InfoScreen(QtWidgets.QWidget):
         spacerItem87 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.lyth_bottom_Info.addItem(spacerItem87)
         self.verticalLayout_12.addLayout(self.lyth_bottom_Info)
+
+        self.btn_closeInfo.clicked.connect(lambda: self.hide())

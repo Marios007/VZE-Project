@@ -380,7 +380,6 @@ class ui_demoscreen(QtWidgets.QWidget):
         # Button handler with interface
         
 
-
 # Preview Screen
 class ui_previewscreen(QtWidgets.QWidget):
     def __init__(self, LogicInterface, Gui):
@@ -1748,7 +1747,6 @@ class ui_DIScreen(QtWidgets.QWidget):
         self.verticalLayout_11.addLayout(self.lyth_bottom_DIScreen)
 
 
-
 # Analyze Preview Screen
 class ui_analyzePvScreen(QtWidgets.QWidget):
     def __init__(self, LogicInterface, Gui):
@@ -1917,7 +1915,6 @@ class ui_analyzePvScreen(QtWidgets.QWidget):
         self.lyth_bottom_AnalyzePreview.addItem(spacerItem52)
         self.verticalLayout_5.addLayout(self.lyth_bottom_AnalyzePreview)
         
-
 
 # Analyze Screen
 class ui_analyzeScreen(QtWidgets.QWidget):
@@ -2720,8 +2717,14 @@ class ui_InfoScreen(QtWidgets.QWidget):
         self.setFixedSize(800,700)
         self.setStyleSheet(styles.styleBackground)
         self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint)
-        
 
+        self.create_layout()
+        self.create_button()
+        self.create_label()
+        self.create_spacer()
+        self.add_items()        
+
+    def create_layout(self):
         self.verticalLayout_12 = QtWidgets.QVBoxLayout(self)
         self.verticalLayout_12.setObjectName("verticalLayout_12")
         self.lyth_headline_Info = QtWidgets.QHBoxLayout()
@@ -2729,56 +2732,18 @@ class ui_InfoScreen(QtWidgets.QWidget):
         self.lyth_headline_Info.setSpacing(6)
         self.lyth_headline_Info.setObjectName("lyth_headline_Info")
         self.lbl_headline_Info = QtWidgets.QLabel(self)
-        font = QtGui.QFont()
-        font.setPointSize(24)
-        font.setBold(True)
-        font.setWeight(75)
-        self.lbl_headline_Info.setFont(font)
-        self.lbl_headline_Info.setWhatsThis("")
-        self.lbl_headline_Info.setAccessibleName("")
-        self.lbl_headline_Info.setAccessibleDescription("")
-        self.lbl_headline_Info.setStyleSheet("color: rgb(242, 141, 27);")
-        self.lbl_headline_Info.setText("Über Schilder Kröten")
-        self.lbl_headline_Info.setObjectName("lbl_headline_Info")
-        self.lyth_headline_Info.addWidget(self.lbl_headline_Info)
-        spacerItem83 = QtWidgets.QSpacerItem(10, 10, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.lyth_headline_Info.addItem(spacerItem83)
+
         self.verticalLayout_12.addLayout(self.lyth_headline_Info)
         self.lytv_centerInfo = QtWidgets.QVBoxLayout()
         self.lytv_centerInfo.setContentsMargins(60, 45, -1, -1)
         self.lytv_centerInfo.setSpacing(20)
         self.lytv_centerInfo.setObjectName("lytv_centerInfo")
-        self.label_Logo = QtWidgets.QLabel(self)
-        self.label_Logo.setMinimumSize(QtCore.QSize(500, 0))
-        self.label_Logo.setMaximumSize(QtCore.QSize(500, 16777215))
-        self.label_Logo.setStatusTip("")
-        self.label_Logo.setWhatsThis("")
-        self.label_Logo.setAccessibleName("")
-        self.label_Logo.setAccessibleDescription("")
-        self.label_Logo.setStyleSheet("QLabel{\n""    font: 75 18pt \"MS Shell Dlg 2\" ;\n""    color:white\n""}\n""")
-        self.label_Logo.setText("")
-        self.label_Logo.setPixmap(QtGui.QPixmap("C:\\Users\\Mario\\AppData\\Local\\Programs\\Python\\Python38\\Lib\\site-packages\\QtDesigner\\../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/pics/LogoSK_big_1.svg"))
-        self.label_Logo.setObjectName("label_Logo")
-        self.lytv_centerInfo.addWidget(self.label_Logo)
-        self.label_infoText = QtWidgets.QLabel(self)
-        self.label_infoText.setStatusTip("")
-        self.label_infoText.setWhatsThis("")
-        self.label_infoText.setAccessibleName("")
-        self.label_infoText.setAccessibleDescription("")
-        self.label_infoText.setStyleSheet("QLabel{\n""    font: 75 18pt \"MS Shell Dlg 2\" ;\n""    color:white\n""}\n""")        
-        self.label_infoText.setText("Schilder Kröten GmbH\n""Musterstraße 1\n""12345 Musterstadt\n""\n""Ansprechpartner:\n""Herr Mayer\n""\n""0123-456789\n""")
-        self.label_infoText.setObjectName("label_infoText")
-        self.lytv_centerInfo.addWidget(self.label_infoText)
-        spacerItem84 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.lytv_centerInfo.addItem(spacerItem84)
-        self.verticalLayout_12.addLayout(self.lytv_centerInfo)
+
         self.lyth_bottom_Info = QtWidgets.QHBoxLayout()
         self.lyth_bottom_Info.setContentsMargins(-1, -1, 2, -1)
         self.lyth_bottom_Info.setObjectName("lyth_bottom_Info")
-        spacerItem85 = QtWidgets.QSpacerItem(0, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
-        self.lyth_bottom_Info.addItem(spacerItem85)
-        spacerItem86 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.lyth_bottom_Info.addItem(spacerItem86)
+
+    def create_button(self):
         self.btn_closeInfo = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -2792,9 +2757,47 @@ class ui_InfoScreen(QtWidgets.QWidget):
         self.btn_closeInfo.setCheckable(False)
         self.btn_closeInfo.setFlat(False)
         self.btn_closeInfo.setObjectName("btn_closeInfo")
-        self.lyth_bottom_Info.addWidget(self.btn_closeInfo)
-        spacerItem87 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.lyth_bottom_Info.addItem(spacerItem87)
-        self.verticalLayout_12.addLayout(self.lyth_bottom_Info)
-
         self.btn_closeInfo.clicked.connect(lambda: self.hide())
+
+    def create_label(self):
+        font = QtGui.QFont()
+        font.setPointSize(24)
+        font.setBold(True)
+        font.setWeight(75)
+
+        self.lbl_headline_Info.setFont(font)
+        self.lbl_headline_Info.setStyleSheet("color: rgb(242, 141, 27);")
+        self.lbl_headline_Info.setText("Über Schilder Kröten")
+        self.lbl_headline_Info.setObjectName("lbl_headline_Info")
+
+        self.label_Logo = QtWidgets.QLabel(self)
+        self.label_Logo.setMinimumSize(QtCore.QSize(500, 0))
+        self.label_Logo.setMaximumSize(QtCore.QSize(500, 16777215))
+        self.label_Logo.setStyleSheet("QLabel{\n""    font: 75 18pt \"MS Shell Dlg 2\" ;\n""    color:white\n""}\n""")
+        self.label_Logo.setPixmap(QtGui.QPixmap("C:\\Users\\Mario\\AppData\\Local\\Programs\\Python\\Python38\\Lib\\site-packages\\QtDesigner\\../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/pics/LogoSK_big_1.svg"))
+        self.label_Logo.setObjectName("label_Logo")
+
+        self.label_infoText = QtWidgets.QLabel(self)
+        self.label_infoText.setStyleSheet("QLabel{\n""    font: 75 18pt \"MS Shell Dlg 2\" ;\n""    color:white\n""}\n""")        
+        self.label_infoText.setText("Schilder Kröten GmbH\n""Musterstraße 1\n""12345 Musterstadt\n""\n""Ansprechpartner:\n""Herr Mayer\n""\n""0123-456789\n""")
+        self.label_infoText.setObjectName("label_infoText")
+
+    def create_spacer(self):
+        self.spacerItem83 = QtWidgets.QSpacerItem(10, 10, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.spacerItem84 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.spacerItem85 = QtWidgets.QSpacerItem(0, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
+        self.spacerItem86 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.spacerItem87 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+
+    def add_items(self):
+        self.lyth_headline_Info.addWidget(self.lbl_headline_Info)
+        self.lyth_headline_Info.addItem(self.spacerItem83)
+        self.lytv_centerInfo.addWidget(self.label_Logo)
+        self.lytv_centerInfo.addWidget(self.label_infoText)
+        self.lytv_centerInfo.addItem(self.spacerItem84)
+        self.verticalLayout_12.addLayout(self.lytv_centerInfo)
+        self.lyth_bottom_Info.addItem(self.spacerItem85)
+        self.lyth_bottom_Info.addItem(self.spacerItem86)
+        self.lyth_bottom_Info.addWidget(self.btn_closeInfo)
+        self.lyth_bottom_Info.addItem(self.spacerItem87)
+        self.verticalLayout_12.addLayout(self.lyth_bottom_Info)

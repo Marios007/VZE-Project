@@ -59,10 +59,13 @@ class VzeGui(QtWidgets.QMainWindow):
         self.demodatascreen = ui_DemoDataScreen(self.logic, self)
         self.stackedWidget.addWidget(self.demodatascreen)
 
+        self.resultscreen = ui_ResultScreen(self.logic, self)
+        self.stackedWidget.addWidget(self.resultscreen)
+
         self.infoscreen = ui_InfoScreen(self.logic, self)
 
         self.verticalLayout.addWidget(self.stackedWidget)
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(3)
         QtCore.QMetaObject.connectSlotsByName(window)
       
 
@@ -624,12 +627,7 @@ class ui_DIScreen(QtWidgets.QWidget):
         self.btn_info_DIScreen.setMinimumSize(QtCore.QSize(140, 45))
         self.btn_info_DIScreen.setMaximumSize(QtCore.QSize(140, 45))
         self.btn_info_DIScreen.setBaseSize(QtCore.QSize(0, 0))
-        self.btn_info_DIScreen.setStatusTip("")
-        self.btn_info_DIScreen.setWhatsThis("")
-        self.btn_info_DIScreen.setAccessibleName("")
-        self.btn_info_DIScreen.setAccessibleDescription("")
-        self.btn_info_DIScreen.setStyleSheet("QPushButton:hover{\n""    border-radius:5px;\n""    border: 2px solid rgb(255, 255, 255)\n""\n""}")
-        self.btn_info_DIScreen.setText("")
+        self.btn_info_DIScreen.setStyleSheet(styles.styleSmallButton)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/icons/info_logo"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_info_DIScreen.setIcon(icon)
@@ -650,12 +648,7 @@ class ui_DIScreen(QtWidgets.QWidget):
         font.setWeight(50)
         font.setKerning(True)
         self.btn_back_DI.setFont(font)
-        self.btn_back_DI.setStatusTip("")
-        self.btn_back_DI.setWhatsThis("")
-        self.btn_back_DI.setAccessibleName("")
-        self.btn_back_DI.setAccessibleDescription("")
-        self.btn_back_DI.setStyleSheet("QPushButton:hover{\n""    border-radius:5px;\n""    border: 2px solid rgb(255, 255, 255)\n""\n""}")
-        self.btn_back_DI.setText("")
+        self.btn_back_DI.setStyleSheet(styles.styleSmallButton)
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap(":/icons/back_icon"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_back_DI.setIcon(icon2)
@@ -678,10 +671,6 @@ class ui_DIScreen(QtWidgets.QWidget):
         font.setItalic(False)
         font.setWeight(9)
         self.btn_reset.setFont(font)
-        self.btn_reset.setStatusTip("")
-        self.btn_reset.setWhatsThis("")
-        self.btn_reset.setAccessibleName("")
-        self.btn_reset.setAccessibleDescription("")
         self.btn_reset.setStyleSheet(styles.styleBluebuttonsmall)
         self.btn_reset.setText("Zurücksetzen")
         self.btn_reset.setCheckable(False)
@@ -703,10 +692,6 @@ class ui_DIScreen(QtWidgets.QWidget):
         font.setItalic(False)
         font.setWeight(9)
         self.btn_skip.setFont(font)
-        self.btn_skip.setStatusTip("")
-        self.btn_skip.setWhatsThis("")
-        self.btn_skip.setAccessibleName("")
-        self.btn_skip.setAccessibleDescription("")
         self.btn_skip.setStyleSheet(styles.styleBluebuttonsmall)
         self.btn_skip.setText("Überspringen")
         self.btn_skip.setCheckable(False)
@@ -728,10 +713,6 @@ class ui_DIScreen(QtWidgets.QWidget):
         font.setItalic(False)
         font.setWeight(9)
         self.btn_DInext.setFont(font)
-        self.btn_DInext.setStatusTip("")
-        self.btn_DInext.setWhatsThis("")
-        self.btn_DInext.setAccessibleName("")
-        self.btn_DInext.setAccessibleDescription("")
         self.btn_DInext.setStyleSheet(styles.styleBluebuttonsmall)
         self.btn_DInext.setText("Weiter")
         self.btn_DInext.setCheckable(False)
@@ -745,10 +726,6 @@ class ui_DIScreen(QtWidgets.QWidget):
         font.setBold(True)
         font.setWeight(75)
         self.lbl_headline_DIScreen.setFont(font)
-        self.lbl_headline_DIScreen.setStatusTip("")
-        self.lbl_headline_DIScreen.setWhatsThis("")
-        self.lbl_headline_DIScreen.setAccessibleName("")
-        self.lbl_headline_DIScreen.setAccessibleDescription("")
         self.lbl_headline_DIScreen.setStyleSheet(styles.styleHeadlines)
         self.lbl_headline_DIScreen.setText("Datei Analyse")
         self.lbl_headline_DIScreen.setObjectName("lbl_headline_DIScreen")
@@ -764,11 +741,7 @@ class ui_DIScreen(QtWidgets.QWidget):
         font.setBold(False)
         font.setWeight(50)
         self.label_DIScreen_smalltext.setFont(font)
-        self.label_DIScreen_smalltext.setStatusTip("")
-        self.label_DIScreen_smalltext.setWhatsThis("")
-        self.label_DIScreen_smalltext.setAccessibleName("")
-        self.label_DIScreen_smalltext.setAccessibleDescription("")
-        self.label_DIScreen_smalltext.setStyleSheet("color: rgb(255, 255, 255);")
+        self.label_DIScreen_smalltext.setStyleSheet(styles.styleText1)
         self.label_DIScreen_smalltext.setText("Anzahl der Schilder eingeben (Optional)")
         self.label_DIScreen_smalltext.setObjectName("label_DIScreen_smalltext")
     
@@ -794,22 +767,22 @@ class ui_DIScreen(QtWidgets.QWidget):
 
                     self.gridLayout_DIScreen.addWidget(self.name_sign, i,j,1,1)
                     
-                    #
+                    #j++ to create the spinbox next to sign (label)
                     j =j+1
 
                     # create spinboxes 
+
                     # print("sb: i:"+ str(i) + " j:"+ str(j) + " k:"+ str(k))
                     self.name_sb = "spinBox_"+ str(k)
-
                     self.name_sb = QtWidgets.QSpinBox(self.scrollAreaWidget_DIScreen)
                     self.name_sb.setMinimumSize(QtCore.QSize(50, 20))
                     self.name_sb.setMaximumSize(QtCore.QSize(50, 20))
                     self.gridLayout_DIScreen.addWidget(self.name_sb, i, j, 1, 1)
                     
-                j =j+1
-                k=k+1
-            j=0
-            i=i+1
+                j = j+1
+                k = k+1
+            j = 0
+            i = i+1
 
     def create_spacer(self):
         self.spacerItem33 = QtWidgets.QSpacerItem(10, 10, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -1132,7 +1105,6 @@ class ui_analyzeScreen(QtWidgets.QWidget):
         self.graphicsAnalyze.setMaximumSize(QtCore.QSize(800, 420))
         self.graphicsAnalyze.setObjectName("graphicsAnalyze")
 
-
     
     def create_spacer(self):
         self.spacerItem53 = QtWidgets.QSpacerItem(10, 10, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -1190,7 +1162,245 @@ class ui_ResultScreen(QtWidgets.QWidget):
         self.logic = LogicInterface
         self.gui = Gui
 
+        self.setObjectName("ResultScreen")
 
+        self.create_layout()
+        self.create_button()
+        self.create_label()
+        self.create_gridContent()
+        self.create_spacer()
+        self.add_items() 
+
+    def create_layout(self):
+        self.verticalLayout_9 = QtWidgets.QVBoxLayout(self)
+        self.verticalLayout_9.setObjectName("verticalLayout_9")
+        self.lyth_headline_Result = QtWidgets.QHBoxLayout()
+        self.lyth_headline_Result.setContentsMargins(20, 0, 20, 0)
+        self.lyth_headline_Result.setSpacing(6)
+        self.lyth_headline_Result.setObjectName("lyth_headline_Result")
+
+        self.lyth_smallText_Result = QtWidgets.QHBoxLayout()
+        self.lyth_smallText_Result.setContentsMargins(0, 0, -1, -1)
+        self.lyth_smallText_Result.setObjectName("lyth_smallText_Result")
+
+        self.lyth_bigGrid_Result = QtWidgets.QHBoxLayout()
+        self.lyth_bigGrid_Result.setContentsMargins(0, 9, -1, 20)
+        self.lyth_bigGrid_Result.setObjectName("lyth_bigGrid_Result")
+
+        self.scrollArea_Result = QtWidgets.QScrollArea(self)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(1)
+        sizePolicy.setHeightForWidth(self.scrollArea_Result.sizePolicy().hasHeightForWidth())
+        self.scrollArea_Result.setSizePolicy(sizePolicy)
+        self.scrollArea_Result.setMinimumSize(QtCore.QSize(976, 0))
+        self.scrollArea_Result.setMaximumSize(QtCore.QSize(1020, 16777215))
+        self.scrollArea_Result.setSizeIncrement(QtCore.QSize(0, 0))
+        self.scrollArea_Result.setWidgetResizable(True)
+        self.scrollArea_Result.setObjectName("scrollArea_Result")
+
+        self.scrollAreaResult = QtWidgets.QWidget()
+        self.scrollAreaResult.setGeometry(QtCore.QRect(0, 0, 950, 360))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.scrollAreaResult.sizePolicy().hasHeightForWidth())
+        self.scrollAreaResult.setSizePolicy(sizePolicy)
+        self.scrollAreaResult.setMinimumSize(QtCore.QSize(950, 0))
+        self.scrollAreaResult.setMaximumSize(QtCore.QSize(950, 16777215))
+        self.scrollAreaResult.setObjectName("scrollAreaResult")
+
+        self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.scrollAreaResult)
+        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
+
+        self.gridLayout_Result = QtWidgets.QGridLayout()
+        self.gridLayout_Result.setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
+        self.gridLayout_Result.setContentsMargins(0, 10, 0, 10)
+        self.gridLayout_Result.setSpacing(25)
+        self.gridLayout_Result.setObjectName("gridLayout_Result")
+
+        self.lyth_bottom_Result = QtWidgets.QHBoxLayout()
+        self.lyth_bottom_Result.setContentsMargins(-1, -1, 2, -1)
+        self.lyth_bottom_Result.setObjectName("lyth_bottom_Result")
+
+    def create_button(self):
+
+        self.btn_info_Result = QtWidgets.QPushButton(self)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.btn_info_Result.sizePolicy().hasHeightForWidth())
+        self.btn_info_Result.setSizePolicy(sizePolicy)
+        self.btn_info_Result.setMinimumSize(QtCore.QSize(140, 45))
+        self.btn_info_Result.setMaximumSize(QtCore.QSize(140, 45))
+        self.btn_info_Result.setBaseSize(QtCore.QSize(0, 0))
+        self.btn_info_Result.setStyleSheet(styles.styleSmallButton)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/icons/info_logo"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.btn_info_Result.setIcon(icon)
+        self.btn_info_Result.setIconSize(QtCore.QSize(130, 30))
+        self.btn_info_Result.setObjectName("btn_info_Result")
+
+        self.btn_endResult = QtWidgets.QPushButton(self)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.btn_endResult.sizePolicy().hasHeightForWidth())
+        self.btn_endResult.setSizePolicy(sizePolicy)
+        self.btn_endResult.setMinimumSize(QtCore.QSize(220, 40))
+        self.btn_endResult.setMaximumSize(QtCore.QSize(220, 40))
+        self.btn_endResult.setStyleSheet(styles.styleBluebuttonsmall)
+        self.btn_endResult.setText("Beenden")
+
+
+    def create_label(self):
+
+        self.lbl_headline_Result = QtWidgets.QLabel(self)
+        font = QtGui.QFont()
+        font.setPointSize(24)
+        font.setBold(True)
+        font.setWeight(75)
+        self.lbl_headline_Result.setFont(font)
+        self.lbl_headline_Result.setStyleSheet(styles.styleHeadlines)
+        self.lbl_headline_Result.setText("Auswertung")
+
+        self.lbl_result = QtWidgets.QLabel(self)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.lbl_result.sizePolicy().hasHeightForWidth())
+        self.lbl_result.setSizePolicy(sizePolicy)
+        self.lbl_result.setMinimumSize(QtCore.QSize(80, 80))
+        self.lbl_result.setMaximumSize(QtCore.QSize(80, 80))
+        self.lbl_result.setStyleSheet("QLabel{\n""    font: bold 18pt \"MS Shell Dlg 2\" ;\n""    background-color: #00AA00;\n""    border-radius: 40px;\n""    color:white\n""}")
+        self.lbl_result.setText("99%")
+        self.lbl_result.setAlignment(QtCore.Qt.AlignCenter)
+        self.lbl_result.setObjectName("lbl_result")
+
+    def create_gridContent(self):
+
+        self.lbl_input_result_1 = QtWidgets.QLabel(self.scrollAreaResult)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.lbl_input_result_1.sizePolicy().hasHeightForWidth())
+        self.lbl_input_result_1.setSizePolicy(sizePolicy)
+        self.lbl_input_result_1.setMinimumSize(QtCore.QSize(80, 30))
+        self.lbl_input_result_1.setMaximumSize(QtCore.QSize(40, 30))
+        self.lbl_input_result_1.setStyleSheet(styles.styleGridHeadline)
+        self.lbl_input_result_1.setText("Eingabe")
+        self.lbl_input_result_1.setAlignment(QtCore.Qt.AlignCenter)
+        self.lbl_input_result_1.setObjectName("lbl_input_result_1")
+
+        self.lbl_input_result_2 = QtWidgets.QLabel(self.scrollAreaResult)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.lbl_input_result_2.sizePolicy().hasHeightForWidth())
+        self.lbl_input_result_2.setSizePolicy(sizePolicy)
+        self.lbl_input_result_2.setMinimumSize(QtCore.QSize(80, 30))
+        self.lbl_input_result_2.setMaximumSize(QtCore.QSize(40, 30))
+
+        self.lbl_input_result_2.setStyleSheet(styles.styleGridHeadline)
+        self.lbl_input_result_2.setText("Eingabe")
+        self.lbl_input_result_2.setAlignment(QtCore.Qt.AlignCenter)
+        self.lbl_input_result_2.setObjectName("lbl_input_result_2")
+
+        self.lbl_input_result_3 = QtWidgets.QLabel(self.scrollAreaResult)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.lbl_input_result_3.sizePolicy().hasHeightForWidth())
+        self.lbl_input_result_3.setSizePolicy(sizePolicy)
+        self.lbl_input_result_3.setMinimumSize(QtCore.QSize(80, 30))
+        self.lbl_input_result_3.setMaximumSize(QtCore.QSize(40, 30))
+
+        self.lbl_input_result_3.setStyleSheet(styles.styleGridHeadline)
+        self.lbl_input_result_3.setText("Eingabe")
+        self.lbl_input_result_3.setAlignment(QtCore.Qt.AlignCenter)
+        self.lbl_input_result_3.setObjectName("lbl_input_result_3")
+
+        self.lbl_recogn_1 = QtWidgets.QLabel(self.scrollAreaResult)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.lbl_recogn_1.sizePolicy().hasHeightForWidth())
+        self.lbl_recogn_1.setSizePolicy(sizePolicy)
+        self.lbl_recogn_1.setMinimumSize(QtCore.QSize(80, 30))
+        self.lbl_recogn_1.setMaximumSize(QtCore.QSize(40, 30))
+        self.lbl_recogn_1.setStyleSheet(styles.styleGridHeadline)
+        self.lbl_recogn_1.setText("Erkannt")
+        self.lbl_recogn_1.setAlignment(QtCore.Qt.AlignCenter)
+        self.lbl_recogn_1.setObjectName("lbl_recogn_1")
+        
+
+        self.lbl_recogn_2 = QtWidgets.QLabel(self.scrollAreaResult)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.lbl_recogn_2.sizePolicy().hasHeightForWidth())
+        self.lbl_recogn_2.setSizePolicy(sizePolicy)
+        self.lbl_recogn_2.setMinimumSize(QtCore.QSize(80, 30))
+        self.lbl_recogn_2.setMaximumSize(QtCore.QSize(40, 30))
+        self.lbl_recogn_2.setStyleSheet(styles.styleGridHeadline)
+        self.lbl_recogn_2.setText("Erkannt")
+        self.lbl_recogn_2.setAlignment(QtCore.Qt.AlignCenter)
+        self.lbl_recogn_2.setObjectName("lbl_recogn_2")
+        
+        self.lbl_recogn_3 = QtWidgets.QLabel(self.scrollAreaResult)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.lbl_recogn_3.sizePolicy().hasHeightForWidth())
+        self.lbl_recogn_3.setSizePolicy(sizePolicy)
+        self.lbl_recogn_3.setMinimumSize(QtCore.QSize(80, 30))
+        self.lbl_recogn_3.setMaximumSize(QtCore.QSize(40, 30))
+        self.lbl_recogn_3.setStyleSheet(styles.styleGridHeadline)
+        self.lbl_recogn_3.setText("Erkannt")
+        self.lbl_recogn_3.setAlignment(QtCore.Qt.AlignCenter)
+        self.lbl_recogn_3.setObjectName("lbl_recogn_3")
+             
+    def create_spacer(self):
+        self.spacerItem66 = QtWidgets.QSpacerItem(10, 10, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.spacerItem67 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.spacerItem68 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.spacerItem69 = QtWidgets.QSpacerItem(0, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Maximum)
+        self.spacerItem70 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.spacerItem71 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.spacerItem72 = QtWidgets.QSpacerItem(0, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
+        self.spacerItem73 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.spacerItem74 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+
+    def add_items(self):
+
+        self.lyth_headline_Result.addWidget(self.lbl_headline_Result)
+        self.lyth_headline_Result.addItem(self.spacerItem66)
+        self.lyth_headline_Result.addWidget(self.btn_info_Result)
+        self.verticalLayout_9.addLayout(self.lyth_headline_Result)
+        self.lyth_smallText_Result.addItem(self.spacerItem67)
+        self.lyth_smallText_Result.addWidget(self.lbl_result, 0, QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+        self.lyth_smallText_Result.addItem(self.spacerItem68)
+        self.lyth_smallText_Result.addItem(self.spacerItem69)
+        self.verticalLayout_9.addLayout(self.lyth_smallText_Result)
+        self.lyth_bigGrid_Result.addItem(self.spacerItem70)
+        self.gridLayout_Result.addWidget(self.lbl_input_result_1, 0, 1, 1, 1)
+        self.gridLayout_Result.addWidget(self.lbl_input_result_2, 0, 4, 1, 1)
+        self.gridLayout_Result.addWidget(self.lbl_input_result_3, 0, 7, 1, 1)
+        self.gridLayout_Result.addWidget(self.lbl_recogn_1, 0, 2, 1, 1)
+        self.gridLayout_Result.addWidget(self.lbl_recogn_2, 0, 5, 1, 1)
+        self.gridLayout_Result.addWidget(self.lbl_recogn_3, 0, 8, 1, 1)
+        self.horizontalLayout_5.addLayout(self.gridLayout_Result)
+        self.scrollArea_Result.setWidget(self.scrollAreaResult)
+        self.lyth_bigGrid_Result.addWidget(self.scrollArea_Result)
+        self.lyth_bigGrid_Result.addItem(self.spacerItem71)
+        self.verticalLayout_9.addLayout(self.lyth_bigGrid_Result)
+        self.lyth_bottom_Result.addItem(self.spacerItem72)
+        self.lyth_bottom_Result.addItem(self.spacerItem73)   
+        self.lyth_bottom_Result.addWidget(self.btn_endResult)
+        self.lyth_bottom_Result.addItem(self.spacerItem74)
+        self.verticalLayout_9.addLayout(self.lyth_bottom_Result)
+
+       
 # Demo Data Screen
 class ui_DemoDataScreen(QtWidgets.QWidget):
     def __init__(self, LogicInterface, Gui):

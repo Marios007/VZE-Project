@@ -2,17 +2,16 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import gui.styles as styles
 import gui.image_ressources as image_ressources
 import csv
-import os
 
 
 class VzeGui(QtWidgets.QMainWindow):
 
     stack_lastScreen = []
     array_dataInput = [[0 for x in range(43)] for y in range(2)]
-    demo_video1 = "./gui/DemoVideo_gutesWetter.mp4"
-    demo_video1_preview = "./gui/pics/DemoVideo_gutesWetter_Thumbnail.jpg"
-    demo_video2 = "./gui/DemoVideo_schlechtesWetter.mp4"
-    demo_video2_preview = "./gui/pics/DemoVideo_schlechtesWetter_Thumbnail.jpg"
+    demo_video1 = "./gui/pics/DemoVideos/DemoVideo_gutesWetter.mp4"
+    demo_video1_preview = "./gui/pics/DemoVideos/DemoVideo_gutesWetter_Thumbnail.jpg"
+    demo_video2 = "./gui/pics/DemoVideos/DemoVideo_schlechtesWetter.mp4"
+    demo_video2_preview = "./gui/pics/DemoVideos/DemoVideo_schlechtesWetter_Thumbnail.jpg"
 
     def __init__(self, logicInterface):
         QtWidgets.QMainWindow.__init__(self)
@@ -120,17 +119,34 @@ class VzeGui(QtWidgets.QMainWindow):
         self.change_screen(6)
 
     def showPreviewImage(self, filepath, nextScreen):
-        #print("method showPreviewImage")
+        print("method showPreviewImage")
         #file = self.logic.getFilePath()
         #print(filepath)
-        
+                
         #if image file
+        if((filepath.endswith('.jpg')) or (filepath.endswith('.jpeg')) or (filepath.endswith('.gif')) or (filepath.endswith('.png')) or (filepath.endswith('.bmp'))):
+            print("File is an image") 
+
+
+        #if video file
+        elif((filepath.endswith('.avi')) or (filepath.endswith('.mov')) or (filepath.endswith('.mp4')) or (filepath.endswith('.mpeg'))):
+            print("File is a video")
+            #Create Thumbnail of video
+            #cap = cv2.VideoCapture(filepath)
+            #success, image = cap.read()
+            #print(success)
+            #cv2.imwrite("./gui/pics/thumb.jpg", image)
+            #thumb = cv2.resize(image, 790, interpolation=cv2.INTER_AREA)
+            #filepath = "./gui/pics/thumb.jpg"
+
+
+        else:
+            print("Unsupported FileType")
+
         pixmap = QtGui.QPixmap(filepath)
         pixmap_scaled = pixmap.scaled(790, 410)
         graphicsScene = QtWidgets.QGraphicsScene(self)
         graphicsScene.addPixmap(pixmap_scaled)
-
-        #if video file
 
         if(nextScreen == 2):
             self.previewscreen.graphicsPreview.setScene(graphicsScene)
@@ -337,6 +353,9 @@ class ui_demoscreen(QtWidgets.QWidget):
         self.btn_demoSonne.setIcon(icon)
         self.btn_demoSonne.setIconSize(QtCore.QSize(30, 30))
         self.btn_demoSonne.setText(("Video mit Sonne"))
+        self.btn_demoSonne.clicked.connect(lambda: self.logic.setFilePath(self.gui.demo_video1))
+        #self.btn_demoSonne.clicked.connect(lambda: self.gui.showPreviewImage(self.logic.getFilePath(),4))
+        #Temporär den Screenshot des Videos verwenden, bis selbst erstellt werden kann
         self.btn_demoSonne.clicked.connect(lambda: self.gui.showPreviewImage(self.gui.demo_video1_preview,4))
         
         self.btn_demoRegen = QtWidgets.QPushButton(self)
@@ -352,6 +371,9 @@ class ui_demoscreen(QtWidgets.QWidget):
         self.btn_demoRegen.setIcon(icon)
         self.btn_demoRegen.setIconSize(QtCore.QSize(30, 30))
         self.btn_demoRegen.setText(("Video mit Regen"))
+        self.btn_demoRegen.clicked.connect(lambda: self.logic.setFilePath(self.gui.demo_video2))
+        #self.btn_demoRegen.clicked.connect(lambda: self.gui.showPreviewImage(self.logic.getFilePath(),4))
+        #Temporär den Screenshot des Videos verwenden, bis selbst erstellt werden kann
         self.btn_demoRegen.clicked.connect(lambda: self.gui.showPreviewImage(self.gui.demo_video2_preview,4))
 
         self.btn_dataSonne = QtWidgets.QPushButton(self)
@@ -888,6 +910,7 @@ class ui_DIScreen(QtWidgets.QWidget):
             i = i+1
             k = k+1
 
+        #Testausgabe des gesamten Arrays
         #for j in range(len(self.gui.array_dataInput[0])):
         #    print(self.gui.array_dataInput[0][j], end=' ')
         #    print(self.gui.array_dataInput[1][j], end=' ')
@@ -1646,7 +1669,7 @@ class ui_DemoDataScreen(QtWidgets.QWidget):
         if(self.gridLayout_DemoData.itemAt(0) is None):
             print("empty")
         else:
-            print("not empty")
+            #print("not empty")
             
             count=self.gridLayout_DemoData.count()
             i = count

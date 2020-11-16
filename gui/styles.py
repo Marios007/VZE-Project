@@ -16,3 +16,5 @@ styleBluebuttonsmall="QPushButton{\n""    font: 75 18pt \"MS Shell Dlg 2\" ;\n""
 styleSmallButton="QPushButton:hover{\n""    border-radius:5px;\n""    border: 2px solid rgb(255, 255, 255)\n""\n""}"
 #style for text in Grid
 styleGridHeadline="color: rgb(255, 255, 255);\n""font: 12pt \"MS Shell Dlg 2\";"
+#style for SpinBox in DataInputScreen
+styleSpinBox="QSpinBox{\n""    font: 75 12pt \"MS Shell Dlg 2\" ;\n""    background-color: #000000;\n""    color:white\n""}"

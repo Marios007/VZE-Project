@@ -1,11 +1,13 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import gui.styles as styles
 import gui.image_ressources as image_ressources
+import csv
 
 
 class VzeGui(QtWidgets.QMainWindow):
 
     stack_lastScreen = []
+    array_dataInput = [[0 for x in range(43)] for y in range(2)]
 
     def __init__(self, logicInterface):
         QtWidgets.QMainWindow.__init__(self)
@@ -95,6 +97,22 @@ class VzeGui(QtWidgets.QMainWindow):
         print("print stack: " + str(self.stack_lastScreen))
         self.stackedWidget.setCurrentIndex(self.stack_lastScreen.pop())
         return 
+
+    def create_DemoDataGrid(self, demoID):
+        print("loading demo data grid for demovideo " + str(demoID))
+
+        demodatafile=""
+
+        if(demoID == 1):
+            demodatafile='./gui/demo_data_1.csv'
+        elif (demoID == 2):
+            demodatafile='./gui/demo_data_2_full.csv'
+        else:
+            print("Unknown error")
+
+        self.demodatascreen.delete_grid()
+        self.demodatascreen.create_grid(demodatafile)
+        self.change_screen(6)
 
 
 # Start Screen
@@ -288,6 +306,10 @@ class ui_demoscreen(QtWidgets.QWidget):
         self.btn_demoSonne.setSizePolicy(sizePolicy)
         self.btn_demoSonne.setMinimumSize(QtCore.QSize(350, 220))
         self.btn_demoSonne.setStyleSheet(styles.styleBluebuttonbig)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/icons/demo_sonne"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.btn_demoSonne.setIcon(icon)
+        self.btn_demoSonne.setIconSize(QtCore.QSize(30, 30))
         self.btn_demoSonne.setText(("Video mit Sonne"))
         self.btn_demoSonne.clicked.connect(lambda: self.gui.change_screen(4))
 
@@ -299,6 +321,11 @@ class ui_demoscreen(QtWidgets.QWidget):
         self.btn_demoRegen.setSizePolicy(sizePolicy)
         self.btn_demoRegen.setMinimumSize(QtCore.QSize(350, 220))
         self.btn_demoRegen.setStyleSheet(styles.styleBluebuttonbig)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/icons/demo_regen"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.btn_demoRegen.setIcon(icon)
+        self.btn_demoRegen.setIconSize(QtCore.QSize(30, 30))
+        self.btn_demoRegen.setText(("Video mit Sonne"))
         self.btn_demoRegen.setText(("Video mit Regen"))
         self.btn_demoRegen.clicked.connect(lambda: self.gui.change_screen(4))
 
@@ -310,7 +337,8 @@ class ui_demoscreen(QtWidgets.QWidget):
         icon1.addPixmap(QtGui.QPixmap(":/icons/data_icon"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_dataSonne.setIcon(icon1)
         self.btn_dataSonne.setIconSize(QtCore.QSize(55, 55))
-        self.btn_dataSonne.clicked.connect(lambda: self.gui.change_screen(6))
+        #self.btn_dataSonne.clicked.connect(lambda: self.gui.change_screen(6))
+        self.btn_dataSonne.clicked.connect(lambda: self.gui.create_DemoDataGrid(1))
 
         self.btn_dataRegen = QtWidgets.QPushButton(self)
         self.btn_dataRegen.setMinimumSize(QtCore.QSize(55, 55))
@@ -318,7 +346,8 @@ class ui_demoscreen(QtWidgets.QWidget):
         self.btn_dataRegen.setStyleSheet(styles.styleSmallButton)
         self.btn_dataRegen.setIcon(icon1)
         self.btn_dataRegen.setIconSize(QtCore.QSize(55, 55))
-        self.btn_dataRegen.clicked.connect(lambda: self.gui.change_screen(6))
+        #self.btn_dataRegen.clicked.connect(lambda: self.gui.change_screen(6))
+        self.btn_dataRegen.clicked.connect(lambda: self.gui.create_DemoDataGrid(2))
 
         self.btn_back_demoscreen = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -683,6 +712,7 @@ class ui_DIScreen(QtWidgets.QWidget):
         self.btn_reset.setCheckable(False)
         self.btn_reset.setFlat(False)
         self.btn_reset.setObjectName("btn_reset")
+        self.btn_reset.clicked.connect(lambda: self.create_gridContent())
 
         self.btn_skip = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -712,6 +742,7 @@ class ui_DIScreen(QtWidgets.QWidget):
         self.btn_DInext.setCheckable(False)
         self.btn_DInext.setFlat(False)
         self.btn_DInext.setObjectName("btn_DInext")
+        self.btn_DInext.clicked.connect(lambda: self.save_gridContent())
 
     def create_label(self):
         self.lbl_headline_DIScreen = QtWidgets.QLabel(self)
@@ -745,7 +776,7 @@ class ui_DIScreen(QtWidgets.QWidget):
                     self.name_sign = QtWidgets.QLabel(self.scrollAreaWidget_DIScreen)
                     self.name_sign.setMinimumSize(QtCore.QSize(48, 48))
                     self.name_sign.setMaximumSize(QtCore.QSize(48, 48))
-
+                    self.name_sign.setObjectName("lbl_sign_"+ str(k))
                     self.name_sign.setPixmap(QtGui.QPixmap(self.sign_id))
                     self.name_sign.setScaledContents(True)
 
@@ -759,8 +790,10 @@ class ui_DIScreen(QtWidgets.QWidget):
                     # print("sb: i:"+ str(i) + " j:"+ str(j) + " k:"+ str(k))
                     self.name_sb = "spinBox_"+ str(k)
                     self.name_sb = QtWidgets.QSpinBox(self.scrollAreaWidget_DIScreen)
-                    self.name_sb.setMinimumSize(QtCore.QSize(50, 20))
-                    self.name_sb.setMaximumSize(QtCore.QSize(50, 20))
+                    self.name_sb.setMinimumSize(QtCore.QSize(50, 25))
+                    self.name_sb.setMaximumSize(QtCore.QSize(50, 25))
+                    self.name_sb.setStyleSheet(styles.styleSpinBox)
+                    self.name_sb.setValue(0)
                     self.gridLayout_DIScreen.addWidget(self.name_sb, i, j, 1, 1)
                     
                 j = j+1
@@ -805,7 +838,36 @@ class ui_DIScreen(QtWidgets.QWidget):
         self.lyth_bottom_DIScreen.addWidget(self.btn_DInext)
         self.lyth_bottom_DIScreen.addItem(self.spacerItem42)
         self.verticalLayout_11.addLayout(self.lyth_bottom_DIScreen)
-       
+
+    def save_gridContent(self):
+        i = 0
+        k = 0
+        
+        count = self.gridLayout_DIScreen.count() -1
+        i = 0
+        k = 0
+    
+        while(i < count):
+            labelItem = self.gridLayout_DIScreen.itemAt(i).widget()
+            labelItemValue = str(labelItem.objectName())
+            #print("Label: " + str(labelItem))
+            #print("Label Value: " + labelItemValue)
+            self.gui.array_dataInput[0][k] = labelItemValue
+            i = i+1
+            
+            spinboxItem = self.gridLayout_DIScreen.itemAt(i).widget()
+            spinboxItemValue = str(spinboxItem.value())
+            #print("SpinBox: " + str(spinboxItem))
+            #print("SpinBox Value: " + spinboxItemValue)
+            self.gui.array_dataInput[1][k] = spinboxItemValue
+            i = i+1
+            k = k+1
+
+        #for j in range(len(self.gui.array_dataInput[0])):
+        #    print(self.gui.array_dataInput[0][j], end=' ')
+        #    print(self.gui.array_dataInput[1][j], end=' ')
+        #    print()
+        
 
 # Analyze Preview Screen
 class ui_analyzePvScreen(QtWidgets.QWidget):
@@ -1392,7 +1454,6 @@ class ui_DemoDataScreen(QtWidgets.QWidget):
         self.create_button()
         self.create_label()
         self.create_spacer()
-        self.create_grid()
         self.add_items()        
 
 
@@ -1510,250 +1571,64 @@ class ui_DemoDataScreen(QtWidgets.QWidget):
         self.spacerItem82 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
 
 
-    def create_grid(self):
-        self.lbl_shieldDemo_9 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_9.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_9.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_9.setScaledContents(True)
-        self.lbl_shieldDemo_9.setObjectName("lbl_shieldDemo_9")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_9, 2, 2, 1, 1)
-        self.lbl_shieldDemo_5 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_5.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_5.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_5.setPixmap(QtGui.QPixmap(":/signs/5"))
-        self.lbl_shieldDemo_5.setScaledContents(True)
-        self.lbl_shieldDemo_5.setObjectName("lbl_shieldDemo_5")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_5, 1, 2, 1, 1)
-        self.lbl_shieldDemo_26 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_26.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_26.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_26.setScaledContents(True)
-        self.lbl_shieldDemo_26.setObjectName("lbl_shieldDemo_26")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_26, 6, 4, 1, 1)
-        self.lbl_shieldDemo_27 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_27.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_27.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_27.setScaledContents(True)
-        self.lbl_shieldDemo_27.setObjectName("lbl_shieldDemo_27")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_27, 6, 6, 1, 1)
-        self.lbl_shieldDemo_21 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_21.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_21.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_21.setScaledContents(True)
-        self.lbl_shieldDemo_21.setObjectName("lbl_shieldDemo_21")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_21, 5, 2, 1, 1)
-        self.lbl_shieldDemo_28 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_28.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_28.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_28.setScaledContents(True)
-        self.lbl_shieldDemo_28.setObjectName("lbl_shieldDemo_28")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_28, 7, 0, 1, 1)
-        self.lbl_shieldDemo_15 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_15.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_15.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_15.setScaledContents(True)
-        self.lbl_shieldDemo_15.setObjectName("lbl_shieldDemo_15")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_15, 3, 6, 1, 1)
-        self.lbl_shieldDemo_4 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_4.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_4.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_4.setPixmap(QtGui.QPixmap(":/signs/4"))
-        self.lbl_shieldDemo_4.setScaledContents(True)
-        self.lbl_shieldDemo_4.setObjectName("lbl_shieldDemo_4")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_4, 1, 0, 1, 1)
-        self.lbl_shieldDemo_10 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_10.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_10.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_10.setScaledContents(True)
-        self.lbl_shieldDemo_10.setObjectName("lbl_shieldDemo_10")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_10, 2, 4, 1, 1)
-        self.lbl_shieldDemo_2 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_2.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_2.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_2.setPixmap(QtGui.QPixmap(":/signs/2"))
-        self.lbl_shieldDemo_2.setScaledContents(True)
-        self.lbl_shieldDemo_2.setObjectName("lbl_shieldDemo_2")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_2, 0, 4, 1, 1)
-        self.lbl_shieldDemo_14 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_14.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_14.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_14.setScaledContents(True)
-        self.lbl_shieldDemo_14.setObjectName("lbl_shieldDemo_14")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_14, 3, 4, 1, 1)
-        self.lbl_amount_1 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.lbl_amount_1.sizePolicy().hasHeightForWidth())
-        self.lbl_amount_1.setSizePolicy(sizePolicy)
-        self.lbl_amount_1.setMinimumSize(QtCore.QSize(40, 30))
-        self.lbl_amount_1.setMaximumSize(QtCore.QSize(40, 30))
-        self.lbl_amount_1.setObjectName("lbl_amount_1")
-        self.gridLayout_DemoData.addWidget(self.lbl_amount_1, 0, 3, 1, 1)
-        self.lbl_shieldDemo_18 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_18.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_18.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_18.setScaledContents(True)
-        self.lbl_shieldDemo_18.setObjectName("lbl_shieldDemo_18")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_18, 4, 4, 1, 1)
-        self.lbl_shieldDemo_22 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_22.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_22.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_22.setScaledContents(True)
-        self.lbl_shieldDemo_22.setObjectName("lbl_shieldDemo_22")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_22, 5, 4, 1, 1)
-        self.lbl_amount_2 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.lbl_amount_2.sizePolicy().hasHeightForWidth())
-        self.lbl_amount_2.setSizePolicy(sizePolicy)
-        self.lbl_amount_2.setMinimumSize(QtCore.QSize(40, 30))
-        self.lbl_amount_2.setMaximumSize(QtCore.QSize(40, 30))
-        self.lbl_amount_2.setObjectName("lbl_amount_2")
-        self.gridLayout_DemoData.addWidget(self.lbl_amount_2, 0, 5, 1, 1)
-        self.lbl_shieldDemo_30 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_30.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_30.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_30.setScaledContents(True)
-        self.lbl_shieldDemo_30.setObjectName("lbl_shieldDemo_30")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_30, 7, 4, 1, 1)
-        self.lbl_shieldDemo_12 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_12.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_12.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_12.setScaledContents(True)
-        self.lbl_shieldDemo_12.setObjectName("lbl_shieldDemo_12")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_12, 3, 0, 1, 1)
-        self.lbl_shieldDemo_25 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_25.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_25.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_25.setScaledContents(True)
-        self.lbl_shieldDemo_25.setObjectName("lbl_shieldDemo_25")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_25, 6, 2, 1, 1)
-        self.lbl_shieldDemo_6 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_6.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_6.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_6.setPixmap(QtGui.QPixmap(":/signs/3"))
-        self.lbl_shieldDemo_6.setScaledContents(True)
-        self.lbl_shieldDemo_6.setObjectName("lbl_shieldDemo_6")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_6, 1, 4, 1, 1)
-        self.lbl_amount_3 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.lbl_amount_3.sizePolicy().hasHeightForWidth())
-        self.lbl_amount_3.setSizePolicy(sizePolicy)
-        self.lbl_amount_3.setMinimumSize(QtCore.QSize(40, 30))
-        self.lbl_amount_3.setMaximumSize(QtCore.QSize(40, 30))
-        self.lbl_amount_3.setObjectName("lbl_amount_3")
-        self.gridLayout_DemoData.addWidget(self.lbl_amount_3, 0, 7, 1, 1)
-        self.lbl_shieldDemo_0 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_0.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_0.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_0.setPixmap(QtGui.QPixmap(":/signs/0"))
-        self.lbl_shieldDemo_0.setScaledContents(True)
-        self.lbl_shieldDemo_0.setObjectName("lbl_shieldDemo_0")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_0, 0, 0, 1, 1)
-        self.lbl_shieldDemo_23 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_23.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_23.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_23.setScaledContents(True)
-        self.lbl_shieldDemo_23.setObjectName("lbl_shieldDemo_23")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_23, 5, 6, 1, 1)
-        self.lbl_shieldDemo_3 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_3.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_3.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_3.setPixmap(QtGui.QPixmap(":/signs/3"))
-        self.lbl_shieldDemo_3.setScaledContents(True)
-        self.lbl_shieldDemo_3.setObjectName("lbl_shieldDemo_3")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_3, 0, 6, 1, 1)
-        self.lbl_amount_0 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.lbl_amount_0.sizePolicy().hasHeightForWidth())
-        self.lbl_amount_0.setSizePolicy(sizePolicy)
-        self.lbl_amount_0.setMinimumSize(QtCore.QSize(40, 30))
-        self.lbl_amount_0.setMaximumSize(QtCore.QSize(40, 30))
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        self.lbl_amount_0.setFont(font)
-        self.lbl_amount_0.setObjectName("lbl_amount_0")
-        self.gridLayout_DemoData.addWidget(self.lbl_amount_0, 0, 1, 1, 1)
-        self.lbl_shieldDemo_17 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_17.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_17.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_17.setScaledContents(True)
-        self.lbl_shieldDemo_17.setObjectName("lbl_shieldDemo_17")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_17, 4, 2, 1, 1)
-        self.lbl_shieldDemo_19 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_19.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_19.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_19.setScaledContents(True)
-        self.lbl_shieldDemo_19.setObjectName("lbl_shieldDemo_19")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_19, 4, 6, 1, 1)
-        self.lbl_shieldDemo_16 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_16.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_16.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_16.setScaledContents(True)
-        self.lbl_shieldDemo_16.setObjectName("lbl_shieldDemo_16")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_16, 4, 0, 1, 1)
-        self.lbl_shieldDemo_20 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_20.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_20.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_20.setScaledContents(True)
-        self.lbl_shieldDemo_20.setObjectName("lbl_shieldDemo_20")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_20, 5, 0, 1, 1)
-        self.lbl_shieldDemo_31 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_31.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_31.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_31.setScaledContents(True)
-        self.lbl_shieldDemo_31.setObjectName("lbl_shieldDemo_31")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_31, 7, 6, 1, 1)
-        self.lbl_shieldDemo_11 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_11.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_11.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_11.setScaledContents(True)
-        self.lbl_shieldDemo_11.setObjectName("lbl_shieldDemo_11")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_11, 2, 6, 1, 1)
-        self.lbl_shieldDemo_29 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_29.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_29.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_29.setScaledContents(True)
-        self.lbl_shieldDemo_29.setObjectName("lbl_shieldDemo_29")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_29, 7, 2, 1, 1)
-        self.lbl_shieldDemo_8 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_8.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_8.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_8.setScaledContents(True)
-        self.lbl_shieldDemo_8.setObjectName("lbl_shieldDemo_8")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_8, 2, 0, 1, 1)
-        self.lbl_shieldDemo_24 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_24.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_24.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_24.setScaledContents(True)
-        self.lbl_shieldDemo_24.setObjectName("lbl_shieldDemo_24")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_24, 6, 0, 1, 1)
-        self.lbl_shieldDemo_13 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_13.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_13.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_13.setScaledContents(True)
-        self.lbl_shieldDemo_13.setObjectName("lbl_shieldDemo_13")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_13, 3, 2, 1, 1)
-        self.lbl_shieldDemo_7 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_7.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_7.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_7.setPixmap(QtGui.QPixmap(":/signs/7"))
-        self.lbl_shieldDemo_7.setScaledContents(True)
-        self.lbl_shieldDemo_7.setObjectName("lbl_shieldDemo_7")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_7, 1, 6, 1, 1)
-        self.lbl_shieldDemo_1 = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-        self.lbl_shieldDemo_1.setMinimumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_1.setMaximumSize(QtCore.QSize(48, 48))
-        self.lbl_shieldDemo_1.setPixmap(QtGui.QPixmap(":/signs/1"))
-        self.lbl_shieldDemo_1.setScaledContents(True)
-        self.lbl_shieldDemo_1.setObjectName("lbl_shieldDemo_1")
-        self.gridLayout_DemoData.addWidget(self.lbl_shieldDemo_1, 0, 2, 1, 1)
+    def create_grid(self, filepath):
+
+        i = 0
+        j = 0
+        
+        with open(filepath, 'r') as csvfile:
+            csv_reader = csv.reader(csvfile, delimiter=';')
+            
+            next(csv_reader)
+
+            for line in csv_reader:
+                if(int(line[2]) > 0):
+
+                    self.sign_id = ":/signs/" + line[0]
+                    self.sign_count = line[2]
+
+                    self.name_sign = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
+                    self.name_sign.setMinimumSize(QtCore.QSize(48, 48))
+                    self.name_sign.setMaximumSize(QtCore.QSize(48, 48))
+                    self.name_sign.setPixmap(QtGui.QPixmap(self.sign_id))
+                    self.name_sign.setScaledContents(True)
+                    self.gridLayout_DemoData.addWidget(self.name_sign, i,j,1,1)
+
+                    j = j+1
+
+                    self.lbl_amount = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
+                    sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+                    sizePolicy.setHorizontalStretch(0)
+                    sizePolicy.setVerticalStretch(0)
+                    sizePolicy.setHeightForWidth(self.lbl_amount.sizePolicy().hasHeightForWidth())
+                    self.lbl_amount.setSizePolicy(sizePolicy)
+                    self.lbl_amount.setMinimumSize(QtCore.QSize(40, 30))
+                    self.lbl_amount.setMaximumSize(QtCore.QSize(40, 30))
+                    self.lbl_amount.setObjectName("lbl_amount")
+                    self.lbl_amount.setStyleSheet(styles.styleText1)
+                    self.lbl_amount.setText(self.sign_count)
+                    self.gridLayout_DemoData.addWidget(self.lbl_amount, i, j, 1, 1)
+
+                    j = j+1
+                    if(j > 7):
+                        j = 0
+                        i = i+1
+
+    def delete_grid(self):
+        
+
+        if(self.gridLayout_DemoData.itemAt(0) is None):
+            print("empty")
+        else:
+            print("not empty")
+            
+            count=self.gridLayout_DemoData.count()
+            i = count
+            while(i >= 0):
+                print("removing item " + str(i))
+                #self.gridLayout_DemoData.itemAt(i).widget.setParent(None)
+                self.gridLayout_DemoData.removeItem(self.gridLayout_DemoData.itemAt(i))
+                i=i-1       
 
 
     def add_items(self):

@@ -52,15 +52,21 @@ class VzeController(GuiInterface):
 
     def loadFile(self):
         print("loading file method")
-        self.fileName, _ = QFileDialog.getOpenFileName(None, 'Open file',"C:\\", "Usable files (*.jpg *.jpeg *.gif *.png *.bmp *.avi *.mov *.mp4 *.mpeg)")
-        if self.fileName:
-            print(self.fileName)
-            return self.fileName
-        
-            
-            
+        filePath, _ = QFileDialog.getOpenFileName(None, 'Open file',"C:\\", "Usable files (*.jpg *.jpeg *.gif *.png *.bmp *.avi *.mov *.mp4 *.mpeg)")
+        if filePath:
+            #print(filePath)
+            self.setFilePath(filePath)
+            #return self.fileName
+  
             #self.opencv.openCVMethod()
             
+    def setFilePath(self, filepath):
+        self.fileName = filepath
+        print(self.fileName)
+
+    def getFilePath(self):
+        return self.fileName
+
     def processCV(self):
         self.opencv.openCVMethod()
 

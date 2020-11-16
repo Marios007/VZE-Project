@@ -2,12 +2,17 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import gui.styles as styles
 import gui.image_ressources as image_ressources
 import csv
+import os
 
 
 class VzeGui(QtWidgets.QMainWindow):
 
     stack_lastScreen = []
     array_dataInput = [[0 for x in range(43)] for y in range(2)]
+    demo_video1 = "./gui/DemoVideo_gutesWetter.mp4"
+    demo_video1_preview = "./gui/pics/DemoVideo_gutesWetter_Thumbnail.jpg"
+    demo_video2 = "./gui/DemoVideo_schlechtesWetter.mp4"
+    demo_video2_preview = "./gui/pics/DemoVideo_schlechtesWetter_Thumbnail.jpg"
 
     def __init__(self, logicInterface):
         QtWidgets.QMainWindow.__init__(self)
@@ -114,6 +119,27 @@ class VzeGui(QtWidgets.QMainWindow):
         self.demodatascreen.create_grid(demodatafile)
         self.change_screen(6)
 
+    def showPreviewImage(self, filepath, nextScreen):
+        #print("method showPreviewImage")
+        #file = self.logic.getFilePath()
+        #print(filepath)
+        
+        #if image file
+        pixmap = QtGui.QPixmap(filepath)
+        pixmap_scaled = pixmap.scaled(790, 410)
+        graphicsScene = QtWidgets.QGraphicsScene(self)
+        graphicsScene.addPixmap(pixmap_scaled)
+
+        #if video file
+
+        if(nextScreen == 2):
+            self.previewscreen.graphicsPreview.setScene(graphicsScene)
+        elif(nextScreen == 4):
+            self.analyzepvscreen.graphicsAnalyzePreview.setScene(graphicsScene)
+        
+        self.change_screen(nextScreen)
+
+
 
 # Start Screen
 class ui_startscreen(QtWidgets.QWidget):
@@ -180,7 +206,7 @@ class ui_startscreen(QtWidgets.QWidget):
         self.btn_loadFile.setText(("Datei auswählen"))
         self.btn_loadFile.setToolTip('Laden eines Videos oder Bildes')
         self.btn_loadFile.clicked.connect(self.logic.loadFile)
-        self.btn_loadFile.clicked.connect(lambda: self.gui.change_screen(2))
+        self.btn_loadFile.clicked.connect(lambda: self.gui.showPreviewImage(self.logic.getFilePath(),2))
 
 
         self.btn_demoToDemo = QtWidgets.QPushButton(self)
@@ -311,8 +337,8 @@ class ui_demoscreen(QtWidgets.QWidget):
         self.btn_demoSonne.setIcon(icon)
         self.btn_demoSonne.setIconSize(QtCore.QSize(30, 30))
         self.btn_demoSonne.setText(("Video mit Sonne"))
-        self.btn_demoSonne.clicked.connect(lambda: self.gui.change_screen(4))
-
+        self.btn_demoSonne.clicked.connect(lambda: self.gui.showPreviewImage(self.gui.demo_video1_preview,4))
+        
         self.btn_demoRegen = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -325,9 +351,8 @@ class ui_demoscreen(QtWidgets.QWidget):
         icon.addPixmap(QtGui.QPixmap(":/icons/demo_regen"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_demoRegen.setIcon(icon)
         self.btn_demoRegen.setIconSize(QtCore.QSize(30, 30))
-        self.btn_demoRegen.setText(("Video mit Sonne"))
         self.btn_demoRegen.setText(("Video mit Regen"))
-        self.btn_demoRegen.clicked.connect(lambda: self.gui.change_screen(4))
+        self.btn_demoRegen.clicked.connect(lambda: self.gui.showPreviewImage(self.gui.demo_video2_preview,4))
 
         self.btn_dataSonne = QtWidgets.QPushButton(self)
         self.btn_dataSonne.setMinimumSize(QtCore.QSize(55, 55))
@@ -362,9 +387,7 @@ class ui_demoscreen(QtWidgets.QWidget):
         icon2.addPixmap(QtGui.QPixmap(":/icons/back_icon"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_back_demoscreen.setIcon(icon2)
         self.btn_back_demoscreen.setIconSize(QtCore.QSize(20, 20))
-        self.btn_back_demoscreen.clicked.connect(lambda: self.gui.goBack_Screen())
-        
-        
+        self.btn_back_demoscreen.clicked.connect(lambda: self.gui.goBack_Screen())  
     
     def create_label(self):
         
@@ -727,7 +750,8 @@ class ui_DIScreen(QtWidgets.QWidget):
         self.btn_skip.setCheckable(False)
         self.btn_skip.setFlat(False)
         self.btn_skip.setObjectName("btn_skip")
-        self.btn_skip.clicked.connect(lambda: self.gui.change_screen(4))
+        #self.btn_skip.clicked.connect(lambda: self.gui.change_screen(4))
+        self.btn_skip.clicked.connect(lambda: self.gui.showPreviewImage(self.logic.getFilePath(),4))
 
         self.btn_DInext = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -743,6 +767,7 @@ class ui_DIScreen(QtWidgets.QWidget):
         self.btn_DInext.setFlat(False)
         self.btn_DInext.setObjectName("btn_DInext")
         self.btn_DInext.clicked.connect(lambda: self.save_gridContent())
+        self.btn_DInext.clicked.connect(lambda: self.gui.showPreviewImage(self.logic.getFilePath(),4))
 
     def create_label(self):
         self.lbl_headline_DIScreen = QtWidgets.QLabel(self)
@@ -983,6 +1008,7 @@ class ui_analyzePvScreen(QtWidgets.QWidget):
         self.graphicsAnalyzePreview.setMinimumSize(QtCore.QSize(800, 420))
         self.graphicsAnalyzePreview.setMaximumSize(QtCore.QSize(800, 420))
         self.graphicsAnalyzePreview.setObjectName("graphicsAnalyzePreview")
+        self.graphicsAnalyzePreview
 
     def create_spacer(self):
         self.spacerItem43 = QtWidgets.QSpacerItem(10, 10, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1129</width>
+    <width>1133</width>
     <height>840</height>
    </rect>
   </property>
@@ -145,7 +145,7 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">
+             <iconset resource="image_ressources.qrc">
               <normaloff>:/icons/info_logo</normaloff>:/icons/info_logo</iconset>
             </property>
             <property name="iconSize">
@@ -532,7 +532,7 @@ QPushButton:hover{
              <string notr="true"/>
             </property>
             <property name="icon">
-             <iconset resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">
+             <iconset resource="image_ressources.qrc">
               <normaloff>:/icons/info_logo</normaloff>:/icons/info_logo</iconset>
             </property>
             <property name="iconSize">
@@ -838,7 +838,7 @@ QPushButton:hover{
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">
+               <iconset resource="image_ressources.qrc">
                 <normaloff>:/icons/data_icon</normaloff>:/icons/data_icon</iconset>
               </property>
               <property name="iconSize">
@@ -902,7 +902,7 @@ QPushButton:hover{
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">
+               <iconset resource="image_ressources.qrc">
                 <normaloff>:/icons/data_icon</normaloff>:/icons/data_icon</iconset>
               </property>
               <property name="iconSize">
@@ -1014,7 +1014,7 @@ QPushButton:hover{
              <string notr="true"/>
             </property>
             <property name="icon">
-             <iconset resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">
+             <iconset resource="image_ressources.qrc">
               <normaloff>:/icons/back_icon</normaloff>:/icons/back_icon</iconset>
             </property>
             <property name="iconSize">
@@ -1156,7 +1156,7 @@ QPushButton:hover{
              <string notr="true"/>
             </property>
             <property name="icon">
-             <iconset resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">
+             <iconset resource="image_ressources.qrc">
               <normaloff>:/icons/info_logo</normaloff>:/icons/info_logo</iconset>
             </property>
             <property name="iconSize">
@@ -1416,7 +1416,7 @@ QPushButton:hover{
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">
+             <iconset resource="image_ressources.qrc">
               <normaloff>:/icons/back_icon</normaloff>:/icons/back_icon</iconset>
             </property>
             <property name="iconSize">
@@ -1637,7 +1637,7 @@ QPushButton:hover{
              <string notr="true"/>
             </property>
             <property name="icon">
-             <iconset resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">
+             <iconset resource="image_ressources.qrc">
               <normaloff>:/icons/info_logo</normaloff>:/icons/info_logo</iconset>
             </property>
             <property name="iconSize">
@@ -1892,7 +1892,7 @@ QPushButton:hover{
                    <string notr="true"/>
                   </property>
                   <property name="pixmap">
-                   <pixmap resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">:/signs/7</pixmap>
+                   <pixmap resource="image_ressources.qrc">:/signs/7</pixmap>
                   </property>
                   <property name="scaledContents">
                    <bool>true</bool>
@@ -2802,7 +2802,7 @@ QPushButton:hover{
                    <string notr="true"/>
                   </property>
                   <property name="pixmap">
-                   <pixmap resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">:/signs/2</pixmap>
+                   <pixmap resource="image_ressources.qrc">:/signs/2</pixmap>
                   </property>
                   <property name="scaledContents">
                    <bool>true</bool>
@@ -2839,7 +2839,7 @@ QPushButton:hover{
                    <string notr="true"/>
                   </property>
                   <property name="pixmap">
-                   <pixmap resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">:/signs/5</pixmap>
+                   <pixmap resource="image_ressources.qrc">:/signs/5</pixmap>
                   </property>
                   <property name="scaledContents">
                    <bool>true</bool>
@@ -3362,7 +3362,7 @@ QPushButton:hover{
                    <string notr="true"/>
                   </property>
                   <property name="pixmap">
-                   <pixmap resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">:/signs/3</pixmap>
+                   <pixmap resource="image_ressources.qrc">:/signs/3</pixmap>
                   </property>
                   <property name="scaledContents">
                    <bool>true</bool>
@@ -3569,7 +3569,7 @@ QPushButton:hover{
                    <string notr="true"/>
                   </property>
                   <property name="pixmap">
-                   <pixmap resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">:/signs/4</pixmap>
+                   <pixmap resource="image_ressources.qrc">:/signs/4</pixmap>
                   </property>
                   <property name="scaledContents">
                    <bool>true</bool>
@@ -3776,7 +3776,7 @@ QPushButton:hover{
                    <string notr="true"/>
                   </property>
                   <property name="pixmap">
-                   <pixmap resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">:/signs/0</pixmap>
+                   <pixmap resource="image_ressources.qrc">:/signs/0</pixmap>
                   </property>
                   <property name="scaledContents">
                    <bool>true</bool>
@@ -3983,7 +3983,7 @@ QPushButton:hover{
                    <string notr="true"/>
                   </property>
                   <property name="pixmap">
-                   <pixmap resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">:/signs/3</pixmap>
+                   <pixmap resource="image_ressources.qrc">:/signs/3</pixmap>
                   </property>
                   <property name="scaledContents">
                    <bool>true</bool>
@@ -4166,7 +4166,7 @@ QPushButton:hover{
                    <string notr="true"/>
                   </property>
                   <property name="pixmap">
-                   <pixmap resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">:/signs/1</pixmap>
+                   <pixmap resource="image_ressources.qrc">:/signs/1</pixmap>
                   </property>
                   <property name="scaledContents">
                    <bool>true</bool>
@@ -4896,7 +4896,7 @@ QPushButton:hover{
              <string notr="true"/>
             </property>
             <property name="icon">
-             <iconset resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">
+             <iconset resource="image_ressources.qrc">
               <normaloff>:/icons/back_icon</normaloff>:/icons/back_icon</iconset>
             </property>
             <property name="iconSize">
@@ -5290,7 +5290,7 @@ QPushButton:hover{
              <string notr="true"/>
             </property>
             <property name="icon">
-             <iconset resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">
+             <iconset resource="image_ressources.qrc">
               <normaloff>:/icons/info_logo</normaloff>:/icons/info_logo</iconset>
             </property>
             <property name="iconSize">
@@ -5533,7 +5533,7 @@ QPushButton:hover{
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">
+             <iconset resource="image_ressources.qrc">
               <normaloff>:/icons/back_icon</normaloff>:/icons/back_icon</iconset>
             </property>
             <property name="iconSize">
@@ -5779,7 +5779,7 @@ QPushButton:hover{
              <string notr="true"/>
             </property>
             <property name="icon">
-             <iconset resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">
+             <iconset resource="image_ressources.qrc">
               <normaloff>:/icons/info_logo</normaloff>:/icons/info_logo</iconset>
             </property>
             <property name="iconSize">
@@ -6385,7 +6385,7 @@ QPushButton:hover{
              <string notr="true"/>
             </property>
             <property name="icon">
-             <iconset resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">
+             <iconset resource="image_ressources.qrc">
               <normaloff>:/icons/info_logo</normaloff>:/icons/info_logo</iconset>
             </property>
             <property name="iconSize">
@@ -7972,7 +7972,7 @@ QPushButton:hover{
              <string notr="true"/>
             </property>
             <property name="icon">
-             <iconset resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">
+             <iconset resource="image_ressources.qrc">
               <normaloff>:/icons/info_logo</normaloff>:/icons/info_logo</iconset>
             </property>
             <property name="iconSize">
@@ -8227,7 +8227,7 @@ QPushButton:hover{
                    <string notr="true"/>
                   </property>
                   <property name="pixmap">
-                   <pixmap resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">:/signs/5</pixmap>
+                   <pixmap resource="image_ressources.qrc">:/signs/5</pixmap>
                   </property>
                   <property name="scaledContents">
                    <bool>true</bool>
@@ -8434,7 +8434,7 @@ QPushButton:hover{
                    <string notr="true"/>
                   </property>
                   <property name="pixmap">
-                   <pixmap resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">:/signs/4</pixmap>
+                   <pixmap resource="image_ressources.qrc">:/signs/4</pixmap>
                   </property>
                   <property name="scaledContents">
                    <bool>true</bool>
@@ -8505,7 +8505,7 @@ QPushButton:hover{
                    <string notr="true"/>
                   </property>
                   <property name="pixmap">
-                   <pixmap resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">:/signs/2</pixmap>
+                   <pixmap resource="image_ressources.qrc">:/signs/2</pixmap>
                   </property>
                   <property name="scaledContents">
                    <bool>true</bool>
@@ -8820,7 +8820,7 @@ QPushButton:hover{
                    <string notr="true"/>
                   </property>
                   <property name="pixmap">
-                   <pixmap resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">:/signs/3</pixmap>
+                   <pixmap resource="image_ressources.qrc">:/signs/3</pixmap>
                   </property>
                   <property name="scaledContents">
                    <bool>true</bool>
@@ -8894,7 +8894,7 @@ QPushButton:hover{
                    <string notr="true"/>
                   </property>
                   <property name="pixmap">
-                   <pixmap resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">:/signs/0</pixmap>
+                   <pixmap resource="image_ressources.qrc">:/signs/0</pixmap>
                   </property>
                   <property name="scaledContents">
                    <bool>true</bool>
@@ -8965,7 +8965,7 @@ QPushButton:hover{
                    <string notr="true"/>
                   </property>
                   <property name="pixmap">
-                   <pixmap resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">:/signs/3</pixmap>
+                   <pixmap resource="image_ressources.qrc">:/signs/3</pixmap>
                   </property>
                   <property name="scaledContents">
                    <bool>true</bool>
@@ -9384,7 +9384,7 @@ QPushButton:hover{
                    <string notr="true"/>
                   </property>
                   <property name="pixmap">
-                   <pixmap resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">:/signs/7</pixmap>
+                   <pixmap resource="image_ressources.qrc">:/signs/7</pixmap>
                   </property>
                   <property name="scaledContents">
                    <bool>true</bool>
@@ -9421,7 +9421,7 @@ QPushButton:hover{
                    <string notr="true"/>
                   </property>
                   <property name="pixmap">
-                   <pixmap resource="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc">:/signs/1</pixmap>
+                   <pixmap resource="image_ressources.qrc">:/signs/1</pixmap>
                   </property>
                   <property name="scaledContents">
                    <bool>true</bool>
@@ -9678,7 +9678,7 @@ QPushButton:hover{
              <string notr="true"/>
             </property>
             <property name="pixmap">
-             <pixmap>../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/pics/LogoSK_big_1.svg</pixmap>
+             <pixmap>../../../../OneDrive/Code/Git/Proj_VZE/gui/pics/LogoSK_big_1.svg</pixmap>
             </property>
            </widget>
           </item>
@@ -9855,7 +9855,8 @@ QPushButton:hover{
   </widget>
  </widget>
  <resources>
-  <include location="../../../../../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc"/>
+  <include location="image_ressources.qrc"/>
+  <include location="../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc"/>
  </resources>
  <connections/>
 </ui>

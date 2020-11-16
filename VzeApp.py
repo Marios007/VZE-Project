@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QFileDialog
 from gui.VzeGui import *
 
-
+#interface definition
 class GuiInterface:
 
     def doSomething(self):
@@ -10,9 +10,14 @@ class GuiInterface:
     def loadFile(self):
         return
 
-    def processCV(self, filename):
+    def setFilePath(self, filepath):
         return
 
+    def getFilePath(self):
+        return
+
+    def processCV(self):
+        return
 
 class openCV_Interface:
 
@@ -42,7 +47,7 @@ class VzeController(GuiInterface):
 
     logic = None
     opencv = openCvController()
-    fileName = None
+    _fileName = None
 
     def __init__(self, logic):
         self.logic = logic
@@ -57,15 +62,13 @@ class VzeController(GuiInterface):
             #print(filePath)
             self.setFilePath(filePath)
             #return self.fileName
-  
-            #self.opencv.openCVMethod()
             
     def setFilePath(self, filepath):
-        self.fileName = filepath
-        print(self.fileName)
+        self._fileName = filepath
+        print(self._fileName)
 
     def getFilePath(self):
-        return self.fileName
+        return self._fileName
 
     def processCV(self):
         self.opencv.openCVMethod()

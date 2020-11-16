@@ -1,7 +1,5 @@
 import cv2
 
-
-
 class imagesProcessing():
 
     # Important - openvc reads images in BGR

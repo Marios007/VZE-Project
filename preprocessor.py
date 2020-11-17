@@ -1,4 +1,5 @@
 import cv2
+import filetype
 
 class imagesProcessing():
     def __init__(self):
@@ -44,4 +45,24 @@ class imagesProcessing():
             return image
 
     def check_File(self, filepath):
-        print("To do")
+        print("method check_file in preprocessor")
+        kind = filetype.guess('tests/fixtures/sample.jpg')
+        if kind is None:
+            print('Cannot guess file type!')
+
+        print('File extension: %s' % kind.extension)
+        print('File MIME type: %s' % kind.mime)
+
+        #if video
+        vidcap=cv2.VideoCapture(filepath)
+        vidcap.set(cv2.CAP_PROP_POS_AVI_RATIO,1)
+        duration = vidcap.get(cv2.CAP_PROP_POS_MSEC)
+        width = int(vidcap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        height = int(vidcap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        fps = int(vidcap.get(cv2.CAP_PROP_FPS))
+        n_frames = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))
+        image = self.get_firstImage(filepath)
+
+
+        #wenn alles erfüllt, dann True zurückgeben
+        return True

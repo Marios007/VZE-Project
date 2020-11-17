@@ -110,7 +110,7 @@ class VzeGui(QtWidgets.QMainWindow):
         if(demoID == 1):
             demodatafile='./gui/demo_data_1.csv'
         elif (demoID == 2):
-            demodatafile='./gui/demo_data_2_full.csv'
+            demodatafile='./gui/demo_data_2.csv'
         else:
             print("Unknown error")
 
@@ -756,7 +756,7 @@ class ui_DIScreen(QtWidgets.QWidget):
         self.btn_reset.setCheckable(False)
         self.btn_reset.setFlat(False)
         self.btn_reset.setObjectName("btn_reset")
-        self.btn_reset.clicked.connect(lambda: self.create_gridContent())
+        self.btn_reset.clicked.connect(lambda: self.reset_gridContent())
 
         self.btn_skip = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -914,6 +914,35 @@ class ui_DIScreen(QtWidgets.QWidget):
         #    print(self.gui.array_dataInput[0][j], end=' ')
         #    print(self.gui.array_dataInput[1][j], end=' ')
         #    print()
+
+    def reset_gridContent(self):
+        i = 0
+        k = 0
+        
+        count = self.gridLayout_DIScreen.count() -1
+        i = 0
+        k = 0
+    
+        while(i < count):
+            labelItem = self.gridLayout_DIScreen.itemAt(i).widget()
+            labelItemValue = str(labelItem.objectName())
+            print("Label: " + str(labelItem))
+            print("Label Value: " + labelItemValue)
+            #self.gui.array_dataInput[0][k] = labelItemValue
+            i = i+1
+            
+            spinboxItem = self.gridLayout_DIScreen.itemAt(i).widget()
+            #print("SpinBox: " + str(spinboxItem))
+            #spinboxItemValue = str(spinboxItem.value())
+            #print("SpinBox Value Before: " + spinboxItemValue)
+            spinboxItem.setValue(0)
+            #spinboxItemValue = str(spinboxItem.value())
+            #print("SpinBox Value After: " + spinboxItemValue)
+            
+            #Wenn Array auch zurückgesetzt werden soll, diese Zeile hier rein
+            #self.gui.array_dataInput[1][k] = spinboxItemValue
+            i = i+1
+            k = k+1
         
 
 # Analyze Preview Screen
@@ -1664,18 +1693,22 @@ class ui_DemoDataScreen(QtWidgets.QWidget):
 
     def delete_grid(self):
         
-
+   
         if(self.gridLayout_DemoData.itemAt(0) is None):
             print("empty")
         else:
             #print("not empty")
-            
             count=self.gridLayout_DemoData.count()
-            i = count
+            i = count-1
             while(i >= 0):
-                print("removing item " + str(i))
-                #self.gridLayout_DemoData.itemAt(i).widget.setParent(None)
-                self.gridLayout_DemoData.removeItem(self.gridLayout_DemoData.itemAt(i))
+                #print("removing item " + str(i))
+                item = self.gridLayout_DemoData.itemAt(i)
+                #Unschön, aber notwendig, da sonst letztes Element immer angezeigt wird.
+                widget = item.widget()
+                widget.setText("")
+                widget.setPixmap(QtGui.QPixmap("None"))
+                #Löschen des Elementes aus dem GridLayout
+                self.gridLayout_DemoData.removeItem(item)
                 i=i-1       
 
 

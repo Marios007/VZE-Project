@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QFileDialog
 from gui.VzeGui import *
+from preprocessor import *
 import abc
 
 #interface definition
@@ -49,6 +50,7 @@ class VzeController(GuiInterface):
 
     logic = None
     opencv = openCvController()
+    preprocessor = imagesProcessing()
     _fileName = None
 
     def __init__(self, logic):

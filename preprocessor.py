@@ -1,7 +1,9 @@
 import cv2
 
 class imagesProcessing():
-
+    def __init__(self):
+        return
+        
     # Important - openvc reads images in BGR
     def read_image(self, path):
         self.image = cv2.imread(path)

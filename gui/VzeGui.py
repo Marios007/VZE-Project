@@ -756,7 +756,7 @@ class ui_DIScreen(QtWidgets.QWidget):
         self.btn_reset.setCheckable(False)
         self.btn_reset.setFlat(False)
         self.btn_reset.setObjectName("btn_reset")
-        self.btn_reset.clicked.connect(lambda: self.create_gridContent())
+        self.btn_reset.clicked.connect(lambda: self.reset_gridContent())
 
         self.btn_skip = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -914,6 +914,35 @@ class ui_DIScreen(QtWidgets.QWidget):
         #    print(self.gui.array_dataInput[0][j], end=' ')
         #    print(self.gui.array_dataInput[1][j], end=' ')
         #    print()
+
+    def reset_gridContent(self):
+        i = 0
+        k = 0
+        
+        count = self.gridLayout_DIScreen.count() -1
+        i = 0
+        k = 0
+    
+        while(i < count):
+            labelItem = self.gridLayout_DIScreen.itemAt(i).widget()
+            labelItemValue = str(labelItem.objectName())
+            print("Label: " + str(labelItem))
+            print("Label Value: " + labelItemValue)
+            #self.gui.array_dataInput[0][k] = labelItemValue
+            i = i+1
+            
+            spinboxItem = self.gridLayout_DIScreen.itemAt(i).widget()
+            #print("SpinBox: " + str(spinboxItem))
+            #spinboxItemValue = str(spinboxItem.value())
+            #print("SpinBox Value Before: " + spinboxItemValue)
+            spinboxItem.setValue(0)
+            #spinboxItemValue = str(spinboxItem.value())
+            #print("SpinBox Value After: " + spinboxItemValue)
+            
+            #Wenn Array auch zurückgesetzt werden soll, diese Zeile hier rein
+            #self.gui.array_dataInput[1][k] = spinboxItemValue
+            i = i+1
+            k = k+1
         
 
 # Analyze Preview Screen

@@ -67,6 +67,7 @@ class VzeController(GuiInterface):
             status = self.preprocessor.check_File(filePath)
             if status:
                 self.setFilePath(filePath)
+            
             #return self.fileName
             
     def setFilePath(self, filepath):

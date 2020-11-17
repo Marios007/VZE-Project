@@ -26,8 +26,8 @@ class VzeGui(QtWidgets.QMainWindow):
         self.setWindowIcon(icon)
     
        # Size of window is always 0,65 times of availabe window
-        size = QtWidgets.QDesktopWidget().availableGeometry()
-        self.setMinimumSize( size.width() * 0.65, size.height() * 0.65)
+        self.size = QtWidgets.QDesktopWidget().availableGeometry()
+        self.setMinimumSize( self.size.width() * 0.65, self.size.height() * 0.65)
 
         # Main widget
         window = QtWidgets.QWidget()
@@ -1743,7 +1743,7 @@ class ui_InfoScreen(QtWidgets.QWidget):
         self.gui = Gui
 
         self.setObjectName("InfoScreen")
-        self.setFixedSize(800,700)
+        self.setFixedSize( self.gui.size.width() * 0.75, self.gui.size.height() * 0.75)
         self.setStyleSheet(styles.styleBackground)
         self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint)
 

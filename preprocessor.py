@@ -1,5 +1,5 @@
 import cv2
-import filetype
+#import filetype
 
 class imagesProcessing():
     def __init__(self):
@@ -36,6 +36,7 @@ class imagesProcessing():
         return resized
 
     def get_firstImage(self, videopath):
+        return
             #Create Thumbnail of video
             #vidcap = cv2.VideoCapture(videopath)
             #success,image = vidcap.read()

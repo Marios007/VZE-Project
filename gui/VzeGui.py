@@ -118,7 +118,15 @@ class VzeGui(QtWidgets.QMainWindow):
         self.demodatascreen.create_grid(demodatafile)
         self.change_screen(6)
 
-    def showPreviewImage(self, filepath, nextScreen):
+    def createGraphicsScene(self, filepath):
+        # Diese Methode in den PreProcessor verlagern
+        pixmap = QtGui.QPixmap(filepath)
+        pixmap_scaled = pixmap.scaled(790, 410)
+        graphicsScene = QtWidgets.QGraphicsScene(self)
+        graphicsScene.addPixmap(pixmap_scaled)
+        return graphicsScene
+    
+    def showPreviewImage(self, filepath):
         print("method showPreviewImage")
         #file = self.logic.getFilePath()
         #print(filepath)
@@ -131,29 +139,21 @@ class VzeGui(QtWidgets.QMainWindow):
         #if video file
         elif((filepath.endswith('.avi')) or (filepath.endswith('.mov')) or (filepath.endswith('.mp4')) or (filepath.endswith('.mpeg'))):
             print("File is a video")
-            #Create Thumbnail of video
-            #cap = cv2.VideoCapture(filepath)
-            #success, image = cap.read()
-            #print(success)
-            #cv2.imwrite("./gui/pics/thumb.jpg", image)
-            #thumb = cv2.resize(image, 790, interpolation=cv2.INTER_AREA)
-            #filepath = "./gui/pics/thumb.jpg"
+            #imagepath = preprocessor.get_firstImage(filepath)
 
+        #graphicsScene = self.preprocessor.createGraphicsScene(filepath)
+        graphicsScene = self.createGraphicsScene(filepath)
 
-        else:
-            print("Unsupported FileType")
+        self.previewscreen.graphicsPreview.setScene(graphicsScene)
+        self.analyzepvscreen.graphicsAnalyzePreview.setScene(graphicsScene)
 
-        pixmap = QtGui.QPixmap(filepath)
-        pixmap_scaled = pixmap.scaled(790, 410)
-        graphicsScene = QtWidgets.QGraphicsScene(self)
-        graphicsScene.addPixmap(pixmap_scaled)
+    def showImageOnAnalyzeScreen(self, filepath):
+        print("method showImageOnAnalyzeScreen")
+                
+        #graphicsScene = self.preprocessor.createGraphicsScene(filepath)
+        graphicsScene = self.createGraphicsScene(filepath)
 
-        if(nextScreen == 2):
-            self.previewscreen.graphicsPreview.setScene(graphicsScene)
-        elif(nextScreen == 4):
-            self.analyzepvscreen.graphicsAnalyzePreview.setScene(graphicsScene)
-        
-        self.change_screen(nextScreen)
+        self.analyzescreen.graphicsAnalyze.setScene(graphicsScene) 
 
 
 
@@ -222,7 +222,8 @@ class ui_startscreen(QtWidgets.QWidget):
         self.btn_loadFile.setText(("Datei auswählen"))
         self.btn_loadFile.setToolTip('Laden eines Videos oder Bildes')
         self.btn_loadFile.clicked.connect(self.logic.loadFile)
-        self.btn_loadFile.clicked.connect(lambda: self.gui.showPreviewImage(self.logic.getFilePath(),2))
+        self.btn_loadFile.clicked.connect(lambda: self.gui.showPreviewImage(self.logic.getFilePath()))
+        self.btn_loadFile.clicked.connect(lambda: self.gui.change_screen(2))
 
 
         self.btn_demoToDemo = QtWidgets.QPushButton(self)
@@ -353,9 +354,10 @@ class ui_demoscreen(QtWidgets.QWidget):
         self.btn_demoSonne.setIconSize(QtCore.QSize(30, 30))
         self.btn_demoSonne.setText(("Video mit Sonne"))
         self.btn_demoSonne.clicked.connect(lambda: self.logic.setFilePath(self.gui.demo_video1))
-        #self.btn_demoSonne.clicked.connect(lambda: self.gui.showPreviewImage(self.logic.getFilePath(),4))
+        #self.btn_demoSonne.clicked.connect(lambda: self.gui.showPreviewImage(self.logic.getFilePath()))
         #Temporär den Screenshot des Videos verwenden, bis selbst erstellt werden kann
-        self.btn_demoSonne.clicked.connect(lambda: self.gui.showPreviewImage(self.gui.demo_video1_preview,4))
+        self.btn_demoSonne.clicked.connect(lambda: self.gui.showPreviewImage(self.gui.demo_video1_preview))
+        self.btn_demoSonne.clicked.connect(lambda: self.gui.change_screen(4))
         
         self.btn_demoRegen = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -371,9 +373,10 @@ class ui_demoscreen(QtWidgets.QWidget):
         self.btn_demoRegen.setIconSize(QtCore.QSize(30, 30))
         self.btn_demoRegen.setText(("Video mit Regen"))
         self.btn_demoRegen.clicked.connect(lambda: self.logic.setFilePath(self.gui.demo_video2))
-        #self.btn_demoRegen.clicked.connect(lambda: self.gui.showPreviewImage(self.logic.getFilePath(),4))
+        #self.btn_demoRegen.clicked.connect(lambda: self.gui.showPreviewImage(self.logic.getFilePath()))
         #Temporär den Screenshot des Videos verwenden, bis selbst erstellt werden kann
-        self.btn_demoRegen.clicked.connect(lambda: self.gui.showPreviewImage(self.gui.demo_video2_preview,4))
+        self.btn_demoRegen.clicked.connect(lambda: self.gui.showPreviewImage(self.gui.demo_video2_preview))
+        self.btn_demoRegen.clicked.connect(lambda: self.gui.change_screen(4))
 
         self.btn_dataSonne = QtWidgets.QPushButton(self)
         self.btn_dataSonne.setMinimumSize(QtCore.QSize(55, 55))
@@ -771,8 +774,8 @@ class ui_DIScreen(QtWidgets.QWidget):
         self.btn_skip.setCheckable(False)
         self.btn_skip.setFlat(False)
         self.btn_skip.setObjectName("btn_skip")
-        #self.btn_skip.clicked.connect(lambda: self.gui.change_screen(4))
-        self.btn_skip.clicked.connect(lambda: self.gui.showPreviewImage(self.logic.getFilePath(),4))
+        self.btn_skip.clicked.connect(lambda: self.gui.change_screen(4))
+        
 
         self.btn_DInext = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -788,7 +791,7 @@ class ui_DIScreen(QtWidgets.QWidget):
         self.btn_DInext.setFlat(False)
         self.btn_DInext.setObjectName("btn_DInext")
         self.btn_DInext.clicked.connect(lambda: self.save_gridContent())
-        self.btn_DInext.clicked.connect(lambda: self.gui.showPreviewImage(self.logic.getFilePath(),4))
+        self.btn_DInext.clicked.connect(lambda: self.gui.change_screen(4))
 
     def create_label(self):
         self.lbl_headline_DIScreen = QtWidgets.QLabel(self)
@@ -925,9 +928,9 @@ class ui_DIScreen(QtWidgets.QWidget):
     
         while(i < count):
             labelItem = self.gridLayout_DIScreen.itemAt(i).widget()
-            labelItemValue = str(labelItem.objectName())
-            print("Label: " + str(labelItem))
-            print("Label Value: " + labelItemValue)
+            #labelItemValue = str(labelItem.objectName())
+            #print("Label: " + str(labelItem))
+            #print("Label Value: " + labelItemValue)
             #self.gui.array_dataInput[0][k] = labelItemValue
             i = i+1
             

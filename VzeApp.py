@@ -1,9 +1,11 @@
 from PyQt5.QtWidgets import QFileDialog
 from gui.VzeGui import *
+import abc
 
 #interface definition
-class GuiInterface:
-
+class GuiInterface(abc.ABC):
+    
+    @abc.abstractmethod
     def doSomething(self):
         return
 
@@ -53,7 +55,7 @@ class VzeController(GuiInterface):
         self.logic = logic
 
     def doSomething(self):
-        print("We are doing something")
+       print("We are doing something")
 
     def loadFile(self):
         print("loading file method")

@@ -1,4 +1,5 @@
 import cv2
+import filetype
 
 class imagesProcessing():
     def __init__(self):
@@ -36,16 +37,32 @@ class imagesProcessing():
 
     def get_firstImage(self, videopath):
             #Create Thumbnail of video
-            vidcap = cv2.VideoCapture(videopath)
-            success,image = vidcap.read()
-            if success:
-                cv2.imwrite("./frame.jpg", image)     # save frame as JPEG file
-            vidcap.release()
-            return image
+            #vidcap = cv2.VideoCapture(videopath)
+            #success,image = vidcap.read()
+            #if success:
+            #    cv2.imwrite("./frame.jpg", image)     # save frame as JPEG file
+            #vidcap.release()
+            #return image
 
-    def createGraphicsScene(self, filepath):
-        pixmap = QtGui.QPixmap(filepath)
-        pixmap_scaled = pixmap.scaled(790, 410)
-        graphicsScene = QtWidgets.QGraphicsScene(self)
-        graphicsScene.addPixmap(pixmap_scaled)
-        return graphicsScene
+    def check_File(self, filepath):
+        #print("method check_file in preprocessor")
+        #kind = filetype.guess('tests/fixtures/sample.jpg')
+        #if kind is None:
+        #    print('Cannot guess file type!')
+
+        #print('File extension: %s' % kind.extension)
+        #print('File MIME type: %s' % kind.mime)
+
+        ##if video
+        #vidcap=cv2.VideoCapture(filepath)
+        #vidcap.set(cv2.CAP_PROP_POS_AVI_RATIO,1)
+        #duration = vidcap.get(cv2.CAP_PROP_POS_MSEC)
+        #width = int(vidcap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        #height = int(vidcap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        #fps = int(vidcap.get(cv2.CAP_PROP_FPS))
+        #n_frames = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))
+        #image = self.get_firstImage(filepath)
+
+
+        ##wenn alles erfüllt, dann True zurückgeben
+        return True

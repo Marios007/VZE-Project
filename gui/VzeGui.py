@@ -110,7 +110,7 @@ class VzeGui(QtWidgets.QMainWindow):
         if(demoID == 1):
             demodatafile='./gui/demo_data_1.csv'
         elif (demoID == 2):
-            demodatafile='./gui/demo_data_2_full.csv'
+            demodatafile='./gui/demo_data_2.csv'
         else:
             print("Unknown error")
 
@@ -1693,18 +1693,22 @@ class ui_DemoDataScreen(QtWidgets.QWidget):
 
     def delete_grid(self):
         
-
+   
         if(self.gridLayout_DemoData.itemAt(0) is None):
             print("empty")
         else:
             #print("not empty")
-            
             count=self.gridLayout_DemoData.count()
-            i = count
+            i = count-1
             while(i >= 0):
-                print("removing item " + str(i))
-                #self.gridLayout_DemoData.itemAt(i).widget.setParent(None)
-                self.gridLayout_DemoData.removeItem(self.gridLayout_DemoData.itemAt(i))
+                #print("removing item " + str(i))
+                item = self.gridLayout_DemoData.itemAt(i)
+                #Unschön, aber notwendig, da sonst letztes Element immer angezeigt wird.
+                widget = item.widget()
+                widget.setText("")
+                widget.setPixmap(QtGui.QPixmap("None"))
+                #Löschen des Elementes aus dem GridLayout
+                self.gridLayout_DemoData.removeItem(item)
                 i=i-1       
 
 

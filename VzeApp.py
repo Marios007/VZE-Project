@@ -64,7 +64,9 @@ class VzeController(GuiInterface):
         filePath, _ = QFileDialog.getOpenFileName(None, 'Open file',"C:\\", "Usable files (*.jpg *.jpeg *.gif *.png *.bmp *.avi *.mov *.mp4 *.mpeg)")
         if filePath:
             #print(filePath)
-            self.setFilePath(filePath)
+            status = self.preprocessor.check_File(filePath)
+            if status:
+                self.setFilePath(filePath)
             #return self.fileName
             
     def setFilePath(self, filepath):

@@ -43,9 +43,5 @@ class imagesProcessing():
             vidcap.release()
             return image
 
-    def createGraphicsScene(self, filepath):
-        pixmap = QtGui.QPixmap(filepath)
-        pixmap_scaled = pixmap.scaled(790, 410)
-        graphicsScene = QtWidgets.QGraphicsScene(self)
-        graphicsScene.addPixmap(pixmap_scaled)
-        return graphicsScene
+    def check_File(self, filepath):
+        print("To do")

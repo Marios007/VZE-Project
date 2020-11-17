@@ -119,7 +119,6 @@ class VzeGui(QtWidgets.QMainWindow):
         self.change_screen(6)
 
     def createGraphicsScene(self, filepath):
-        # Diese Methode in den PreProcessor verlagern
         pixmap = QtGui.QPixmap(filepath)
         pixmap_scaled = pixmap.scaled(790, 410)
         graphicsScene = QtWidgets.QGraphicsScene(self)
@@ -141,7 +140,6 @@ class VzeGui(QtWidgets.QMainWindow):
             print("File is a video")
             #imagepath = preprocessor.get_firstImage(filepath)
 
-        #graphicsScene = self.preprocessor.createGraphicsScene(filepath)
         graphicsScene = self.createGraphicsScene(filepath)
 
         self.previewscreen.graphicsPreview.setScene(graphicsScene)
@@ -150,7 +148,6 @@ class VzeGui(QtWidgets.QMainWindow):
     def showImageOnAnalyzeScreen(self, filepath):
         print("method showImageOnAnalyzeScreen")
                 
-        #graphicsScene = self.preprocessor.createGraphicsScene(filepath)
         graphicsScene = self.createGraphicsScene(filepath)
 
         self.analyzescreen.graphicsAnalyze.setScene(graphicsScene) 

@@ -14,7 +14,8 @@ class imagesProcessing():
 
     def read_video(self, path):
         cap = cv2.VideoCapture(path)
-        height, width = None, None
+        width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
         return cap, height, width
 
     def get_dimensions(self, image):
@@ -77,21 +78,23 @@ class imagesProcessing():
         if(fileType == 1):
             #File is an image
             print("Image-Resolution-Check")
+            img = self.read_image(filepath)
+            heigth, width = self.get_dimensions(img)
+
+            print("ImageResolution: " + str(width) + "x" + str(heigth))
 
         elif(fileType == 2):
             #File is a video
             print("Video-Resolution-Check")
+            
+            vidcap,heigth,width = self.read_video(filepath)
 
-        
-        # vidcap=cv2.VideoCapture(filepath)
-        # vidcap.set(cv2.CAP_PROP_POS_AVI_RATIO,1)
-        # duration = vidcap.get(cv2.CAP_PROP_POS_MSEC)
-        # width = int(vidcap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        # height = int(vidcap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        # fps = int(vidcap.get(cv2.CAP_PROP_FPS))
-        # n_frames = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))
-        # image = self.get_firstImage(filepath)
+            print("VideoResolution: " + str(width) + "x" + str(heigth))
 
+        if(width < 800) or (heigth < 600):
+            return -2
+        elif(width > 1920) or (heigth > 1080):
+            return -1                
 
         ##wenn alles erfüllt, dann True zurückgeben
         return 1
@@ -100,6 +103,18 @@ class imagesProcessing():
         # -1 zurückgeben, wenn Video zu lang ist
         #  1 zurückgeben, wenn alles passt
 
-        #Hier die Überprüfung einbauen
+        max_duration = 600
+        vidcap=cv2.VideoCapture(filepath)
+        
+        fps = vidcap.get(cv2.CAP_PROP_FPS)      # OpenCV2 version 2 used "CV_CAP_PROP_FPS"
+        frame_count = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))
+        duration = frame_count/fps
+        
+        vidcap.release()
 
-        return 1
+        print("File has a length of " + str(duration) + " seconds")
+
+        if(duration > max_duration):
+            return -1
+        else:
+            return 1

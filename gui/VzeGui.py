@@ -101,10 +101,15 @@ class VzeGui(QtWidgets.QMainWindow):
         return 
 
     def create_DemoDataGrid(self, demoID):
+        """
+        This method is used for creating the dataGrid for displaying the demoData
+        """
         print("loading demo data grid for demovideo " + str(demoID))
 
+        #reset the variable demodatafile
         demodatafile=""
 
+        #set demodatafile according to the passed demoID
         if(demoID == 1):
             demodatafile='./gui/demo_data_1.csv'
         elif (demoID == 2):
@@ -112,49 +117,80 @@ class VzeGui(QtWidgets.QMainWindow):
         else:
             print("Unknown error")
 
+        #delete the old grid
         self.demodatascreen.delete_grid()
+        #create the new grid according to the demoData
         self.demodatascreen.create_grid(demodatafile)
+        #change screen to demoDataScreen
         self.change_screen(6)
 
+
     def createGraphicsScene(self, filepath):
+        """
+        This method is used for creating a graphicsScene from an imagepath
+        """
+        #create pixmap from filepath
         pixmap = QtGui.QPixmap(filepath)
+        #scale pixmap to correct size
         pixmap_scaled = pixmap.scaled(790, 410)
+        #create graphicsScene
         graphicsScene = QtWidgets.QGraphicsScene(self)
         graphicsScene.addPixmap(pixmap_scaled)
+
         return graphicsScene
     
+
     def showPreviewImage(self, filepath):
+        """
+        This method is used for displaying a previewImage on every previewScreen and the analyseScreen
+        """
         print("method showPreviewImage")
-        #file = self.logic.getFilePath()
-        #print(filepath)
-
+        
+        #call method to create a graphicScene
         graphicsScene = self.createGraphicsScene(filepath)
-
+        #display image on previewScreen, analyzePreviewScreen and analyseScreen
         self.previewscreen.graphicsPreview.setScene(graphicsScene)
         self.analyzepvscreen.graphicsAnalyzePreview.setScene(graphicsScene)
         self.analyzescreen.graphicsAnalyze.setScene(graphicsScene)
 
     def showImageOnAnalyzeScreen(self, filepath):
+        """
+        This method is used for displaying an image on the AnalyzeScreen
+        """
         print("method showImageOnAnalyzeScreen")
-                
+        
+        #call method to create a graphicScene
         graphicsScene = self.createGraphicsScene(filepath)
-
+        #display image on analyseScreen
         self.analyzescreen.graphicsAnalyze.setScene(graphicsScene) 
 
     def loadFile(self):
+        """
+        This method is used for uploading a file
+        """
+        #Calling method loadFile in VzeApp.py
         status,nachricht,image = self.logic.loadFile()
 
+        #if status is ok
         if(status == 0):
-            #self.showPreviewImage(self.logic.getFilePath())
+            #load the created image as a preview
             self.showPreviewImage(image)
+            #change screen to analyzePreviewScreen
             self.change_screen(2)
         else:
             print(nachricht)
 
     def loadDemoVideo(self, filepath):
+        """
+        This method is used for loading one of the demo-videos and go to the preview-screen
+        """
+        #Get the first image of the demo-video as PreviewImage
         imagepath = self.logic.preprocessor.get_firstImage(filepath)
+        #Save the path to the demo-video in the variable filepath
         self.logic.setFilePath(filepath)
+        #load the created image as a preview
         self.showPreviewImage(imagepath)
+        #change screen to previewScreen
         self.change_screen(4)
 
 

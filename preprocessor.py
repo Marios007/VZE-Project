@@ -14,7 +14,8 @@ class imagesProcessing():
 
     def read_video(self, path):
         cap = cv2.VideoCapture(path)
-        height, width = None, None
+        width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
         return cap, height, width
 
     def get_dimensions(self, image):
@@ -77,23 +78,22 @@ class imagesProcessing():
         if(fileType == 1):
             #File is an image
             print("Image-Resolution-Check")
-            img = cv2.imread(filepath,0)
-            height, width = img.shape[:2]
+            img = self.read_image(filepath)
+            heigth, width = self.get_dimensions(img)
 
-            print("ImageResolution: " + str(width) + "x" + str(height))
+            print("ImageResolution: " + str(width) + "x" + str(heigth))
 
         elif(fileType == 2):
             #File is a video
             print("Video-Resolution-Check")
-            vidcap=cv2.VideoCapture(filepath)
-            width = int(vidcap.get(cv2.CAP_PROP_FRAME_WIDTH))
-            height = int(vidcap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+            
+            vidcap,heigth,width = self.read_video(filepath)
 
-            print("VideoResolution: " + str(width) + "x" + str(height))
+            print("VideoResolution: " + str(width) + "x" + str(heigth))
 
-        if(width < 800) or (height < 600):
+        if(width < 800) or (heigth < 600):
             return -2
-        elif(width > 1920) or (height > 1080):
+        elif(width > 1920) or (heigth > 1080):
             return -1                
 
         ##wenn alles erfüllt, dann True zurückgeben

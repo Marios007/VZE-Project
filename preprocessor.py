@@ -77,21 +77,24 @@ class imagesProcessing():
         if(fileType == 1):
             #File is an image
             print("Image-Resolution-Check")
+            img = cv2.imread(filepath,0)
+            height, width = img.shape[:2]
+
+            print("ImageResolution: " + str(width) + "x" + str(height))
 
         elif(fileType == 2):
             #File is a video
             print("Video-Resolution-Check")
+            vidcap=cv2.VideoCapture(filepath)
+            width = int(vidcap.get(cv2.CAP_PROP_FRAME_WIDTH))
+            height = int(vidcap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-        
-        # vidcap=cv2.VideoCapture(filepath)
-        # vidcap.set(cv2.CAP_PROP_POS_AVI_RATIO,1)
-        # duration = vidcap.get(cv2.CAP_PROP_POS_MSEC)
-        # width = int(vidcap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        # height = int(vidcap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        # fps = int(vidcap.get(cv2.CAP_PROP_FPS))
-        # n_frames = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))
-        # image = self.get_firstImage(filepath)
+            print("VideoResolution: " + str(width) + "x" + str(height))
 
+        if(width < 800) or (height < 600):
+            return -2
+        elif(width > 1920) or (height > 1080):
+            return -1                
 
         ##wenn alles erfüllt, dann True zurückgeben
         return 1
@@ -100,6 +103,18 @@ class imagesProcessing():
         # -1 zurückgeben, wenn Video zu lang ist
         #  1 zurückgeben, wenn alles passt
 
-        #Hier die Überprüfung einbauen
+        max_duration = 600
+        vidcap=cv2.VideoCapture(filepath)
+        
+        fps = vidcap.get(cv2.CAP_PROP_FPS)      # OpenCV2 version 2 used "CV_CAP_PROP_FPS"
+        frame_count = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))
+        duration = frame_count/fps
+        
+        vidcap.release()
 
-        return 1
+        print("File has a length of " + str(duration) + " seconds")
+
+        if(duration > max_duration):
+            return -1
+        else:
+            return 1

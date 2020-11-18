@@ -1,5 +1,5 @@
 import cv2
-#import filetype
+import filetype
 
 class imagesProcessing():
     def __init__(self):
@@ -36,34 +36,70 @@ class imagesProcessing():
         return resized
 
     def get_firstImage(self, videopath):
-        return
-            #Create Thumbnail of video
-            #vidcap = cv2.VideoCapture(videopath)
-            #success,image = vidcap.read()
-            #if success:
-            #    cv2.imwrite("./frame.jpg", image)     # save frame as JPEG file
-            #vidcap.release()
-            #return image
+        #Create Thumbnail of video
+        imagepath = "./gui/pics/firstPic.jpg"
+        vidcap = cv2.VideoCapture(videopath)
+        success,image = vidcap.read()
+        if success:
+           cv2.imwrite(imagepath, image)     # save frame as JPEG file
+        vidcap.release()
+        return imagepath
 
-    def check_File(self, filepath):
-        #print("method check_file in preprocessor")
-        #kind = filetype.guess('tests/fixtures/sample.jpg')
-        #if kind is None:
-        #    print('Cannot guess file type!')
+    def check_fileType(self, filepath):
+        print("method check_file in preprocessor")
+        imagepath = None
+        kind = filetype.guess(filepath)
 
-        #print('File extension: %s' % kind.extension)
-        #print('File MIME type: %s' % kind.mime)
+        if kind is None:
+            print('Cannot guess file type!')
+            return -1,None
 
-        ##if video
-        #vidcap=cv2.VideoCapture(filepath)
-        #vidcap.set(cv2.CAP_PROP_POS_AVI_RATIO,1)
-        #duration = vidcap.get(cv2.CAP_PROP_POS_MSEC)
-        #width = int(vidcap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        #height = int(vidcap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        #fps = int(vidcap.get(cv2.CAP_PROP_FPS))
-        #n_frames = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))
-        #image = self.get_firstImage(filepath)
+        elif(str(kind.mime).startswith("image")):
+            print("File is an image")
+            #image = self.read_image(filepath)
+            return 1,filepath
+
+        elif(str(kind.mime).startswith("video")):
+            print("File is a video")
+            imagepath = self.get_firstImage(filepath)
+            return 2,imagepath
+
+        else:
+            print("Filetype unknown")
+            return -1,None
+
+
+    def check_fileResolution(self, fileType, filepath):
+        # -1 zurückgeben, wenn Auflösung zu hoch, 
+        # -2 zurückgeben, wenn Auflösung zu niedrig, 
+        # 1 zurückgeben, wenn alles passt
+
+        if(fileType == 1):
+            #File is an image
+            print("Image-Resolution-Check")
+
+        elif(fileType == 2):
+            #File is a video
+            print("Video-Resolution-Check")
+
+        
+        # vidcap=cv2.VideoCapture(filepath)
+        # vidcap.set(cv2.CAP_PROP_POS_AVI_RATIO,1)
+        # duration = vidcap.get(cv2.CAP_PROP_POS_MSEC)
+        # width = int(vidcap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        # height = int(vidcap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        # fps = int(vidcap.get(cv2.CAP_PROP_FPS))
+        # n_frames = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))
+        # image = self.get_firstImage(filepath)
 
 
         ##wenn alles erfüllt, dann True zurückgeben
-        return True
+        return 1
+
+    def check_fileLength(self, filepath):
+        # -1 zurückgeben, wenn Video zu lang ist
+        #  1 zurückgeben, wenn alles passt
+
+        #Hier die Überprüfung einbauen
+
+        return 1

@@ -9,9 +9,7 @@ class VzeGui(QtWidgets.QMainWindow):
     stack_lastScreen = []
     array_dataInput = [[0 for x in range(43)] for y in range(2)]
     demo_video1 = "./gui/pics/DemoVideos/DemoVideo_gutesWetter.mp4"
-    demo_video1_preview = "./gui/pics/DemoVideos/DemoVideo_gutesWetter_Thumbnail.jpg"
     demo_video2 = "./gui/pics/DemoVideos/DemoVideo_schlechtesWetter.mp4"
-    demo_video2_preview = "./gui/pics/DemoVideos/DemoVideo_schlechtesWetter_Thumbnail.jpg"
 
     def __init__(self, logicInterface):
         QtWidgets.QMainWindow.__init__(self)
@@ -129,21 +127,12 @@ class VzeGui(QtWidgets.QMainWindow):
         print("method showPreviewImage")
         #file = self.logic.getFilePath()
         #print(filepath)
-                
-        #if image file
-        if((filepath.endswith('.jpg')) or (filepath.endswith('.jpeg')) or (filepath.endswith('.gif')) or (filepath.endswith('.png')) or (filepath.endswith('.bmp'))):
-            print("File is an image") 
-
-
-        #if video file
-        elif((filepath.endswith('.avi')) or (filepath.endswith('.mov')) or (filepath.endswith('.mp4')) or (filepath.endswith('.mpeg'))):
-            print("File is a video")
-            #imagepath = preprocessor.get_firstImage(filepath)
 
         graphicsScene = self.createGraphicsScene(filepath)
 
         self.previewscreen.graphicsPreview.setScene(graphicsScene)
         self.analyzepvscreen.graphicsAnalyzePreview.setScene(graphicsScene)
+        self.analyzescreen.graphicsAnalyze.setScene(graphicsScene)
 
     def showImageOnAnalyzeScreen(self, filepath):
         print("method showImageOnAnalyzeScreen")
@@ -151,6 +140,24 @@ class VzeGui(QtWidgets.QMainWindow):
         graphicsScene = self.createGraphicsScene(filepath)
 
         self.analyzescreen.graphicsAnalyze.setScene(graphicsScene) 
+
+    def loadFile(self):
+        status,nachricht,image = self.logic.loadFile()
+
+        if(status == 0):
+            #self.showPreviewImage(self.logic.getFilePath())
+            self.showPreviewImage(image)
+            self.change_screen(2)
+        else:
+            print(nachricht)
+
+    def loadDemoVideo(self, filepath):
+        imagepath = self.logic.preprocessor.get_firstImage(filepath)
+        self.logic.setFilePath(filepath)
+        self.showPreviewImage(imagepath)
+        self.change_screen(4)
+
+
 
 
 
@@ -218,9 +225,7 @@ class ui_startscreen(QtWidgets.QWidget):
         self.btn_loadFile.setStyleSheet(styles.styleBluebuttonbig)
         self.btn_loadFile.setText(("Datei auswählen"))
         self.btn_loadFile.setToolTip('Laden eines Videos oder Bildes')
-        self.btn_loadFile.clicked.connect(self.logic.loadFile)
-        self.btn_loadFile.clicked.connect(lambda: self.gui.showPreviewImage(self.logic.getFilePath()))
-        self.btn_loadFile.clicked.connect(lambda: self.gui.change_screen(2))
+        self.btn_loadFile.clicked.connect(self.gui.loadFile)
 
 
         self.btn_demoToDemo = QtWidgets.QPushButton(self)
@@ -350,11 +355,7 @@ class ui_demoscreen(QtWidgets.QWidget):
         self.btn_demoSonne.setIcon(icon)
         self.btn_demoSonne.setIconSize(QtCore.QSize(30, 30))
         self.btn_demoSonne.setText(("Video mit Sonne"))
-        self.btn_demoSonne.clicked.connect(lambda: self.logic.setFilePath(self.gui.demo_video1))
-        #self.btn_demoSonne.clicked.connect(lambda: self.gui.showPreviewImage(self.logic.getFilePath()))
-        #Temporär den Screenshot des Videos verwenden, bis selbst erstellt werden kann
-        self.btn_demoSonne.clicked.connect(lambda: self.gui.showPreviewImage(self.gui.demo_video1_preview))
-        self.btn_demoSonne.clicked.connect(lambda: self.gui.change_screen(4))
+        self.btn_demoSonne.clicked.connect(lambda: self.gui.loadDemoVideo(self.gui.demo_video1))
         
         self.btn_demoRegen = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -369,11 +370,7 @@ class ui_demoscreen(QtWidgets.QWidget):
         self.btn_demoRegen.setIcon(icon)
         self.btn_demoRegen.setIconSize(QtCore.QSize(30, 30))
         self.btn_demoRegen.setText(("Video mit Regen"))
-        self.btn_demoRegen.clicked.connect(lambda: self.logic.setFilePath(self.gui.demo_video2))
-        #self.btn_demoRegen.clicked.connect(lambda: self.gui.showPreviewImage(self.logic.getFilePath()))
-        #Temporär den Screenshot des Videos verwenden, bis selbst erstellt werden kann
-        self.btn_demoRegen.clicked.connect(lambda: self.gui.showPreviewImage(self.gui.demo_video2_preview))
-        self.btn_demoRegen.clicked.connect(lambda: self.gui.change_screen(4))
+        self.btn_demoRegen.clicked.connect(lambda: self.gui.loadDemoVideo(self.gui.demo_video2))
 
         self.btn_dataSonne = QtWidgets.QPushButton(self)
         self.btn_dataSonne.setMinimumSize(QtCore.QSize(55, 55))
@@ -383,7 +380,6 @@ class ui_demoscreen(QtWidgets.QWidget):
         icon1.addPixmap(QtGui.QPixmap(":/icons/data_icon"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_dataSonne.setIcon(icon1)
         self.btn_dataSonne.setIconSize(QtCore.QSize(55, 55))
-        #self.btn_dataSonne.clicked.connect(lambda: self.gui.change_screen(6))
         self.btn_dataSonne.clicked.connect(lambda: self.gui.create_DemoDataGrid(1))
 
         self.btn_dataRegen = QtWidgets.QPushButton(self)
@@ -392,7 +388,6 @@ class ui_demoscreen(QtWidgets.QWidget):
         self.btn_dataRegen.setStyleSheet(styles.styleSmallButton)
         self.btn_dataRegen.setIcon(icon1)
         self.btn_dataRegen.setIconSize(QtCore.QSize(55, 55))
-        #self.btn_dataRegen.clicked.connect(lambda: self.gui.change_screen(6))
         self.btn_dataRegen.clicked.connect(lambda: self.gui.create_DemoDataGrid(2))
 
         self.btn_back_demoscreen = QtWidgets.QPushButton(self)

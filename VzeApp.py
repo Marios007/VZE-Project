@@ -61,15 +61,46 @@ class VzeController(GuiInterface):
 
     def loadFile(self):
         print("loading file method")
+        self.setFilePath("")
+        image = None
         filePath, _ = QFileDialog.getOpenFileName(None, 'Open file',"C:\\", "Usable files (*.jpg *.jpeg *.gif *.png *.bmp *.avi *.mov *.mp4 *.mpeg)")
-        if filePath:
-            #print(filePath)
-            status = self.preprocessor.check_File(filePath)
-            if status:
-                self.setFilePath(filePath)
+        
+        if(filePath != ""):
+    
+            #Status 1 --> Bild, Status 2 --> Video, Status -1 --> Fehler
+            status_type,imagepath = self.preprocessor.check_fileType(filePath)
             
-            #return self.fileName
+            if(status_type == -1):
+                return -1,"Der Dateityp ist leider nicht richtig",None
+
+            print("File-Type-Check passed")
+
+            #Status 1 --> Auflösung OK, Status -1 --> Auflösung zu hoch, Status -2 --> Auflösung zu niedrig
+            status_res = self.preprocessor.check_fileResolution(status_type, filePath)
+
+            if(status_res == -1):
+                return -1,"Die Auflösung ist leider zu hoch",None
+            if(status_res == -2):
+                return -1,"Die Auflösung ist leider zu niedrig",None
+
+            print("File-Resolution-Check passed")
+
+            if(status_type == 2):
+                #Status 1 --> Länge OK, Status -1 --> VIdeo zu lang
+                status_len = self.preprocessor.check_fileLength(filePath)
+
+                if(status_len == -1):
+                    return -1,"Das Video ist leider zu lang",None
+                
+            print("File-Length-Check passed")
+
+            self.setFilePath(filePath)
+            return 0,"Datei erfolgreich ausgewählt",imagepath
             
+            
+        else:
+            return -1,"Es wurde keine Datei ausgewählt",None
+
     def setFilePath(self, filepath):
         self._fileName = filepath
         print(self._fileName)

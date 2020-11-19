@@ -8,9 +8,6 @@ to do:
 play with probability mininimum and threshold
 """
 
-
-
-
 import numpy as np
 import pandas as pd
 import cv2
@@ -104,11 +101,17 @@ def print_text_on_image(image, text, x_min, y_min, font_size, color, thickness):
     return image
 
 def convert_grayscale(image):
-    image = cv2.cuda.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    #GPU
+    #image = cv2.cuda.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    #CPU
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     return image
 
 def equalize_histogram(image):
-    image = cv2.cuda.equalizeHist(image)
+    #GPU
+    #image = cv2.cuda.equalizeHist(image)
+    #CPU
+    image = cv2.equalizeHist(image)
     return image
 
 def preprocessing_images(image):
@@ -116,17 +119,17 @@ def preprocessing_images(image):
     maybe we should use variables instead of constants
     """
     #GPU
-    source = cv2.cuda_GpuMat()
-    source.upload(image)
-    image_cuda = cv2.cuda.resize(source, (32,32), interpolation = cv2.INTER_AREA) 
-    image_cuda = convert_grayscale(image_cuda)
-    image_cuda = equalize_histogram(image_cuda)
-    image = image_cuda.download()
+    # source = cv2.cuda_GpuMat()
+    # source.upload(image)
+    # image_cuda = cv2.cuda.resize(source, (32,32), interpolation = cv2.INTER_AREA) 
+    # image_cuda = convert_grayscale(image_cuda)
+    # image_cuda = equalize_histogram(image_cuda)
+    # image = image_cuda.download()
     
     #CPU
-    #image = cv2.resize(image, (32,32), interpolation = cv2.INTER_AREA) 
-    #image = convert_grayscale(image)
-    #image = equalize_histogram(image)
+    image = cv2.resize(image, (32,32), interpolation = cv2.INTER_AREA) 
+    image = convert_grayscale(image)
+    image = equalize_histogram(image)
 
     image = image/255
     image = image.reshape(1,32,32,1)
@@ -136,16 +139,46 @@ def preprocessing_images(image):
     return image
 
 def detect_signs(image, height, width, labels, model, yolo_network, mean, layers_names_output, probability_minimum, threshold, dnn_dim):
-    #for one anchor box: [tx, ty, tw, th, obj score, class prob.]
+    #only for debugging
+    number_traffic_signs = 0
+    
+    #for one anchor box: [tx, ty, tw, th, obj score, class probs.]
     output_from_yolo_network = yolo_detection(image, dnn_dim, layers_names_output)
     
-    
-    
-    arr = np.array(output_from_yolo_network)
+    #create arrays out of list
+    arr_output_layer1 = np.array(output_from_yolo_network[0], dtype=np.float32)
+    arr_output_layer2 = np.array(output_from_yolo_network[1], dtype=np.float32)
+    arr_output_layer3 = np.array(output_from_yolo_network[2], dtype=np.float32)
+    # concetanate arrays
+    arr_output_layers = np.vstack((arr_output_layer1,arr_output_layer2,arr_output_layer3))
+    # create index array with indexes if probability is higher than the min value
+    max_output_layers = np.argwhere(arr_output_layers[:,5:]>probability_minimum)
+    # create array with the relevant detected boxes and confidences
+    if max_output_layers.size == 0:
+        results = []
+    else:
+        arr_output_layers_relevant = arr_output_layers[max_output_layers[:,0]]
+        confidences = np.amax(arr_output_layers_relevant[:,5:], axis=1)
+        #confidences.reshape(confidences.shape[0],1)
 
+        box_current = arr_output_layers_relevant[:,:4] * np.array([width, height, width, height])
 
+        #xmin, ymin, box_width, box_height
+        bounding_boxes = np.array([box_current[:,0]-(box_current[:,2]/2),
+                                    box_current[:,1]-(box_current[:,3]/2),
+                                    box_current[:,2],
+                                    box_current[:,3]], dtype=int).T
 
+        #NMSBoxes dont accept an array, adress this issue later
+        bounding_boxes_list = np.ndarray.tolist(bounding_boxes)
 
+        # non-maximum suppression of given bounding boxes, deletes duplicates, contains number of kept indicies
+        results = cv2.dnn.NMSBoxes(bounding_boxes_list, confidences, probability_minimum, threshold)
+
+        #only for fps analysis
+        number_traffic_signs = len(results)
+
+    """
     bounding_boxes = []
     confidences = []
     
@@ -161,6 +194,7 @@ def detect_signs(image, height, width, labels, model, yolo_network, mean, layers
                 #print(len(detected_objects))
                 #print(detected_objects)
                 # Scaling bounding box coordinates to the initial frame size and get top left coordinates
+                
                 box_current = detected_objects[0:4] * np.array([width, height, width, height])
                 x_center, y_center, box_width, box_height = box_current
                 # offsets for bounding boxes
@@ -177,6 +211,7 @@ def detect_signs(image, height, width, labels, model, yolo_network, mean, layers
                     # checkpoint
                     #print(max_confidence, x_min, y_min, box_current)
 
+    
     # non-maximum suppression of given bounding boxes, deletes duplicates, contains number of kept indicies
     results = cv2.dnn.NMSBoxes(bounding_boxes, confidences, probability_minimum, threshold)
     #print(len(results))
@@ -188,10 +223,15 @@ def detect_signs(image, height, width, labels, model, yolo_network, mean, layers
     
     number_traffic_signs = len(results)
 
+
+    """
+
+    sign_data = np.array([])
+
     if len(results) > 0:
         for i in results.flatten():
-            x_min, y_min = bounding_boxes[i][0], bounding_boxes[i][1]
-            box_width, box_height = bounding_boxes[i][2], bounding_boxes[i][3]
+            x_min, y_min = bounding_boxes[i,0], bounding_boxes[i,1]
+            box_width, box_height = bounding_boxes[i,2], bounding_boxes[i,3]
             
             # checkpoint for future cnn
             captured_sign = image[y_min:y_min+int(box_height), x_min:x_min+int(box_width), :]
@@ -205,8 +245,9 @@ def detect_signs(image, height, width, labels, model, yolo_network, mean, layers
             # preparation of captured signs for the cnn       
             if captured_sign.shape[:1] == (0,) or captured_sign.shape[1:2] == (0,):
                 pass
-            else:        
+            else:  
                 captured_sign_pcd = preprocessing_images(captured_sign)
+                """
                 # feeding the cnn and get prediction and probability
                 probabilities = model.predict_proba(captured_sign_pcd)
                 prediction = np.argmax(probabilities, axis = 1)
@@ -240,8 +281,9 @@ def detect_signs(image, height, width, labels, model, yolo_network, mean, layers
 
     image = print_boxes_on_image(sign_data, image)
     #print()
-    
+    """
     return image, number_traffic_signs
+
 
 def print_boxes_on_image(sign_data, image):
     box_color = [0, 0, 255]
@@ -361,7 +403,7 @@ while(cap.isOpened()):
     if cv2.waitKey(10) & 0xFF ==ord("q"):
         break
 
-pd.DataFrame(frames_hist).to_csv("./fps_analysis.csv")
+pd.DataFrame(frames_hist).to_csv("./fps_analysis.csv", index=False)
 
 print("done")
 cap.release()

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1133</width>
+    <width>1147</width>
     <height>840</height>
    </rect>
   </property>
@@ -694,6 +694,16 @@ QPushButton:hover{
               <property name="text">
                <string notr="true">Video mit Sonne</string>
               </property>
+              <property name="icon">
+               <iconset resource="image_ressources.qrc">
+                <normaloff>:/icons/demo_sonne</normaloff>:/icons/demo_sonne</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>85</width>
+                <height>85</height>
+               </size>
+              </property>
               <property name="shortcut">
                <string notr="true"/>
               </property>
@@ -762,15 +772,19 @@ QPushButton:hover{
               </property>
               <property name="styleSheet">
                <string notr="true">QPushButton{
-	font: 75 26pt &quot;MS Shell Dlg 2&quot; ;
-	background-color: #1C4481;
-	border-radius:5px;
-	color:white
-}
-
-QPushButton:hover{
-	border: 2px solid rgb(255, 255, 255)
-}</string>
+    font: 75 26pt &quot;MS Shell Dlg 2&quot;;
+    background-color: #1C4481;
+    border-radius: 5px;
+	color:white;
+    text-align:bottom;
+    background-origin: content;
+   	background-clip: padding;
+    padding-bottom: 10px;
+    background-image: url(:/icons/icon_plus) 0 0 0 0;
+    background-position: top;
+    background-repeat: no-repeat}
+QPushButton:hover{border: 2px solid rgb(255, 255, 255)}
+</string>
               </property>
               <property name="text">
                <string notr="true">Video mit Regen</string>
@@ -1783,7 +1797,7 @@ QPushButton:hover{
                <x>0</x>
                <y>0</y>
                <width>950</width>
-               <height>816</height>
+               <height>820</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -6566,7 +6580,7 @@ QPushButton:hover{
                <x>0</x>
                <y>0</y>
                <width>950</width>
-               <height>360</height>
+               <height>364</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -8118,7 +8132,7 @@ QPushButton:hover{
                <x>0</x>
                <y>0</y>
                <width>950</width>
-               <height>597</height>
+               <height>601</height>
               </rect>
              </property>
              <property name="sizePolicy">
@@ -9856,7 +9870,7 @@ QPushButton:hover{
  </widget>
  <resources>
   <include location="image_ressources.qrc"/>
-  <include location="../../../../OneDrive/Code/Git/Proj_VZE/gui/image_ressources.qrc"/>
+  <include location="image_ressources.qrc"/>
  </resources>
  <connections/>
 </ui>

@@ -5,9 +5,10 @@
 	<file alias='info_logo'>.\pics\info_logo.svg</file>
 	<file alias='logo_schild'>.\pics\Logo_Schild_v1_2020-08-10_TB.png</file>
 	<file alias='demo'>.\pics\Demo.svg</file>
-	<file alias='demo_regen'>.\pics\Demo_Regen.svg</file>
+	<file alias='demo_regen'>.\pics\Demo_Regen1.svg</file>
 	<file alias='demo_sonne'>.\pics\Demo_Sonne.svg</file>
 	<file alias='icon_plus'>.\pics\icon-plus.svg</file>
+	<file alias='icon_plus1'>.\pics\icon-plus.png</file>
 	<file alias='logoSK_big'>.\pics\LogoSK_big.svg</file>
 	<file alias='logoSK_big_1'>.\pics\LogoSK_big_1.svg</file>
 </qresource>

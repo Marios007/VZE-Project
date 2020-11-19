@@ -125,18 +125,18 @@ class VzeGui(QtWidgets.QMainWindow):
         self.change_screen(6)
 
 
-    def createGraphicsScene(self, filepath):
+    def createGraphicsScene(self, numpy):
         """
         This method is used for creating a graphicsScene from an imagepath
         """
-        #create pixmap from filepath
-        pixmap = QtGui.QPixmap(filepath)
+        #create pixmap from numpy array
+        image = QtGui.QImage(numpy, numpy.shape[1],numpy.shape[0], numpy.shape[1] * 3,QtGui.QImage.Format_RGB888).rgbSwapped()
+        pixmap = QtGui.QPixmap(image)
         #scale pixmap to correct size
         pixmap_scaled = pixmap.scaled(790, 410)
         #create graphicsScene
         graphicsScene = QtWidgets.QGraphicsScene(self)
         graphicsScene.addPixmap(pixmap_scaled)
-
         return graphicsScene
     
 
@@ -185,11 +185,11 @@ class VzeGui(QtWidgets.QMainWindow):
         This method is used for loading one of the demo-videos and go to the preview-screen
         """
         #Get the first image of the demo-video as PreviewImage
-        imagepath = self.logic.preprocessor.get_firstImage(filepath)
+        image = self.logic.preprocessor.get_firstImage(filepath)
         #Save the path to the demo-video in the variable filepath
         self.logic.setFilePath(filepath)
         #load the created image as a preview
-        self.showPreviewImage(imagepath)
+        self.showPreviewImage(image)
         #change screen to previewScreen
         self.change_screen(4)
 

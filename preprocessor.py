@@ -41,14 +41,16 @@ class imagesProcessing():
         imagepath = "./gui/pics/firstPic.jpg"
         vidcap = cv2.VideoCapture(videopath)
         success,image = vidcap.read()
+
         if success:
            cv2.imwrite(imagepath, image)     # save frame as JPEG file
         vidcap.release()
-        return imagepath
+        #return image
+        return image
 
     def check_fileType(self, filepath):
         print("method check_file in preprocessor")
-        imagepath = None
+        image = None
         kind = filetype.guess(filepath)
 
         if kind is None:
@@ -57,13 +59,13 @@ class imagesProcessing():
 
         elif(str(kind.mime).startswith("image")):
             print("File is an image")
-            #image = self.read_image(filepath)
-            return 1,filepath
+            image = self.read_image(filepath)
+            return 1,image
 
         elif(str(kind.mime).startswith("video")):
             print("File is a video")
-            imagepath = self.get_firstImage(filepath)
-            return 2,imagepath
+            image = self.get_firstImage(filepath)
+            return 2,image
 
         else:
             print("Filetype unknown")

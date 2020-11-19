@@ -76,7 +76,7 @@ class VzeController(GuiInterface):
     
             #check the type of the file
             #Status 1 --> image, Status 2 --> video, Status -1 --> error
-            status_type,imagepath = self.preprocessor.check_fileType(filePath)
+            status_type,image = self.preprocessor.check_fileType(filePath)
             
             #If a wrong datatype is detected
             if(status_type == -1):
@@ -110,7 +110,7 @@ class VzeController(GuiInterface):
             #if every check is passed, call method to set filePath
             self.setFilePath(filePath)
             #return that everything is OK and the path to the previewImage
-            return 0,"Datei erfolgreich ausgewählt",imagepath
+            return 0,"Datei erfolgreich ausgewählt",image
             
         #if user canceled the operation and didn´t select a file    
         else:

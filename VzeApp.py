@@ -64,24 +64,21 @@ class VzeController(GuiInterface):
         """
         This method is used for loading a file into the software
         """
-        print("loading file method")
         #reset filePath and image
         self.setFilePath("")
         imagepath = None
-
         #open FileExplorer to let the user choose his file
         filePath, _ = QFileDialog.getOpenFileName(None, 'Open file',"C:\\", "Usable files (*.jpg *.jpeg *.gif *.png *.bmp *.avi *.mov *.mp4 *.mpeg)")
         
         #if user selects a file
         if(filePath != ""):
-    
             #check the type of the file
             #Status 1 --> image, Status 2 --> video, Status -1 --> error
             status_type,image = self.preprocessor.check_fileType(filePath)
             
             #If a wrong datatype is detected
             if(status_type == -1):
-                return -1,"Der Dateityp ist leider nicht richtig",None
+                return -1,"Dieser Dateityp wird nicht unterstützt\nUnterstütze Dateitypen:\n*.jpg *.jpeg *.gif *.png *.bmp *.avi *.mov *.mp4 *.mpeg",None
 
             print("File-Type-Check passed")
 
@@ -91,9 +88,9 @@ class VzeController(GuiInterface):
 
             #if the file has a wrong resolution
             if(status_res == -1):
-                return -1,"Die Auflösung ist leider zu hoch",None
+                return -1,"Die Auflösung ist zu hoch",None
             if(status_res == -2):
-                return -1,"Die Auflösung ist leider zu niedrig",None
+                return -1,"Die Auflösung ist zu gering",None
 
             print("File-Resolution-Check passed")
 

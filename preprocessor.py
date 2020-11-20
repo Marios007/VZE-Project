@@ -37,16 +37,19 @@ class imagesProcessing():
         return resized
 
     def get_firstImage(self, videopath):
-        #Create Thumbnail of video
-        imagepath = "./gui/pics/firstPic.jpg"
+        #Create previewImage of video
         vidcap = cv2.VideoCapture(videopath)
         success,image = vidcap.read()
 
         if success:
-           cv2.imwrite(imagepath, image)     # save frame as JPEG file
+            return image
+        else:
+            print("PreviewImage could not be created!")
+            return None
+        
         vidcap.release()
-        #return image
-        return image
+        
+        
 
     def check_fileType(self, filepath):
         print("method check_file in preprocessor")

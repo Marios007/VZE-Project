@@ -184,14 +184,21 @@ class VzeGui(QtWidgets.QMainWindow):
         """
         This method is used for loading one of the demo-videos and go to the preview-screen
         """
-        #Get the first image of the demo-video as PreviewImage
-        image = self.logic.preprocessor.get_firstImage(filepath)
-        #Save the path to the demo-video in the variable filepath
-        self.logic.setFilePath(filepath)
-        #load the created image as a preview
-        self.showPreviewImage(image)
-        #change screen to previewScreen
-        self.change_screen(4)
+        #Check if video exists
+        fileExists = self.logic.checkFilePath(filepath)
+        
+        if(fileExists):
+            #Get the first image of the demo-video as PreviewImage
+            image = self.logic.preprocessor.get_firstImage(filepath)
+            #Save the path to the demo-video in the variable filepath
+            self.logic.setFilePath(filepath)
+            #load the created image as a preview
+            self.showPreviewImage(image)
+            #change screen to previewScreen
+            self.change_screen(4)
+        else:
+            print("The given demoVideo does not exist: " + filepath)
+            self.change_screen(0)
 
 
 

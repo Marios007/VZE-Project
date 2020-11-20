@@ -83,19 +83,27 @@ class VzeGui(QtWidgets.QMainWindow):
      #    
 
 
-    #change to next screen and save last screen to stack
     def change_screen(self, nextScreen):
+        """
+        change to next screen and save last screen to stack
+        """
         self.set_lastScreen()
         self.stackedWidget.setCurrentIndex(nextScreen)
         return
 
     # save last screen on stack
     def set_lastScreen(self):
+        """
+        save the screen you are currently on onto a stack
+        """
         self.stack_lastScreen.append(self.stackedWidget.currentIndex())
-        print("Save last screen: " + str(self.stackedWidget.currentIndex()))
+        #print("Save last screen: " + str(self.stackedWidget.currentIndex()))
 
-    # go back  to last screen and remove first value from stack
+    
     def change_screen_back(self):
+        """
+        go back to last screen and pop off last element from stack
+        """
         print("print stack: " + str(self.stack_lastScreen))
         self.stackedWidget.setCurrentIndex(self.stack_lastScreen.pop())
         return 

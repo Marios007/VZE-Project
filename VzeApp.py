@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QFileDialog
 from gui.VzeGui import *
 from preprocessor import *
 import abc
+import os
 
 #interface definition
 class GuiInterface(abc.ABC):
@@ -124,6 +125,10 @@ class VzeController(GuiInterface):
     #Getter-method for filePath
     def getFilePath(self):
         return self._fileName
+
+    def checkFilePath(self,filepath):
+        status = os.path.exists(filepath)
+        return status
 
     def processCV(self):
         self.opencv.openCVMethod()

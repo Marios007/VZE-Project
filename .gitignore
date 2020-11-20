@@ -17,6 +17,5 @@ __pycache__/VzeApp.cpython-37.pyc
 
 .vscode/launch.json
 __pycache__/preprocessor.cpython-37.pyc
-gui/pics/DemoVideos/DemoVideo_schlechtesWetter.mp4
 gui/pics/DemoVideos/DemoVideo_gutesWetter.mp4
-gui/pics/firstPic.jpg
+gui/pics/DemoVideos/DemoVideo_schlechtesWetter.mp4

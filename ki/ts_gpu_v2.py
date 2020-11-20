@@ -2,10 +2,16 @@
 done:
 changed box_size for cnn input by factor 1.35
 print boxes and labels after feeding all captured signs to the cnn
-if the cnn probability is low (maybe <=65%) dont show box and label
+tracking fps of every single frame and looging it in an csv file
+get rid of almost all for loops
+yolo preprocessing now parallel processed with numpy functions
+cnn now feeded with an array of all detected signs for classification -> parallel processed
 
-to do:
-play with probability mininimum and threshold
+
+todo:
+if the box_width or box_height is to small, skip the classification for the specific traffic sign
+if the cnn probability is low (maybe <=65%) dont show box and label
+counting detected signs
 """
 
 import numpy as np
@@ -14,6 +20,9 @@ import cv2
 import pickle
 from keras.models import load_model
 import tensorflow as tf
+
+
+from tensorflow.python.client import device_lib
 
 # allow tensorflow to use gpu
 physical_devices = tf.config.experimental.list_physical_devices('GPU')
@@ -83,17 +92,17 @@ def yolo_detection(image, dnn_dim, layers_names_output):
     output_from_yolo_network = yolo_network.forward(layers_names_output)
     return output_from_yolo_network
 
-def calculate_time(estimated_time, frames_count, start_time, end_time, frames_hist, number_traffic_signs):
-    frameTime = (end_time - start_time)/cv2.getTickFrequency()
+def calculate_time(estimated_time, frames_count, start_time, end_time, frames_hist, number_traffic_signs, sign_names):
+    frame_time = (end_time - start_time)/cv2.getTickFrequency()
     estimated_time += (end_time - start_time)/cv2.getTickFrequency()
-    avgFps = round((frames_count / estimated_time), 1)
-    frameFps = round((1/ frameTime), 1)
-
-    frames_hist = np.vstack((frames_hist, np.array([frames_count, frameTime, estimated_time, frameFps, avgFps, number_traffic_signs])))
+    avg_fps = round((frames_count / estimated_time), 1)
+    frame_fps = round((1/ frame_time), 1)
+    #print(frames_count, frame_time, frame_fps, estimated_time, avg_fps)
+    frames_hist = np.vstack((frames_hist, np.array([frames_count, frame_time, estimated_time, frame_fps, avg_fps, number_traffic_signs, sign_names.flatten()])))
 
     #print("calculating time {0:.3f} seconds - FPS: {1}".format(estimated_time, fps))
     #print('FPS:', round((frames_count / estimated_time), 1))
-    return estimated_time, avgFps, frameFps, frames_hist
+    return estimated_time, avg_fps, frame_fps, frames_hist
 
 def print_text_on_image(image, text, x_min, y_min, font_size, color, thickness):
     cv2.putText(image, text, (x_min, y_min), cv2.FONT_HERSHEY_DUPLEX, font_size, [0,0,0], thickness+1)
@@ -156,156 +165,88 @@ def detect_signs(image, height, width, labels, model, yolo_network, mean, layers
     # create array with the relevant detected boxes and confidences
     if max_output_layers.size == 0:
         results = []
+        sign_names = np.array([])
     else:
         arr_output_layers_relevant = arr_output_layers[max_output_layers[:,0]]
         confidences = np.amax(arr_output_layers_relevant[:,5:], axis=1)
-        #confidences.reshape(confidences.shape[0],1)
 
         box_current = arr_output_layers_relevant[:,:4] * np.array([width, height, width, height])
+        # 1.35 = increased box_width and box_height
+        # xmin, ymin, box_width, box_height
+        min_point_offset = 0.998
+        box_size_offset = 1.2
+        bounding_boxes = np.array([(box_current[:,0]-(box_current[:,2]/2))*min_point_offset,
+                                   (box_current[:,1]-(box_current[:,3]/2))*min_point_offset,
+                                   box_current[:,2]*box_size_offset,
+                                   box_current[:,3]*box_size_offset], dtype=int).T
 
-        #xmin, ymin, box_width, box_height
-        bounding_boxes = np.array([box_current[:,0]-(box_current[:,2]/2),
-                                    box_current[:,1]-(box_current[:,3]/2),
-                                    box_current[:,2],
-                                    box_current[:,3]], dtype=int).T
-
-        #NMSBoxes dont accept an array, adress this issue later
+        # NMSBoxes dont accept an array, adress this issue later
         bounding_boxes_list = np.ndarray.tolist(bounding_boxes)
 
         # non-maximum suppression of given bounding boxes, deletes duplicates, contains number of kept indicies
         results = cv2.dnn.NMSBoxes(bounding_boxes_list, confidences, probability_minimum, threshold)
 
-        #only for fps analysis
+        # only for fps analysis
         number_traffic_signs = len(results)
 
-    """
-    bounding_boxes = []
-    confidences = []
-    
-    for result in output_from_yolo_network:
-        #print(len(result))
-        #print(result)
-        for detected_objects in result:
-            #list of obj scores from boxes
-            max_confidence = max(detected_objects[5:])
+        bounding_boxes_final = bounding_boxes[results.flatten()]
+        
+        captured_signs_array = np.array([[[]]])
 
-            # Eliminating weak predictions by minimum probability
-            if max_confidence > probability_minimum:
-                #print(len(detected_objects))
-                #print(detected_objects)
-                # Scaling bounding box coordinates to the initial frame size and get top left coordinates
-                
-                box_current = detected_objects[0:4] * np.array([width, height, width, height])
-                x_center, y_center, box_width, box_height = box_current
-                # offsets for bounding boxes
-                if box_width > 15.0 and box_height > 15.0:
-                    box_width*=1.35
-                    box_height*=1.35
-                    x_min = int(x_center - (box_width / 2))
-                    y_min = int(y_center - (box_height / 2))
+        # creating images of detected traffic signs
+        for i in range(len(bounding_boxes_final)):
+            captured_sign = image[bounding_boxes_final[i,1]:bounding_boxes_final[i,1]+bounding_boxes_final[i,3],
+                                  bounding_boxes_final[i,0]:bounding_boxes_final[i,0]+bounding_boxes_final[i,2],:]
+            # Checkpoint
+            #show_image("sign" + str(i), captured_sign)
+            captured_sign = preprocessing_images(captured_sign)
+            # Checkpoint
+            #show_image("sign" + str(i), captured_sign[0,:,:,0],)
+            #print("processing_done")
+            captured_signs_array = np.vstack([captured_signs_array,captured_sign]) if captured_signs_array.size else captured_sign
+            # Checkpoint
+            #print(captured_signs_array.shape)
 
-                    # Adding results to lists
-                    bounding_boxes.append([x_min, y_min, int(box_width), int(box_height)])
-                    confidences.append(float(max_confidence))
+        # Checkpoint
+        # for i in range(len(captured_signs_array)):
+        #     show_image("arr", captured_signs_array[i])
+        #     cv2.waitKey(250)
 
-                    # checkpoint
-                    #print(max_confidence, x_min, y_min, box_current)
+        # feeding the images through the cnn (parallel processed)
+        probabilities_all = model.predict_proba(captured_signs_array)
+        prediction = np.argmax(probabilities_all, axis = 1)
+        sign_names = labels.iloc[prediction, 2]
+        sign_names = np.array(sign_names)
+        probabilities = probabilities_all[np.arange(probabilities_all.shape[0])[:, None],prediction.reshape(prediction.shape[0],1)[:]]*100
 
-    
-    # non-maximum suppression of given bounding boxes, deletes duplicates, contains number of kept indicies
-    results = cv2.dnn.NMSBoxes(bounding_boxes, confidences, probability_minimum, threshold)
-    #print(len(results))
-    #print(results)
-    
-    sign_data = np.array([])
-    #box_color = [0, 0, 255]
-    #text_color = [0, 255, 0]
-    
-    number_traffic_signs = len(results)
+        # checkpoint
+        #print("class: {0} - predict: {1} - probability: {2}".format(prediction, sign_names , probabilities))        
+
+        image = print_boxes_on_image(image, bounding_boxes_final, sign_names, probabilities)
+
+    return image, number_traffic_signs, sign_names
 
 
-    """
-
-    sign_data = np.array([])
-
-    if len(results) > 0:
-        for i in results.flatten():
-            x_min, y_min = bounding_boxes[i,0], bounding_boxes[i,1]
-            box_width, box_height = bounding_boxes[i,2], bounding_boxes[i,3]
-            
-            # checkpoint for future cnn
-            captured_sign = image[y_min:y_min+int(box_height), x_min:x_min+int(box_width), :]
-            #checkpoint
-            #show_image("estimated_sign", captured_sign)
-            #print("captured_sign before processing: ", captured_sign.shape, captured_sign.dtype)
-            #cv2.waitKey(0)
-            #cv2.destroyAllWindows()
-            #cv2.imwrite("captured_sign"+str(i)+".jpg", captured_sign)
-
-            # preparation of captured signs for the cnn       
-            if captured_sign.shape[:1] == (0,) or captured_sign.shape[1:2] == (0,):
-                pass
-            else:  
-                captured_sign_pcd = preprocessing_images(captured_sign)
-                """
-                # feeding the cnn and get prediction and probability
-                probabilities = model.predict_proba(captured_sign_pcd)
-                prediction = np.argmax(probabilities, axis = 1)
-                name = labels.iat[int(prediction), 2]
-                probability = probabilities[0,prediction]*100
-                # checkpoint
-                #print("class: {0} - predict: {1} - probability: {2:.2f}%".format(prediction, name , float(probability)))
-            
-                # to prevent boxes and texts from beeing drawn if probability is low
-                if probability > 65:
-                    # Preparing text with label and confidence for current bounding box
-                    text_box_sign = '{}: {:.2f}'.format(name, float(probability))
-                    # store data of each captured sign to draw boxes and text after all detected signs are feeded in the cnn
-                    sign_data = np.append(sign_data, [x_min, y_min, box_width, box_height, text_box_sign])
-                    # feeding the cnn and get prediction and probability
-                    probabilities = model.predict_proba(captured_sign_pcd)
-                    prediction = np.argmax(probabilities, axis = 1)
-                    name = labels.iat[int(prediction), 2]
-                    probability = probabilities[0,prediction]*100
-                    # checkpoint
-                    #print("class: {0} - predict: {1} - probability: {2:.2f}%".format(prediction, name , float(probability)))
-
-    
-                    # to prevent boxes and texts from beeing drawn if probability is low
-                    if probability > 65:
-                        # Preparing text with label and confidence for current bounding box
-                        text_box_sign = '{}: {:.2f}'.format(name, float(probability))
-                        # store data of each captured sign to draw boxes and text after all detected signs are feeded in the cnn
-                        sign_data = np.append(sign_data, [x_min, y_min, box_width, box_height, text_box_sign])
-
-
-    image = print_boxes_on_image(sign_data, image)
-    #print()
-    """
-    return image, number_traffic_signs
-
-
-def print_boxes_on_image(sign_data, image):
+def print_boxes_on_image(image, bounding_boxes_final, sign_names, probabilities):
     box_color = [0, 0, 255]
     text_color = [0, 255, 0]
 
-    for i in range(0,len(sign_data), 5):
-        x_min = int(sign_data[i])
-        y_min = int(sign_data[i+1])
-        box_width = int(sign_data[i+2])
-        box_height = int(sign_data[i+3])
-        text_box_sign = str(sign_data[i+4])
+    for i in range(len(bounding_boxes_final)):
+        font_size = bounding_boxes_final[i,2]/90
+        cv2.rectangle(image, (bounding_boxes_final[i,0], bounding_boxes_final[i,1]),
+                            (bounding_boxes_final[i,0] + bounding_boxes_final[i,2],
+                            bounding_boxes_final[i,1] + bounding_boxes_final[i,3]),
+                            box_color, 2)
+        print_text_on_image(image, (str(sign_names[i]) + " " + str(np.format_float_positional(probabilities[i,0],precision=2))),
+                            bounding_boxes_final[i,0], bounding_boxes_final[i,1]-5, font_size, text_color, 1)
 
-        font_size = box_width/100*0.9
-    
-        cv2.rectangle(image, (x_min, y_min), (x_min + int(box_width), y_min + int(box_height)), box_color, 2)
-        print_text_on_image(image, text_box_sign, x_min, y_min-5, font_size, text_color, 1)
     return image
 
 
 """
 main
 """
+print("[INFO] running...")
 probability_minimum = 0.25
 threshold = 0.25
 frames_count = 1
@@ -316,22 +257,25 @@ path_image = "./test_rl.jpg"
 path_video = "./input/Ausschnitt_5.mp4"
 path_yolo_weights = "./input/yolo/yolov3_ts.weights"
 path_yolo_config = "./input/yolo/yolov3_ts.cfg"
-#path_yolo_weights = "./input/yolo_tiny/yolov3-spp.weights"
-#path_yolo_config = "./input/yolo_tiny/yolov3_tiny.cfg"
+
 
 labels, model, yolo_network, mean = load_models(path_yolo_weights, path_yolo_config)
 layers_all, layers_names_output = get_layers(yolo_network)
 dnn_dim = (416, 416)
 
 # set CUDA as the preferable backend and target
+print()
 print("[INFO] setting preferable backend and target to CUDA...")
 yolo_network.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
 yolo_network.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
 
+# this should output a GPU device
+print("[INFO] detected devices by tensorflow...")
+print(device_lib.list_local_devices())
+print()
 
-
-# checkpoint
-print("models loaded")
+# if this shows up all models are loaded and gpu is ready
+print("[INFO] models loaded...")
 
 """
 image
@@ -372,11 +316,12 @@ cap, height, width = read_video(path_video)
 # to save the video
 frame_width = int(cap.get(3)/2)
 frame_height = int(cap.get(4)/2)
-print(frame_width, frame_height)
+print("[INFO] image processing size: ", frame_width, frame_height)
+print()
 #out = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (frame_width,frame_height))
 out = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc(*"MJPG"), 10, (frame_width,frame_height))
 
-frames_hist = np.array(["frame", "frame_time", "sum_time", "frame_fps", "avg_fps", "num_detect_ts"])
+frames_hist = np.array(["frame", "frame_time", "sum_time", "frame_fps", "avg_fps", "num_detected_signs", "detected_signs"])
 
 while(cap.isOpened()):
     # start timer for fps calculation
@@ -391,16 +336,17 @@ while(cap.isOpened()):
     if width is None or height is None:
         height, width = get_dimensions(frame)
 
-    frame, number_traffic_signs = detect_signs(frame, height, width, labels, model, yolo_network, mean, layers_names_output, probability_minimum, threshold, dnn_dim)
+    frame, number_traffic_signs, sign_names = detect_signs(frame, height, width, labels, model, yolo_network, mean, layers_names_output, probability_minimum, threshold, dnn_dim)
     end_time = cv2.getTickCount()
     
-    estimated_time, avgFps, frameFps, frames_hist = calculate_time(estimated_time, frames_count, start_time, end_time, frames_hist, number_traffic_signs)
-    text_info = "time {0:.3f} s - frame-fps: {1} - avg-fps: {2}".format(estimated_time, frameFps, avgFps)
+    estimated_time, avg_fps, frame_fps, frames_hist = calculate_time(estimated_time, frames_count, start_time, end_time, frames_hist, number_traffic_signs, sign_names)
+    text_info = "time {0:.3f} s - frame-fps: {1} - avg-fps: {2}".format(estimated_time, frame_fps, avg_fps)
     frame = print_text_on_image(frame, text_info, 20, 20, 0.5, [0,0,255], 2)
     out.write(frame)
     show_image("bounding_boxes", frame)
     frames_count+=1
-    if cv2.waitKey(10) & 0xFF ==ord("q"):
+    #default should be 1
+    if cv2.waitKey(1) & 0xFF ==ord("q"):
         break
 
 pd.DataFrame(frames_hist).to_csv("./fps_analysis.csv", index=False)

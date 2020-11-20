@@ -126,6 +126,10 @@ class VzeController(GuiInterface):
     def processCV(self):
         self.opencv.openCVMethod()
 
+    def startVideo(self):
+        # Testmethod to play the video
+        self.preprocessor.playVideoStream(self.getFilePath())
+
 class VzeApp(QtWidgets.QApplication):
 
     mainWidget = None

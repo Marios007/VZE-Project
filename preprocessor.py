@@ -123,3 +123,20 @@ class imagesProcessing():
             return -1
         else:
             return 1
+
+    def playVideoStream(self, path):
+        """
+        testmethod to play a video
+        """
+        print("play video " + str(path))
+        self.video = cv2.VideoCapture(path)
+        self.running = True
+        while(self.video.isOpened()):
+            read, image = self.video.read()
+            if not read:
+                break
+            cv2.imshow("test", image)
+            if cv2.waitKey(3) & 0xFF ==ord("q"):
+                break
+        self.video.release()
+        cv2.destroyAllWindows()

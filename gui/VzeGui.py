@@ -548,11 +548,6 @@ class ui_previewscreen(QtWidgets.QWidget):
 
     def create_button(self):
         self.btn_info_previewScreen = QtWidgets.QPushButton(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_info_previewScreen.sizePolicy().hasHeightForWidth())
-        self.btn_info_previewScreen.setSizePolicy(sizePolicy)
         self.btn_info_previewScreen.setMinimumSize(QtCore.QSize(140, 45))
         self.btn_info_previewScreen.setMaximumSize(QtCore.QSize(140, 45))
         self.btn_info_previewScreen.setBaseSize(QtCore.QSize(0, 0))
@@ -564,11 +559,6 @@ class ui_previewscreen(QtWidgets.QWidget):
         self.btn_info_previewScreen.clicked.connect(lambda: self.gui.infoscreen.show())
 
         self.btn_back_previewScreen = QtWidgets.QPushButton(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_back_previewScreen.sizePolicy().hasHeightForWidth())
-        self.btn_back_previewScreen.setSizePolicy(sizePolicy)
         self.btn_back_previewScreen.setMinimumSize(QtCore.QSize(0, 0))
         self.btn_back_previewScreen.setMaximumSize(QtCore.QSize(40, 40))
         self.btn_back_previewScreen.setStyleSheet(styles.styleSmallButton)
@@ -725,11 +715,6 @@ class ui_DIScreen(QtWidgets.QWidget):
 
     def create_button(self):
         self.btn_info_DIScreen = QtWidgets.QPushButton(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_info_DIScreen.sizePolicy().hasHeightForWidth())
-        self.btn_info_DIScreen.setSizePolicy(sizePolicy)
         self.btn_info_DIScreen.setMinimumSize(QtCore.QSize(140, 45))
         self.btn_info_DIScreen.setMaximumSize(QtCore.QSize(140, 45))
         self.btn_info_DIScreen.setBaseSize(QtCore.QSize(0, 0))
@@ -742,11 +727,6 @@ class ui_DIScreen(QtWidgets.QWidget):
         self.btn_info_DIScreen.clicked.connect(lambda: self.gui.infoscreen.show())
 
         self.btn_back_DI = QtWidgets.QPushButton(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_back_DI.sizePolicy().hasHeightForWidth())
-        self.btn_back_DI.setSizePolicy(sizePolicy)
         self.btn_back_DI.setMinimumSize(QtCore.QSize(0, 0))
         self.btn_back_DI.setMaximumSize(QtCore.QSize(40, 40))
         self.btn_back_DI.setStyleSheet(styles.styleSmallButton)
@@ -812,11 +792,6 @@ class ui_DIScreen(QtWidgets.QWidget):
         self.lbl_headline_DIScreen.setObjectName("lbl_headline_DIScreen")
 
         self.label_DIScreen_smalltext = QtWidgets.QLabel(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_DIScreen_smalltext.sizePolicy().hasHeightForWidth())
-        self.label_DIScreen_smalltext.setSizePolicy(sizePolicy)
         self.label_DIScreen_smalltext.setStyleSheet(styles.styleText1)
         self.label_DIScreen_smalltext.setText("Anzahl der Schilder eingeben (Optional)")
         self.label_DIScreen_smalltext.setObjectName("label_DIScreen_smalltext")
@@ -847,7 +822,6 @@ class ui_DIScreen(QtWidgets.QWidget):
                     j =j+1
 
                     # create spinboxes 
-
                     # print("sb: i:"+ str(i) + " j:"+ str(j) + " k:"+ str(k))
                     self.name_sb = "spinBox_"+ str(k)
                     self.name_sb = QtWidgets.QSpinBox(self.scrollAreaWidget_DIScreen)
@@ -1006,11 +980,6 @@ class ui_analyzePvScreen(QtWidgets.QWidget):
 
     def create_button(self):
         self.btn_info_AnalyzePreview = QtWidgets.QPushButton(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_info_AnalyzePreview.sizePolicy().hasHeightForWidth())
-        self.btn_info_AnalyzePreview.setSizePolicy(sizePolicy)
         self.btn_info_AnalyzePreview.setMinimumSize(QtCore.QSize(140, 45))
         self.btn_info_AnalyzePreview.setMaximumSize(QtCore.QSize(140, 45))
         self.btn_info_AnalyzePreview.setBaseSize(QtCore.QSize(0, 0))
@@ -1023,11 +992,6 @@ class ui_analyzePvScreen(QtWidgets.QWidget):
         self.btn_info_AnalyzePreview.clicked.connect(lambda: self.gui.infoscreen.show())
 
         self.btn_back_AnalyzePreview = QtWidgets.QPushButton(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_back_AnalyzePreview.sizePolicy().hasHeightForWidth())
-        self.btn_back_AnalyzePreview.setSizePolicy(sizePolicy)
         self.btn_back_AnalyzePreview.setMinimumSize(QtCore.QSize(0, 0))
         self.btn_back_AnalyzePreview.setMaximumSize(QtCore.QSize(40, 40))
         self.btn_back_AnalyzePreview.setStyleSheet(styles.styleSmallButton)
@@ -1040,11 +1004,6 @@ class ui_analyzePvScreen(QtWidgets.QWidget):
         self.btn_back_AnalyzePreview.clicked.connect(lambda: self.gui.change_screen_back())
 
         self.btn_startAnalyze = QtWidgets.QPushButton(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_startAnalyze.sizePolicy().hasHeightForWidth())
-        self.btn_startAnalyze.setSizePolicy(sizePolicy)
         self.btn_startAnalyze.setMinimumSize(QtCore.QSize(220, 40))
         self.btn_startAnalyze.setMaximumSize(QtCore.QSize(220, 40))
         self.btn_startAnalyze.setStyleSheet(styles.styleBluebuttonsmall)
@@ -1052,6 +1011,9 @@ class ui_analyzePvScreen(QtWidgets.QWidget):
         self.btn_startAnalyze.setCheckable(False)
         self.btn_startAnalyze.setFlat(False)
         self.btn_startAnalyze.setObjectName("btn_startAnalyze")
+        self.btn_startAnalyze.clicked.connect(lambda: self.gui.change_screen(5))
+        self.btn_startAnalyze.clicked.connect(self.logic.startVideo)
+
 
     def create_label(self):
         self.lbl_headline_AnalyzePreview = QtWidgets.QLabel(self)
@@ -1060,11 +1022,6 @@ class ui_analyzePvScreen(QtWidgets.QWidget):
         self.lbl_headline_AnalyzePreview.setObjectName("lbl_headline_AnalyzePreview")
 
         self.label_AnalyzePreview = QtWidgets.QLabel(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_AnalyzePreview.sizePolicy().hasHeightForWidth())
-        self.label_AnalyzePreview.setSizePolicy(sizePolicy)
         self.label_AnalyzePreview.setStyleSheet(styles.styleText1)
         self.label_AnalyzePreview.setText("Vorschau")
         self.label_AnalyzePreview.setObjectName("label_AnalyzePreview")
@@ -1164,11 +1121,6 @@ class ui_analyzeScreen(QtWidgets.QWidget):
 
     def create_button(self):
         self.btn_info_Analyze = QtWidgets.QPushButton(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_info_Analyze.sizePolicy().hasHeightForWidth())
-        self.btn_info_Analyze.setSizePolicy(sizePolicy)
         self.btn_info_Analyze.setMinimumSize(QtCore.QSize(140, 45))
         self.btn_info_Analyze.setMaximumSize(QtCore.QSize(140, 45))
         self.btn_info_Analyze.setBaseSize(QtCore.QSize(0, 0))
@@ -1361,11 +1313,6 @@ class ui_ResultScreen(QtWidgets.QWidget):
     def create_button(self):
 
         self.btn_info_Result = QtWidgets.QPushButton(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_info_Result.sizePolicy().hasHeightForWidth())
-        self.btn_info_Result.setSizePolicy(sizePolicy)
         self.btn_info_Result.setMinimumSize(QtCore.QSize(140, 45))
         self.btn_info_Result.setMaximumSize(QtCore.QSize(140, 45))
         self.btn_info_Result.setBaseSize(QtCore.QSize(0, 0))
@@ -1603,11 +1550,6 @@ class ui_DemoDataScreen(QtWidgets.QWidget):
 
     def create_button(self):
         self.btn_info_DemoData = QtWidgets.QPushButton(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_info_DemoData.sizePolicy().hasHeightForWidth())
-        self.btn_info_DemoData.setSizePolicy(sizePolicy)
         self.btn_info_DemoData.setMinimumSize(QtCore.QSize(140, 45))
         self.btn_info_DemoData.setMaximumSize(QtCore.QSize(140, 45))
         self.btn_info_DemoData.setBaseSize(QtCore.QSize(0, 0))
@@ -1640,13 +1582,7 @@ class ui_DemoDataScreen(QtWidgets.QWidget):
         self.lbl_headline_DemoData.setStyleSheet(styles.styleHeadlines)
         self.lbl_headline_DemoData.setText("Demo")
         self.lbl_headline_DemoData.setObjectName("lbl_headline_DemoData")
-
         self.label_DIScreen_DemoData = QtWidgets.QLabel(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_DIScreen_DemoData.sizePolicy().hasHeightForWidth())
-        self.label_DIScreen_DemoData.setSizePolicy(sizePolicy)
         self.label_DIScreen_DemoData.setStyleSheet(styles.styleText1)
         self.label_DIScreen_DemoData.setText("Anzahl der Schilder im Video")
         self.label_DIScreen_DemoData.setObjectName("label_DIScreen_DemoData")
@@ -1789,11 +1725,6 @@ class ui_InfoScreen(QtWidgets.QWidget):
 
     def create_button(self):
         self.btn_closeInfo = QtWidgets.QPushButton(self)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_closeInfo.sizePolicy().hasHeightForWidth())
-        self.btn_closeInfo.setSizePolicy(sizePolicy)
         self.btn_closeInfo.setMinimumSize(QtCore.QSize(220, 40))
         self.btn_closeInfo.setMaximumSize(QtCore.QSize(220, 40))
         self.btn_closeInfo.setStyleSheet(styles.styleBluebuttonsmall)

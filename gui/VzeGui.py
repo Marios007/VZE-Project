@@ -197,7 +197,10 @@ class VzeGui(QtWidgets.QMainWindow):
             #change screen to previewScreen
             self.change_screen(4)
         else:
+            errorMessage = "Das Demovideo existiert nicht!\nBitte kontaktieren Sie den Support"
+            errorTitle = "Fehler Demovideo"
             print("The given demoVideo does not exist: " + filepath)
+            self.showPopup(errorTitle, errorMessage)
             self.change_screen(0)
 
     def showPopup(self,title,message):
@@ -211,8 +214,6 @@ class VzeGui(QtWidgets.QMainWindow):
         self.popMsg.setStandardButtons(QtWidgets.QMessageBox.Ok)
         self.popMsg.setStyleSheet("")
         self.popMsg.exec_()
-
-
 
 
 # Start Screen

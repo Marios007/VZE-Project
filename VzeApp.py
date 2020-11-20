@@ -7,10 +7,6 @@ import os
 #interface definition
 class GuiInterface(abc.ABC):
     
-    @abc.abstractmethod
-    def doSomething(self):
-        return
-
     def loadFile(self):
         return
 
@@ -18,6 +14,9 @@ class GuiInterface(abc.ABC):
         return
 
     def getFilePath(self):
+        return
+
+    def checkFilePath(self,filepath):
         return
 
     def processCV(self):
@@ -56,9 +55,6 @@ class VzeController(GuiInterface):
 
     def __init__(self, logic):
         self.logic = logic
-
-    def doSomething(self):
-       print("We are doing something")
 
     def loadFile(self):
         """

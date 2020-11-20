@@ -12,7 +12,6 @@ todo:
 if the box_width or box_height is to small, skip the classification for the specific traffic sign
 if the cnn probability is low (maybe <=65%) dont show box and label
 counting detected signs
-!!!breaks cause of captured signs box width or box height = 0!!!
 """
 
 import numpy as np
@@ -22,7 +21,7 @@ import pickle
 from keras.models import load_model
 import tensorflow as tf
 
-import matplotlib.pyplot as plt
+
 from tensorflow.python.client import device_lib
 
 # allow tensorflow to use gpu
@@ -100,12 +99,6 @@ def calculate_time(estimated_time, frames_count, start_time, end_time, frames_hi
     frame_fps = round((1/ frame_time), 1)
     #print(frames_count, frame_time, frame_fps, estimated_time, avg_fps)
     frames_hist = np.vstack((frames_hist, np.array([frames_count, frame_time, estimated_time, frame_fps, avg_fps, number_traffic_signs, sign_names.flatten()])))
-    """
-    # plot fps - slow, only for demonstration purpose
-    frame_fps_plot = ax.plot(frames_hist[1:,0]/10,(frames_hist[1:,3]))
-    avg_fps_plot = ax.plot(frames_hist[1:,0]/10,(frames_hist[1:,4]))
-    #num_signs_plot = secax.plot(frames_hist[1:,0]/10,(frames_hist[1:,5]))
-    """
 
     #print("calculating time {0:.3f} seconds - FPS: {1}".format(estimated_time, fps))
     #print('FPS:', round((frames_count / estimated_time), 1))
@@ -157,9 +150,7 @@ def preprocessing_images(image):
 def detect_signs(image, height, width, labels, model, yolo_network, mean, layers_names_output, probability_minimum, threshold, dnn_dim):
     #only for debugging
     number_traffic_signs = 0
-    results = []
-    sign_names = np.array([])
-
+    
     #for one anchor box: [tx, ty, tw, th, obj score, class probs.]
     output_from_yolo_network = yolo_detection(image, dnn_dim, layers_names_output)
     
@@ -173,12 +164,14 @@ def detect_signs(image, height, width, labels, model, yolo_network, mean, layers
     max_output_layers = np.argwhere(arr_output_layers[:,5:]>probability_minimum)
     # create array with the relevant detected boxes and confidences
     if max_output_layers.size == 0:
-        pass
+        results = []
+        sign_names = np.array([])
     else:
         arr_output_layers_relevant = arr_output_layers[max_output_layers[:,0]]
         confidences = np.amax(arr_output_layers_relevant[:,5:], axis=1)
 
         box_current = arr_output_layers_relevant[:,:4] * np.array([width, height, width, height])
+        # 1.35 = increased box_width and box_height
         # xmin, ymin, box_width, box_height
         min_point_offset = 0.998
         box_size_offset = 1.2
@@ -203,7 +196,7 @@ def detect_signs(image, height, width, labels, model, yolo_network, mean, layers
         # creating images of detected traffic signs
         for i in range(len(bounding_boxes_final)):
             captured_sign = image[bounding_boxes_final[i,1]:bounding_boxes_final[i,1]+bounding_boxes_final[i,3],
-                                bounding_boxes_final[i,0]:bounding_boxes_final[i,0]+bounding_boxes_final[i,2],:]
+                                  bounding_boxes_final[i,0]:bounding_boxes_final[i,0]+bounding_boxes_final[i,2],:]
             # Checkpoint
             #show_image("sign" + str(i), captured_sign)
             captured_sign = preprocessing_images(captured_sign)
@@ -214,12 +207,11 @@ def detect_signs(image, height, width, labels, model, yolo_network, mean, layers
             # Checkpoint
             #print(captured_signs_array.shape)
 
-
         # Checkpoint
         # for i in range(len(captured_signs_array)):
         #     show_image("arr", captured_signs_array[i])
         #     cv2.waitKey(250)
- 
+
         # feeding the images through the cnn (parallel processed)
         probabilities_all = model.predict_proba(captured_signs_array)
         prediction = np.argmax(probabilities_all, axis = 1)
@@ -262,7 +254,7 @@ estimated_time = 0
 
 #path_image = "C:/Users/Aqua/Desktop/yolo_object_detection/yolo-traffic-signs/Traffic_signs_data/00039.jpg"
 path_image = "./test_rl.jpg"
-path_video = "./input/Ausschnitt_4.mp4"
+path_video = "./input/Ausschnitt_5.mp4"
 path_yolo_weights = "./input/yolo/yolov3_ts.weights"
 path_yolo_config = "./input/yolo/yolov3_ts.cfg"
 
@@ -331,23 +323,6 @@ out = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc(*"MJPG"), 10, (frame_wi
 
 frames_hist = np.array(["frame", "frame_time", "sum_time", "frame_fps", "avg_fps", "num_detected_signs", "detected_signs"])
 
-"""
-# plt frame for fps visualisation - slow, only for demonstration purpose
-plt.ion()
-fig, ax = plt.subplots(figsize=(6,4))
-ax.set_title("frames analysis")
-ax.set_xlabel("frame")
-ax.set_ylabel("fps")
-ax.legend()
-#secax = ax.twinx()
-#secax.set_xlabel("number of detected signs")
-"""
-
-print("****************")
-print("*  processing  *")
-print("****************")
-print()
-
 while(cap.isOpened()):
     # start timer for fps calculation
     start_time = cv2.getTickCount()
@@ -363,9 +338,8 @@ while(cap.isOpened()):
 
     frame, number_traffic_signs, sign_names = detect_signs(frame, height, width, labels, model, yolo_network, mean, layers_names_output, probability_minimum, threshold, dnn_dim)
     end_time = cv2.getTickCount()
-
+    
     estimated_time, avg_fps, frame_fps, frames_hist = calculate_time(estimated_time, frames_count, start_time, end_time, frames_hist, number_traffic_signs, sign_names)
-
     text_info = "time {0:.3f} s - frame-fps: {1} - avg-fps: {2}".format(estimated_time, frame_fps, avg_fps)
     frame = print_text_on_image(frame, text_info, 20, 20, 0.5, [0,0,255], 2)
     out.write(frame)
@@ -377,10 +351,7 @@ while(cap.isOpened()):
 
 pd.DataFrame(frames_hist).to_csv("./fps_analysis.csv", index=False)
 
-print()
-print("**********")
-print("*  done  *")
-print("**********")
+print("done")
 cap.release()
 out.release()
 cv2.destroyAllWindows()

@@ -169,8 +169,7 @@ class VzeGui(QtWidgets.QMainWindow):
         This method is used for uploading a file
         """
         #Calling method loadFile in VzeApp.py
-        status,nachricht,image = self.logic.loadFile()
-
+        status,message,image = self.logic.loadFile()
         #if status is ok
         if(status == 0):
             #load the created image as a preview
@@ -178,7 +177,8 @@ class VzeGui(QtWidgets.QMainWindow):
             #change screen to analyzePreviewScreen
             self.change_screen(2)
         else:
-            print(nachricht)
+            error = "Fehler beim Laden der Datei"
+            self.showPopup(error, message)
 
     def loadDemoVideo(self, filepath):
         """
@@ -200,6 +200,17 @@ class VzeGui(QtWidgets.QMainWindow):
             print("The given demoVideo does not exist: " + filepath)
             self.change_screen(0)
 
+    def showPopup(self,title,message):
+        """
+        method for showing a popup with a title and a message (with Warning Icon)
+        """
+        self.popMsg = QtWidgets.QMessageBox()
+        self.popMsg.setWindowTitle(title)
+        self.popMsg.setText(message)
+        self.popMsg.setIcon(QtWidgets.QMessageBox.Warning)
+        self.popMsg.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        self.popMsg.setStyleSheet("")
+        self.popMsg.exec_()
 
 
 

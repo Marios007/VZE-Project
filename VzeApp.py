@@ -129,6 +129,10 @@ class VzeController(GuiInterface):
         # Testmethod to play the video
         self.preprocessor.playVideoStream(self.getFilePath())
 
+    def startAnalysis(self):
+        #Method to start the analysis
+        print("Method startAnalysis in VzeApp")  
+
 class VzeApp(QtWidgets.QApplication):
 
     mainWidget = None

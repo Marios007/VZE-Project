@@ -136,6 +136,7 @@ class imagesProcessing():
             if not read:
                 break
             cv2.imshow("test", image)
+            
             #SL: Hier muss eigentlich nur die Methode showImageOnAnalyzeScreen der VzeGui aufgerufen werden. Weiß aber noch nicht wie.
             if cv2.waitKey(3) & 0xFF ==ord("q"):
                 break

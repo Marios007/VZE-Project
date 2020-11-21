@@ -7,9 +7,11 @@ import csv
 class VzeGui(QtWidgets.QMainWindow):
 
     stack_lastScreen = []
-    array_dataInput = [[0 for x in range(43)] for y in range(2)]
+    array_dataInput = [[0 for x in range(43)] for y in range(3)]
     demo_video1 = "./gui/pics/DemoVideos/DemoVideo_gutesWetter.mp4"
     demo_video2 = "./gui/pics/DemoVideos/DemoVideo_schlechtesWetter.mp4"
+    demo_datafile1='./gui/demo_data_1.csv'
+    demo_datafile2='./gui/demo_data_2.csv'
 
     def __init__(self, logicInterface):
         QtWidgets.QMainWindow.__init__(self)
@@ -116,9 +118,9 @@ class VzeGui(QtWidgets.QMainWindow):
 
         #set demodatafile according to the passed demoID
         if(demoID == 1):
-            demodatafile='./gui/demo_data_1.csv'
+            demodatafile=self.demo_datafile1
         elif (demoID == 2):
-            demodatafile='./gui/demo_data_2.csv'
+            demodatafile=self.demo_datafile2
         else:
             print("Unknown error")
 
@@ -183,7 +185,7 @@ class VzeGui(QtWidgets.QMainWindow):
             error = "Fehler beim Laden der Datei"
             self.showPopup(error, message)
 
-    def loadDemoVideo(self, filepath):
+    def loadDemoVideo(self, filepath, demoID):
         """
         This method is used for loading one of the demo-videos and go to the preview-screen
         """
@@ -197,6 +199,13 @@ class VzeGui(QtWidgets.QMainWindow):
             self.logic.setFilePath(filepath)
             #load the created image as a preview
             self.showPreviewImage(image)
+            #load the data of the demovideo to the array
+            #set demodatafile according to the passed demoID
+            if(demoID == 1):
+                demodatafile=self.demo_datafile1
+            elif (demoID == 2):
+                demodatafile=self.demo_datafile2
+            self.loadDemoData(demodatafile)
             #change screen to previewScreen
             self.change_screen(4)
         else:
@@ -226,6 +235,39 @@ class VzeGui(QtWidgets.QMainWindow):
         # und dann beim Klicken des Abbrechen-Button auf False setzen.
         # In der Methode zum Video abspielen müsste dann nur in jedem Schleifendurchlauf diese abgefragt werden.
         self.change_screen(0)
+
+    def show_Result(self):
+        self.logic.startAnalysis()
+        self.change_screen(7)
+
+    def loadDemoData(self,filepath):
+        with open(filepath, 'r') as csvfile:
+            csv_reader = csv.reader(csvfile, delimiter=';')
+            
+            next(csv_reader)
+
+            i = 0
+            for line in csv_reader:
+                self.sign_id = line[0]
+                self.sign_count = line[2]
+
+                self.array_dataInput[0][i] = self.sign_id
+                self.array_dataInput[1][i] = self.sign_count
+                self.array_dataInput[2][i] = "0"
+                i=i+1
+
+        csvfile.close()
+
+        print("Demo-Data loaded")
+        #Testausgabe des gesamten Arrays
+        for j in range(len(self.array_dataInput[0])):
+            print(self.array_dataInput[0][j], end=' ')
+            print(self.array_dataInput[1][j], end=' ')
+            print(self.array_dataInput[2][j], end=' ')
+            print()
+
+
+
 
 
 # Start Screen
@@ -398,13 +440,13 @@ class ui_demoscreen(QtWidgets.QWidget):
         self.btn_demoSonne.setMinimumSize(QtCore.QSize(350, 220))
         self.btn_demoSonne.setStyleSheet(styles.styleBluebuttonbig3)
         self.btn_demoSonne.setText(("Video mit Sonne"))
-        self.btn_demoSonne.clicked.connect(lambda: self.gui.loadDemoVideo(self.gui.demo_video1))
+        self.btn_demoSonne.clicked.connect(lambda: self.gui.loadDemoVideo(self.gui.demo_video1,1))
         
         self.btn_demoRegen = QtWidgets.QPushButton(self)
         self.btn_demoRegen.setMinimumSize(QtCore.QSize(350, 220))
         self.btn_demoRegen.setStyleSheet(styles.styleBluebuttonbig4)
         self.btn_demoRegen.setText(("Video mit Regen"))
-        self.btn_demoRegen.clicked.connect(lambda: self.gui.loadDemoVideo(self.gui.demo_video2))
+        self.btn_demoRegen.clicked.connect(lambda: self.gui.loadDemoVideo(self.gui.demo_video2,2))
 
         self.btn_dataSonne = QtWidgets.QPushButton(self)
         self.btn_dataSonne.setMinimumSize(QtCore.QSize(55, 55))
@@ -495,15 +537,6 @@ class ui_demoscreen(QtWidgets.QWidget):
         self.lyth_bottom_demoscreen.addItem(self.spacerItem23)
         self.verticalLayout_3.addLayout(self.lyth_bottom_demoscreen)
 
-        # Button Info Demoscreen
-
-        
-        # Layout big center
-        # Label Text and spacer
-        # Layout big in big center layout with the 2 buttons
-        # Button Back in Demoscreen
-        # Set texts
-        # Button handler with interface
         
 
 # Preview Screen
@@ -816,7 +849,7 @@ class ui_DIScreen(QtWidgets.QWidget):
                     self.name_sign = QtWidgets.QLabel(self.scrollAreaWidget_DIScreen)
                     self.name_sign.setMinimumSize(QtCore.QSize(48, 48))
                     self.name_sign.setMaximumSize(QtCore.QSize(48, 48))
-                    self.name_sign.setObjectName("lbl_sign_"+ str(k))
+                    self.name_sign.setObjectName(str(k))
                     self.name_sign.setPixmap(QtGui.QPixmap(self.sign_id))
                     self.name_sign.setScaledContents(True)
 
@@ -899,8 +932,19 @@ class ui_DIScreen(QtWidgets.QWidget):
             #print("SpinBox: " + str(spinboxItem))
             #print("SpinBox Value: " + spinboxItemValue)
             self.gui.array_dataInput[1][k] = spinboxItemValue
+
+            #Temporär die Ergebniszeile alles auf 0 setzen
+            self.gui.array_dataInput[2][k] = "0"
+
             i = i+1
             k = k+1
+
+        #Testausgabe des gesamten Arrays
+        for j in range(len(self.gui.array_dataInput[0])):
+            print(self.gui.array_dataInput[0][j], end=' ')
+            print(self.gui.array_dataInput[1][j], end=' ')
+            print(self.gui.array_dataInput[2][j], end=' ')
+            print()
 
         self.check_gridContent()
         #Testausgabe des gesamten Arrays
@@ -930,11 +974,11 @@ class ui_DIScreen(QtWidgets.QWidget):
             #spinboxItemValue = str(spinboxItem.value())
             #print("SpinBox Value Before: " + spinboxItemValue)
             spinboxItem.setValue(0)
-            #spinboxItemValue = str(spinboxItem.value())
+            spinboxItemValue = str(spinboxItem.value())
             #print("SpinBox Value After: " + spinboxItemValue)
             
             #Wenn Array auch zurückgesetzt werden soll, diese Zeile hier rein
-            #self.gui.array_dataInput[1][k] = spinboxItemValue
+            self.gui.array_dataInput[1][k] = spinboxItemValue
             i = i+1
             k = k+1
 
@@ -1169,11 +1213,11 @@ class ui_analyzeScreen(QtWidgets.QWidget):
         self.btn_showResult.setSizePolicy(sizePolicy)
         self.btn_showResult.setMinimumSize(QtCore.QSize(220, 40))
         self.btn_showResult.setMaximumSize(QtCore.QSize(220, 40))
-        self.btn_showResult.setStyleSheet(styles.styleBluebuttonsmall)
+        self.btn_showResult.setStyleSheet(styles.styleDeactivatedbuttonsmall)
         self.btn_showResult.setText("Zur Auswertung")
-        self.btn_showResult.setCheckable(False)
-        self.btn_showResult.setFlat(False)
+        #self.btn_showResult.setEnabled(False)
         self.btn_showResult.setObjectName("btn_showResult")
+        self.btn_showResult.clicked.connect(self.gui.show_Result)
 
 
     def create_label(self):
@@ -1261,6 +1305,28 @@ class ui_analyzeScreen(QtWidgets.QWidget):
         self.lyth_bottom_Analyze.addWidget(self.btn_showResult)
         self.lyth_bottom_Analyze.addItem(self.spacerItem65)
         self.verticalLayout_6.addLayout(self.lyth_bottom_Analyze)
+
+    def changeButtonEnabled(self):
+        """
+        This method is used for changing the enabled-status of the cancel- and the result button, when the analysis has finished
+        """
+        #status = str(self.btn_cancelAnalyze.isEnabled())
+        #print("Cancel Button is currently " + status)
+        
+        if(self.btn_cancelAnalyze.isEnabled()):
+            print("CancelBtn deactivated, ResultBtn activated")
+            self.btn_showResult.setStyleSheet(styles.styleBluebuttonsmall)
+            self.btn_cancelAnalyze.setStyleSheet(styles.styleDeactivatedbuttonsmall)
+            self.btn_showResult.setEnabled(True)
+            self.btn_cancelAnalyze.setEnabled(False)
+        else:
+            print("ResultBtn deactivated, CancelBtn activated")
+            self.btn_showResult.setStyleSheet(styles.styleDeactivatedbuttonsmall)
+            self.btn_cancelAnalyze.setStyleSheet(styles.styleBluebuttonsmall)
+            self.btn_showResult.setEnabled(False)
+            self.btn_cancelAnalyze.setEnabled(True)
+
+
       
 
 # Result Screen
@@ -1379,6 +1445,8 @@ class ui_ResultScreen(QtWidgets.QWidget):
 
     def create_gridContent(self):
 
+
+        
         self.lbl_input_result_1 = QtWidgets.QLabel(self.scrollAreaResult)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -1664,6 +1732,8 @@ class ui_DemoDataScreen(QtWidgets.QWidget):
                         j = 0
                         i = i+1
 
+        csvfile.close()
+
     def delete_grid(self):
         
    
@@ -1763,7 +1833,6 @@ class ui_InfoScreen(QtWidgets.QWidget):
 
         self.label_Logo = QtWidgets.QLabel(self)
         self.label_Logo.setMinimumSize(QtCore.QSize(500, 0))
-        #self.label_Logo.setMaximumSize(QtCore.QSize(500, 16777215))
         self.label_Logo.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.label_Logo.setAlignment(QtCore.Qt.AlignCenter)
         self.label_Logo.setPixmap(QtGui.QPixmap(":/icons/logoSK_big_1"))

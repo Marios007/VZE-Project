@@ -1,9 +1,10 @@
 import cv2
 import filetype
 
-class imagesProcessing():
-    def __init__(self):
-        return
+class imageProcessing():
+    def __init__(self, logicInterface, vzeController):
+        self.ILogic = logicInterface
+        self.vzeController = vzeController
         
     # Important - openvc reads images in BGR
     def read_image(self, path):
@@ -132,11 +133,11 @@ class imagesProcessing():
         self.video = cv2.VideoCapture(path)
         self.running = True
         while(self.video.isOpened()):
-            read, image = self.video.read()
+            read, frame = self.video.read()
             if not read:
                 break
-            cv2.imshow("test", image)
-            
+            cv2.imshow("test", frame)
+            #self.ILogic.streaming(frame)
             #SL: Hier muss eigentlich nur die Methode showImageOnAnalyzeScreen der VzeGui aufgerufen werden. Weiß aber noch nicht wie.
             if cv2.waitKey(3) & 0xFF ==ord("q"):
                 break

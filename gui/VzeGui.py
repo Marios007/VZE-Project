@@ -156,7 +156,7 @@ class VzeGui(QtWidgets.QMainWindow):
         #display image on previewScreen, analyzePreviewScreen and analyseScreen
         self.previewscreen.graphicsPreview.setScene(graphicsScene)
         self.analyzepvscreen.graphicsAnalyzePreview.setScene(graphicsScene)
-        self.analyzescreen.graphicsAnalyze.setScene(graphicsScene)
+        # self.analyzescreen.graphicsAnalyze.setScene(graphicsScene)
 
     def showImageOnAnalyzeScreen(self, image):
         """
@@ -1077,7 +1077,7 @@ class ui_analyzePvScreen(QtWidgets.QWidget):
         self.btn_startAnalyze.setFlat(False)
         self.btn_startAnalyze.setObjectName("btn_startAnalyze")
         self.btn_startAnalyze.clicked.connect(lambda: self.gui.change_screen(5))
-        #self.btn_startAnalyze.clicked.connect(self.logic.startVideo)
+        self.btn_startAnalyze.clicked.connect(self.logic.startVideo)
 
 
     def create_label(self):
@@ -1253,10 +1253,16 @@ class ui_analyzeScreen(QtWidgets.QWidget):
 
 
     def create_preview(self):
-        self.graphicsAnalyze = QtWidgets.QGraphicsView(self)
-        self.graphicsAnalyze.setMinimumSize(QtCore.QSize(800, 420))
-        self.graphicsAnalyze.setMaximumSize(QtCore.QSize(800, 420))
-        self.graphicsAnalyze.setObjectName("graphicsAnalyze")
+
+        self.videoLayout = QtWidgets.QLabel(self)
+        self.videoLayout.setText("")
+        self.videoLayout.setMinimumSize(QtCore.QSize(800, 420))
+        self.videoLayout.setMaximumSize(QtCore.QSize(800, 420))
+        
+        # self.graphicsAnalyze = QtWidgets.QGraphicsView(self)
+        # self.graphicsAnalyze.setMinimumSize(QtCore.QSize(800, 420))
+        # self.graphicsAnalyze.setMaximumSize(QtCore.QSize(800, 420))
+        # self.graphicsAnalyze.setObjectName("graphicsAnalyze")
 
     
     def create_spacer(self):
@@ -1286,7 +1292,8 @@ class ui_analyzeScreen(QtWidgets.QWidget):
         self.lytv_bigCenter_Analyze.addLayout(self.lyth_smallText_Analyze)
         self.lyth_centerBig_Analyze.addItem(self.spacerItem56)
         self.lyth_centerBig_Analyze.addItem(self.spacerItem57)
-        self.lyth_centerBig_Analyze.addWidget(self.graphicsAnalyze)
+        # self.lyth_centerBig_Analyze.addWidget(self.graphicsAnalyze)
+        self.lyth_centerBig_Analyze.addWidget(self.videoLayout)
         self.lyth_centerBig_Analyze.addItem(self.spacerItem58)
         self.verticalLayout_7.addWidget(self.label_IconTop)
         self.verticalLayout_7.addWidget(self.label_IconMid)

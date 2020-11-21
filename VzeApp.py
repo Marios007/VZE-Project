@@ -22,90 +22,84 @@ class GuiInterface(abc.ABC):
     def processCV(self):
         return
 
-class openCV_Interface:
+    def startVideo(self):
+        return
+
+    def startAnalysis(self):
+        return
+
+class openCV_Interface(abc.ABC):
 
     def openCVMethod(self):
         return
 
-    def loadFile1(self):
+    def startVideo(self):
+        return
+
+    def streaming(self):
         return
 
 
 class openCvController(openCV_Interface):
-
+    
     logic = None
 
-    def __init__(self):
-        m_var = None
+    def __init__(self, logic):
+        self.logic = logic
 
     def openCVMethod(self):
         print("openCVMethod")
         return
 
-    def loadFile1(self):
+    def startVideo(self):
+        return
+
+    def streaming(self, frame):
         return
 
 
 class VzeController(GuiInterface):
 
     logic = None
-    opencv = openCvController()
-    preprocessor = imagesProcessing()
+    #opencv = openCvController()
+    
     _fileName = None
 
     def __init__(self, logic):
         self.logic = logic
+        self.preprocessor = imageProcessing(openCvController, self)
 
     def loadFile(self):
         """
         This method is used for loading a file into the software
         """
-        #reset filePath
         self.setFilePath("")
-        #open FileExplorer to let the user choose his file
         filePath, _ = QFileDialog.getOpenFileName(None, 'Open file',"C:\\", "Usable files (*.jpg *.jpeg *.gif *.png *.bmp *.avi *.mov *.mp4 *.mpeg)")
         
         #if user selects a file
         if(filePath != ""):
-            #check the type of the file
             #Status 1 --> image, Status 2 --> video, Status -1 --> error
             status_type,image = self.preprocessor.check_fileType(filePath)
-            
-            #If a wrong datatype is detected
             if(status_type == -1):
                 return -1,"Dieser Dateityp wird nicht unterstützt\nUnterstütze Dateitypen:\n*.jpg *.jpeg *.gif *.png *.bmp *.avi *.mov *.mp4 *.mpeg",None
-
             print("File-Type-Check passed")
-
-            #check the resolution of the file
             #Status 1 --> resolution OK, Status -1 --> resolution too high, Status -2 --> resolution too low
             status_res = self.preprocessor.check_fileResolution(status_type, filePath)
-
-            #if the file has a wrong resolution
             if(status_res == -1):
                 return -1,"Die Auflösung ist zu hoch",None
             if(status_res == -2):
                 return -1,"Die Auflösung ist zu gering",None
 
             print("File-Resolution-Check passed")
-
-            #if the file is a video, check the length
             if(status_type == 2):
                 #Status 1 --> length OK, Status -1 --> video too long
                 status_len = self.preprocessor.check_fileLength(filePath)
-
-                #if the file is too long
                 if(status_len == -1):
                     return -1,"Das Video ist leider zu lang",None
                 
             print("File-Length-Check passed")
-
-            #if every check is passed, call method to set filePath
             self.setFilePath(filePath)
-            #return that everything is OK and the path to the previewImage
             return 0,"Datei erfolgreich ausgewählt",image
-            
-        #if user canceled the operation and didn´t select a file    
         else:
             return -1,"Es wurde keine Datei ausgewählt",None
 
@@ -123,11 +117,11 @@ class VzeController(GuiInterface):
         return status
 
     def processCV(self):
-        self.opencv.openCVMethod()
+        self.preprocessor.openCVMethod()
 
     def startVideo(self):
-        # Testmethod to play the video
         self.preprocessor.playVideoStream(self.getFilePath())
+    
 
     def startAnalysis(self):
         #Method to start the analysis

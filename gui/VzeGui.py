@@ -82,7 +82,6 @@ class VzeGui(QtWidgets.QMainWindow):
          
      #    
 
-
     def change_screen(self, nextScreen):
         """
         change to next screen and save last screen to stack
@@ -91,15 +90,13 @@ class VzeGui(QtWidgets.QMainWindow):
         self.stackedWidget.setCurrentIndex(nextScreen)
         return
 
-    # save last screen on stack
     def set_lastScreen(self):
         """
         save the screen you are currently on onto a stack
         """
         self.stack_lastScreen.append(self.stackedWidget.currentIndex())
         #print("Save last screen: " + str(self.stackedWidget.currentIndex()))
-
-    
+ 
     def change_screen_back(self):
         """
         go back to last screen and pop off last element from stack
@@ -132,7 +129,6 @@ class VzeGui(QtWidgets.QMainWindow):
         #change screen to demoDataScreen
         self.change_screen(6)
 
-
     def createGraphicsScene(self, numpy):
         """
         This method is used for creating a graphicsScene from an image
@@ -147,7 +143,6 @@ class VzeGui(QtWidgets.QMainWindow):
         graphicsScene.addPixmap(pixmap_scaled)
         return graphicsScene
     
-
     def showPreviewImage(self, filepath):
         """
         This method is used for displaying a previewImage on every previewScreen and the analyseScreen
@@ -161,14 +156,14 @@ class VzeGui(QtWidgets.QMainWindow):
         self.analyzepvscreen.graphicsAnalyzePreview.setScene(graphicsScene)
         self.analyzescreen.graphicsAnalyze.setScene(graphicsScene)
 
-    def showImageOnAnalyzeScreen(self, filepath):
+    def showImageOnAnalyzeScreen(self, image):
         """
         This method is used for displaying an image on the AnalyzeScreen
         """
         print("method showImageOnAnalyzeScreen")
         
         #call method to create a graphicScene
-        graphicsScene = self.createGraphicsScene(filepath)
+        graphicsScene = self.createGraphicsScene(image)
         #display image on analyseScreen
         self.analyzescreen.graphicsAnalyze.setScene(graphicsScene) 
 
@@ -222,6 +217,15 @@ class VzeGui(QtWidgets.QMainWindow):
         self.popMsg.setStandardButtons(QtWidgets.QMessageBox.Ok)
         self.popMsg.setStyleSheet("")
         self.popMsg.exec_()
+
+    def cancel_Analyze(self):
+        """
+        method to cancel the Analysis of the current file and get back to the startscreen
+        """
+        #SL: Hier dann der Cancel der Analyse. Eventuell eine globale Variable mit True belegen, wenn die Analyse laufen soll
+        # und dann beim Klicken des Abbrechen-Button auf False setzen.
+        # In der Methode zum Video abspielen müsste dann nur in jedem Schleifendurchlauf diese abgefragt werden.
+        self.change_screen(0)
 
 
 # Start Screen
@@ -783,7 +787,7 @@ class ui_DIScreen(QtWidgets.QWidget):
         self.btn_DInext.setFlat(False)
         self.btn_DInext.setObjectName("btn_DInext")
         self.btn_DInext.clicked.connect(lambda: self.save_gridContent())
-        self.btn_DInext.clicked.connect(lambda: self.gui.change_screen(4))
+        #self.btn_DInext.clicked.connect(lambda: self.gui.change_screen(4))
 
     def create_label(self):
         self.lbl_headline_DIScreen = QtWidgets.QLabel(self)
@@ -898,6 +902,7 @@ class ui_DIScreen(QtWidgets.QWidget):
             i = i+1
             k = k+1
 
+        self.check_gridContent()
         #Testausgabe des gesamten Arrays
         #for j in range(len(self.gui.array_dataInput[0])):
         #    print(self.gui.array_dataInput[0][j], end=' ')
@@ -932,6 +937,22 @@ class ui_DIScreen(QtWidgets.QWidget):
             #self.gui.array_dataInput[1][k] = spinboxItemValue
             i = i+1
             k = k+1
+
+    def check_gridContent(self):
+        
+        emptyCheck = True
+        
+        for j in range(len(self.gui.array_dataInput[0])):
+            count = int(self.gui.array_dataInput[1][j])
+            if(count > 0):
+                emptyCheck = False
+           
+        if(emptyCheck):
+            title = "Keine Daten eingegeben"
+            message = "Sie haben keine Daten eingegeben!\nDas bedeutet, dass in Ihrem Video keine Verkehrszeichen vorkommen!\nIst dies der Fall oder wenn Sie keinen Vergleich wünschen, nutzen Sie bitte den Button 'Überspringen'"
+            self.gui.showPopup(title,message)
+        else:
+            self.gui.change_screen(4)
         
 
 # Analyze Preview Screen
@@ -1138,6 +1159,7 @@ class ui_analyzeScreen(QtWidgets.QWidget):
         self.btn_cancelAnalyze.setStyleSheet(styles.styleBluebuttonsmall)
         self.btn_cancelAnalyze.setText("Abbrechen")
         self.btn_cancelAnalyze.setObjectName("btn_cancelAnalyze")
+        self.btn_cancelAnalyze.clicked.connect(self.gui.cancel_Analyze)
 
         self.btn_showResult = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -1715,7 +1737,7 @@ class ui_InfoScreen(QtWidgets.QWidget):
 
         self.verticalLayout_12.addLayout(self.lyth_headline_Info)
         self.lytv_centerInfo = QtWidgets.QVBoxLayout()
-        self.lytv_centerInfo.setContentsMargins(60, 45, -1, -1)
+        self.lytv_centerInfo.setContentsMargins(-1, 45, -1, -1)
         self.lytv_centerInfo.setSpacing(20)
         self.lytv_centerInfo.setObjectName("lytv_centerInfo")
 
@@ -1741,13 +1763,16 @@ class ui_InfoScreen(QtWidgets.QWidget):
 
         self.label_Logo = QtWidgets.QLabel(self)
         self.label_Logo.setMinimumSize(QtCore.QSize(500, 0))
-        self.label_Logo.setMaximumSize(QtCore.QSize(500, 16777215))
+        #self.label_Logo.setMaximumSize(QtCore.QSize(500, 16777215))
+        self.label_Logo.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        self.label_Logo.setAlignment(QtCore.Qt.AlignCenter)
         self.label_Logo.setPixmap(QtGui.QPixmap(":/icons/logoSK_big_1"))
         self.label_Logo.setObjectName("label_Logo")
 
         self.label_infoText = QtWidgets.QLabel(self)
         self.label_infoText.setStyleSheet(styles.styleText1)      
         self.label_infoText.setText("Schilder Kröten GmbH\n""Musterstraße 1\n""12345 Musterstadt\n""\n""Ansprechpartner:\n""Herr Mayer\n""\n""0123-456789\n""")
+        self.label_infoText.setAlignment(QtCore.Qt.AlignCenter)
         self.label_infoText.setObjectName("label_infoText")
 
     def create_spacer(self):

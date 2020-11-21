@@ -14,9 +14,8 @@ styleBluebuttonbig2= "QPushButton{\n""    font: 75 26pt \"MS Shell Dlg 2\";\n"" 
 styleBluebuttonbig3= "QPushButton{\n""    font: 75 26pt \"MS Shell Dlg 2\";\n""    background-color: #1C4481;\n""    border-radius: 5px;\n""    color:white;\n""    text-align:bottom;\n""    background-origin: content;\n""     background-clip: padding;\n""    padding-bottom: 10px;\n""    background-image: url(:/icons/demo_sonne) 0 0 0 0;\n""    background-position: top\n;""     background-repeat: no-repeat}\n""\n""QPushButton:hover{\n""    border: 2px solid rgb(255, 255, 255)\n""}"
 styleBluebuttonbig4= "QPushButton{\n""    font: 75 26pt \"MS Shell Dlg 2\";\n""    background-color: #1C4481;\n""    border-radius: 5px;\n""    color:white;\n""    text-align:bottom;\n""    background-origin: content;\n""     background-clip: padding;\n""    padding-bottom: 10px;\n""    background-image: url(:/icons/demo_regen) 0 0 0 0;\n""    background-position: top\n;""     background-repeat: no-repeat}\n""\n""QPushButton:hover{\n""    border: 2px solid rgb(255, 255, 255)\n""}"
 
-
 #small blue buttons
-styleBluebuttonsmall="QPushButton{\n""    font: 75 18pt \"MS Shell Dlg 2\" ;\n""    background-color: #1C4481;\n""    border-radius: 5px;\n""    color:white\n""}\n""\n""QPushButton:hover{\n""    border: 2px solid rgb(255, 255, 255)\n""}"
+styleBluebuttonsmall="QPushButton{\n""    font: 75 18pt \"MS Shell Dlg 2\" ;\n""    background-color: #1C4481;\n""    border-radius: 5px;\n""    color:white\n""}\n""\n""QPushButton:hover{\n""    border: 2px solid rgb(255, 255, 255)\n""}""QPushButton:disabled {background-color:#5B8BA1;}"
 #small deactivated buttons
 styleDeactivatedbuttonsmall="QPushButton{\n""    font: 75 18pt \"MS Shell Dlg 2\" ;\n""    background-color: #5B8BA1;\n""    border-radius: 5px;\n""    color:white\n""}\n""\n""QPushButton:hover{\n""    border: 2px solid rgb(255, 255, 255)\n""}"
 #other small buttons only need hover function

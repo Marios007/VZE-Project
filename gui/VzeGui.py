@@ -206,6 +206,7 @@ class VzeGui(QtWidgets.QMainWindow):
             elif (demoID == 2):
                 demodatafile=self.demo_datafile2
             self.loadDemoData(demodatafile)
+            self.logic.setCompareResult(False)
             #change screen to previewScreen
             self.change_screen(4)
         else:
@@ -238,6 +239,7 @@ class VzeGui(QtWidgets.QMainWindow):
 
     def show_Result(self):
         self.logic.startAnalysis()
+        self.resultscreen.create_gridContent()
         self.change_screen(7)
 
     def loadDemoData(self,filepath):
@@ -253,20 +255,28 @@ class VzeGui(QtWidgets.QMainWindow):
 
                 self.array_dataInput[0][i] = self.sign_id
                 self.array_dataInput[1][i] = self.sign_count
-                self.array_dataInput[2][i] = "0"
+                self.array_dataInput[2][i] = self.sign_count
                 i=i+1
 
         csvfile.close()
 
         print("Demo-Data loaded")
         #Testausgabe des gesamten Arrays
-        for j in range(len(self.array_dataInput[0])):
-            print(self.array_dataInput[0][j], end=' ')
-            print(self.array_dataInput[1][j], end=' ')
-            print(self.array_dataInput[2][j], end=' ')
-            print()
+        #for j in range(len(self.array_dataInput[0])):
+        #    print(self.array_dataInput[0][j], end=' ')
+        #    print(self.array_dataInput[1][j], end=' ')
+        #    print(self.array_dataInput[2][j], end=' ')
+        #    print()
 
-
+    def cleanup(self):
+        print("CleanUp-Method")
+        self.array_dataInput = [[0 for x in range(43)] for y in range(3)]
+        self.logic.setCompareResult(False)
+        self.logic.setFilePath("")
+        self.demodatascreen.delete_grid()
+        self.diScreen.reset_gridContent()
+        self.resultscreen.delete_grid()
+        self.change_screen(0)
 
 
 
@@ -803,6 +813,7 @@ class ui_DIScreen(QtWidgets.QWidget):
         self.btn_skip.setCheckable(False)
         self.btn_skip.setFlat(False)
         self.btn_skip.setObjectName("btn_skip")
+        self.btn_skip.clicked.connect(lambda: self.logic.setCompareResult(False))
         self.btn_skip.clicked.connect(lambda: self.gui.change_screen(4))
         
 
@@ -934,24 +945,19 @@ class ui_DIScreen(QtWidgets.QWidget):
             self.gui.array_dataInput[1][k] = spinboxItemValue
 
             #Temporär die Ergebniszeile alles auf 0 setzen
-            self.gui.array_dataInput[2][k] = "0"
+            self.gui.array_dataInput[2][k] = spinboxItemValue
 
             i = i+1
             k = k+1
 
         #Testausgabe des gesamten Arrays
-        for j in range(len(self.gui.array_dataInput[0])):
-            print(self.gui.array_dataInput[0][j], end=' ')
-            print(self.gui.array_dataInput[1][j], end=' ')
-            print(self.gui.array_dataInput[2][j], end=' ')
-            print()
-
-        self.check_gridContent()
-        #Testausgabe des gesamten Arrays
         #for j in range(len(self.gui.array_dataInput[0])):
         #    print(self.gui.array_dataInput[0][j], end=' ')
         #    print(self.gui.array_dataInput[1][j], end=' ')
+        #    print(self.gui.array_dataInput[2][j], end=' ')
         #    print()
+
+        self.check_gridContent()
 
     def reset_gridContent(self):
         i = 0
@@ -996,7 +1002,9 @@ class ui_DIScreen(QtWidgets.QWidget):
             message = "Sie haben keine Daten eingegeben!\nDas bedeutet, dass in Ihrem Video keine Verkehrszeichen vorkommen!\nIst dies der Fall oder wenn Sie keinen Vergleich wünschen, nutzen Sie bitte den Button 'Überspringen'"
             self.gui.showPopup(title,message)
         else:
+            self.logic.setCompareResult(True)
             self.gui.change_screen(4)
+            
         
 
 # Analyze Preview Screen
@@ -1213,7 +1221,7 @@ class ui_analyzeScreen(QtWidgets.QWidget):
         self.btn_showResult.setSizePolicy(sizePolicy)
         self.btn_showResult.setMinimumSize(QtCore.QSize(220, 40))
         self.btn_showResult.setMaximumSize(QtCore.QSize(220, 40))
-        self.btn_showResult.setStyleSheet(styles.styleDeactivatedbuttonsmall)
+        self.btn_showResult.setStyleSheet(styles.styleBluebuttonsmall)
         self.btn_showResult.setText("Zur Auswertung")
         #self.btn_showResult.setEnabled(False)
         self.btn_showResult.setObjectName("btn_showResult")
@@ -1317,19 +1325,13 @@ class ui_analyzeScreen(QtWidgets.QWidget):
         """
         This method is used for changing the enabled-status of the cancel- and the result button, when the analysis has finished
         """
-        #status = str(self.btn_cancelAnalyze.isEnabled())
-        #print("Cancel Button is currently " + status)
-        
+         
         if(self.btn_cancelAnalyze.isEnabled()):
             print("CancelBtn deactivated, ResultBtn activated")
-            self.btn_showResult.setStyleSheet(styles.styleBluebuttonsmall)
-            self.btn_cancelAnalyze.setStyleSheet(styles.styleDeactivatedbuttonsmall)
             self.btn_showResult.setEnabled(True)
             self.btn_cancelAnalyze.setEnabled(False)
         else:
             print("ResultBtn deactivated, CancelBtn activated")
-            self.btn_showResult.setStyleSheet(styles.styleDeactivatedbuttonsmall)
-            self.btn_cancelAnalyze.setStyleSheet(styles.styleBluebuttonsmall)
             self.btn_showResult.setEnabled(False)
             self.btn_cancelAnalyze.setEnabled(True)
 
@@ -1349,7 +1351,6 @@ class ui_ResultScreen(QtWidgets.QWidget):
         self.create_layout()
         self.create_button()
         self.create_label()
-        self.create_gridContent()
         self.create_spacer()
         self.add_items() 
 
@@ -1429,6 +1430,7 @@ class ui_ResultScreen(QtWidgets.QWidget):
         self.btn_endResult.setMaximumSize(QtCore.QSize(220, 40))
         self.btn_endResult.setStyleSheet(styles.styleBluebuttonsmall)
         self.btn_endResult.setText("Beenden")
+        self.btn_endResult.clicked.connect(self.gui.cleanup)
 
 
     def create_label(self):
@@ -1452,88 +1454,117 @@ class ui_ResultScreen(QtWidgets.QWidget):
 
     def create_gridContent(self):
 
+        if(self.logic.getCompareResult):
+            print("Es wird eine Auswertung durchgeführt")
+        else:
+            print("Die Ergebnisse werden nur angezeigt")
 
+        #Insert header to gridLayout
+        i = 0
+        while(i < 9):
+            self.lbl_header_schild = QtWidgets.QLabel(self.scrollAreaResult)
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(self.lbl_header_schild.sizePolicy().hasHeightForWidth())
+            self.lbl_header_schild.setSizePolicy(sizePolicy)
+            self.lbl_header_schild.setMinimumSize(QtCore.QSize(80, 30))
+            self.lbl_header_schild.setMaximumSize(QtCore.QSize(40, 30))
+            self.lbl_header_schild.setStyleSheet(styles.styleGridHeadline)
+            self.lbl_header_schild.setText("Schild")
+            #self.lbl_header_schild.setAlignment(QtCore.Qt.AlignCenter)
+            self.lbl_header_schild.setObjectName("lbl_header_schild"+str(i))
+            self.gridLayout_Result.addWidget(self.lbl_header_schild, 0, i, 1, 1)
+
+            i=i+1
+
+            if(self.logic.getCompareResult()):
+                self.lbl_header_eingabe = QtWidgets.QLabel(self.scrollAreaResult)
+                sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+                sizePolicy.setHorizontalStretch(0)
+                sizePolicy.setVerticalStretch(0)
+                sizePolicy.setHeightForWidth(self.lbl_header_eingabe.sizePolicy().hasHeightForWidth())
+                self.lbl_header_eingabe.setSizePolicy(sizePolicy)
+                self.lbl_header_eingabe.setMinimumSize(QtCore.QSize(80, 30))
+                self.lbl_header_eingabe.setMaximumSize(QtCore.QSize(40, 30))
+                self.lbl_header_eingabe.setStyleSheet(styles.styleGridHeadline)
+                self.lbl_header_eingabe.setText("Eingabe")
+                #self.lbl_header_eingabe.setAlignment(QtCore.Qt.AlignCenter)
+                self.lbl_header_eingabe.setObjectName("lbl_header_eingabe"+str(i))
+                self.gridLayout_Result.addWidget(self.lbl_header_eingabe, 0, i, 1, 1)
+
+                i=i+1
+
+            self.lbl_header_erkannt = QtWidgets.QLabel(self.scrollAreaResult)
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(self.lbl_header_erkannt.sizePolicy().hasHeightForWidth())
+            self.lbl_header_erkannt.setSizePolicy(sizePolicy)
+            self.lbl_header_erkannt.setMinimumSize(QtCore.QSize(80, 30))
+            self.lbl_header_erkannt.setMaximumSize(QtCore.QSize(40, 30))
+            self.lbl_header_erkannt.setStyleSheet(styles.styleGridHeadline)
+            self.lbl_header_erkannt.setText("Erkannt")
+            #self.lbl_header_erkannt.setAlignment(QtCore.Qt.AlignCenter)
+            self.lbl_header_erkannt.setObjectName("lbl_header_erkannt"+str(i))
+            self.gridLayout_Result.addWidget(self.lbl_header_erkannt, 0, i, 1, 1)
+
+            i=i+1
+
+        #insert data
+        line=1
+        column=0
         
-        self.lbl_input_result_1 = QtWidgets.QLabel(self.scrollAreaResult)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.lbl_input_result_1.sizePolicy().hasHeightForWidth())
-        self.lbl_input_result_1.setSizePolicy(sizePolicy)
-        self.lbl_input_result_1.setMinimumSize(QtCore.QSize(80, 30))
-        self.lbl_input_result_1.setMaximumSize(QtCore.QSize(40, 30))
-        self.lbl_input_result_1.setStyleSheet(styles.styleGridHeadline)
-        self.lbl_input_result_1.setText("Eingabe")
-        self.lbl_input_result_1.setAlignment(QtCore.Qt.AlignCenter)
-        self.lbl_input_result_1.setObjectName("lbl_input_result_1")
+        for j in range(len(self.gui.array_dataInput[0])):
 
-        self.lbl_input_result_2 = QtWidgets.QLabel(self.scrollAreaResult)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.lbl_input_result_2.sizePolicy().hasHeightForWidth())
-        self.lbl_input_result_2.setSizePolicy(sizePolicy)
-        self.lbl_input_result_2.setMinimumSize(QtCore.QSize(80, 30))
-        self.lbl_input_result_2.setMaximumSize(QtCore.QSize(40, 30))
+            self.sign_id = ":/signs/" + str(self.gui.array_dataInput[0][j])
+            self.sign_input = str(self.gui.array_dataInput[1][j])
+            self.sign_detected = str(self.gui.array_dataInput[2][j])
 
-        self.lbl_input_result_2.setStyleSheet(styles.styleGridHeadline)
-        self.lbl_input_result_2.setText("Eingabe")
-        self.lbl_input_result_2.setAlignment(QtCore.Qt.AlignCenter)
-        self.lbl_input_result_2.setObjectName("lbl_input_result_2")
+            if( (self.sign_input != "0") or ( (self.logic.getCompareResult() == True) and (self.sign_detected != "0") ) ):
 
-        self.lbl_input_result_3 = QtWidgets.QLabel(self.scrollAreaResult)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.lbl_input_result_3.sizePolicy().hasHeightForWidth())
-        self.lbl_input_result_3.setSizePolicy(sizePolicy)
-        self.lbl_input_result_3.setMinimumSize(QtCore.QSize(80, 30))
-        self.lbl_input_result_3.setMaximumSize(QtCore.QSize(40, 30))
+                self.name_sign = QtWidgets.QLabel(self.scrollAreaResult)
+                self.name_sign.setMinimumSize(QtCore.QSize(48, 48))
+                self.name_sign.setMaximumSize(QtCore.QSize(48, 48))
+                self.name_sign.setPixmap(QtGui.QPixmap(self.sign_id))
+                self.name_sign.setScaledContents(True)
+                self.gridLayout_Result.addWidget(self.name_sign, line,column,1,1)
 
-        self.lbl_input_result_3.setStyleSheet(styles.styleGridHeadline)
-        self.lbl_input_result_3.setText("Eingabe")
-        self.lbl_input_result_3.setAlignment(QtCore.Qt.AlignCenter)
-        self.lbl_input_result_3.setObjectName("lbl_input_result_3")
+                column = column+1
 
-        self.lbl_recogn_1 = QtWidgets.QLabel(self.scrollAreaResult)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.lbl_recogn_1.sizePolicy().hasHeightForWidth())
-        self.lbl_recogn_1.setSizePolicy(sizePolicy)
-        self.lbl_recogn_1.setMinimumSize(QtCore.QSize(80, 30))
-        self.lbl_recogn_1.setMaximumSize(QtCore.QSize(40, 30))
-        self.lbl_recogn_1.setStyleSheet(styles.styleGridHeadline)
-        self.lbl_recogn_1.setText("Erkannt")
-        self.lbl_recogn_1.setAlignment(QtCore.Qt.AlignCenter)
-        self.lbl_recogn_1.setObjectName("lbl_recogn_1")
-        
+                if(self.logic.getCompareResult()):
+                    self.lbl_eingabe = QtWidgets.QLabel(self.scrollAreaResult)
+                    sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+                    sizePolicy.setHorizontalStretch(0)
+                    sizePolicy.setVerticalStretch(0)
+                    sizePolicy.setHeightForWidth(self.lbl_eingabe.sizePolicy().hasHeightForWidth())
+                    self.lbl_eingabe.setSizePolicy(sizePolicy)
+                    self.lbl_eingabe.setMinimumSize(QtCore.QSize(40, 30))
+                    self.lbl_eingabe.setMaximumSize(QtCore.QSize(40, 30))
+                    self.lbl_eingabe.setObjectName("lbl_eingabe")
+                    self.lbl_eingabe.setStyleSheet(styles.styleText1)
+                    self.lbl_eingabe.setText(self.sign_input)
+                    self.gridLayout_Result.addWidget(self.lbl_eingabe, line,column,1,1)
+                    column = column+1
 
-        self.lbl_recogn_2 = QtWidgets.QLabel(self.scrollAreaResult)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.lbl_recogn_2.sizePolicy().hasHeightForWidth())
-        self.lbl_recogn_2.setSizePolicy(sizePolicy)
-        self.lbl_recogn_2.setMinimumSize(QtCore.QSize(80, 30))
-        self.lbl_recogn_2.setMaximumSize(QtCore.QSize(40, 30))
-        self.lbl_recogn_2.setStyleSheet(styles.styleGridHeadline)
-        self.lbl_recogn_2.setText("Erkannt")
-        self.lbl_recogn_2.setAlignment(QtCore.Qt.AlignCenter)
-        self.lbl_recogn_2.setObjectName("lbl_recogn_2")
-        
-        self.lbl_recogn_3 = QtWidgets.QLabel(self.scrollAreaResult)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.lbl_recogn_3.sizePolicy().hasHeightForWidth())
-        self.lbl_recogn_3.setSizePolicy(sizePolicy)
-        self.lbl_recogn_3.setMinimumSize(QtCore.QSize(80, 30))
-        self.lbl_recogn_3.setMaximumSize(QtCore.QSize(40, 30))
-        self.lbl_recogn_3.setStyleSheet(styles.styleGridHeadline)
-        self.lbl_recogn_3.setText("Erkannt")
-        self.lbl_recogn_3.setAlignment(QtCore.Qt.AlignCenter)
-        self.lbl_recogn_3.setObjectName("lbl_recogn_3")
+                self.lbl_erkannt = QtWidgets.QLabel(self.scrollAreaResult)
+                sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+                sizePolicy.setHorizontalStretch(0)
+                sizePolicy.setVerticalStretch(0)
+                sizePolicy.setHeightForWidth(self.lbl_erkannt.sizePolicy().hasHeightForWidth())
+                self.lbl_erkannt.setSizePolicy(sizePolicy)
+                self.lbl_erkannt.setMinimumSize(QtCore.QSize(40, 30))
+                self.lbl_erkannt.setMaximumSize(QtCore.QSize(40, 30))
+                self.lbl_erkannt.setObjectName("lbl_erkannt")
+                self.lbl_erkannt.setStyleSheet(styles.styleText1)
+                self.lbl_erkannt.setText(self.sign_detected)
+                self.gridLayout_Result.addWidget(self.lbl_erkannt, line,column,1,1)
+
+                column = column+1
+
+            if(column > 8):
+                column = 0
+                line = line+1
              
     def create_spacer(self):
         self.spacerItem66 = QtWidgets.QSpacerItem(10, 10, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -1547,7 +1578,6 @@ class ui_ResultScreen(QtWidgets.QWidget):
         self.spacerItem74 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
 
     def add_items(self):
-
         self.lyth_headline_Result.addWidget(self.lbl_headline_Result)
         self.lyth_headline_Result.addItem(self.spacerItem66)
         self.lyth_headline_Result.addWidget(self.btn_info_Result)
@@ -1558,12 +1588,6 @@ class ui_ResultScreen(QtWidgets.QWidget):
         self.lyth_smallText_Result.addItem(self.spacerItem69)
         self.verticalLayout_9.addLayout(self.lyth_smallText_Result)
         self.lyth_bigGrid_Result.addItem(self.spacerItem70)
-        self.gridLayout_Result.addWidget(self.lbl_input_result_1, 0, 1, 1, 1)
-        self.gridLayout_Result.addWidget(self.lbl_input_result_2, 0, 4, 1, 1)
-        self.gridLayout_Result.addWidget(self.lbl_input_result_3, 0, 7, 1, 1)
-        self.gridLayout_Result.addWidget(self.lbl_recogn_1, 0, 2, 1, 1)
-        self.gridLayout_Result.addWidget(self.lbl_recogn_2, 0, 5, 1, 1)
-        self.gridLayout_Result.addWidget(self.lbl_recogn_3, 0, 8, 1, 1)
         self.horizontalLayout_5.addLayout(self.gridLayout_Result)
         self.scrollArea_Result.setWidget(self.scrollAreaResult)
         self.lyth_bigGrid_Result.addWidget(self.scrollArea_Result)
@@ -1574,6 +1598,24 @@ class ui_ResultScreen(QtWidgets.QWidget):
         self.lyth_bottom_Result.addWidget(self.btn_endResult)
         self.lyth_bottom_Result.addItem(self.spacerItem74)
         self.verticalLayout_9.addLayout(self.lyth_bottom_Result)
+
+    def delete_grid(self):
+        if(self.gridLayout_Result.itemAt(0) is None):
+            print("empty")
+        else:
+            #print("not empty")
+            count=self.gridLayout_Result.count()
+            i = count-1
+            while(i >= 0):
+                #print("removing item " + str(i))
+                item = self.gridLayout_Result.itemAt(i)
+                #Unschön, aber notwendig, da sonst letztes Element immer angezeigt wird.
+                widget = item.widget()
+                widget.setText("")
+                widget.setPixmap(QtGui.QPixmap("None"))
+                #Löschen des Elementes aus dem GridLayout
+                self.gridLayout_Result.removeItem(item)
+                i=i-1  
 
        
 # Demo Data Screen

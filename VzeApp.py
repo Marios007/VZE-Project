@@ -64,6 +64,7 @@ class VzeController(GuiInterface):
     #opencv = openCvController()
     
     _fileName = None
+    _compareResult = False
 
     def __init__(self, logic):
         self.logic = logic
@@ -103,14 +104,18 @@ class VzeController(GuiInterface):
         else:
             return -1,"Es wurde keine Datei ausgewählt",None
 
-    #Setter-method for filePath
     def setFilePath(self, filepath):
         self._fileName = filepath
-        print(self._fileName)
+        #print(self._fileName)
 
-    #Getter-method for filePath
     def getFilePath(self):
         return self._fileName
+
+    def setCompareResult(self,compare):
+        self._compareResult = compare
+
+    def getCompareResult(self):
+        return self._compareResult
 
     def checkFilePath(self,filepath):
         status = os.path.exists(filepath)

@@ -60,9 +60,8 @@ class VzeController(GuiInterface):
         """
         This method is used for loading a file into the software
         """
-        #reset filePath and image
+        #reset filePath
         self.setFilePath("")
-        imagepath = None
         #open FileExplorer to let the user choose his file
         filePath, _ = QFileDialog.getOpenFileName(None, 'Open file',"C:\\", "Usable files (*.jpg *.jpeg *.gif *.png *.bmp *.avi *.mov *.mp4 *.mpeg)")
         

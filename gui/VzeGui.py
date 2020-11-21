@@ -135,7 +135,7 @@ class VzeGui(QtWidgets.QMainWindow):
 
     def createGraphicsScene(self, numpy):
         """
-        This method is used for creating a graphicsScene from an imagepath
+        This method is used for creating a graphicsScene from an image
         """
         #create pixmap from numpy array
         image = QtGui.QImage(numpy, numpy.shape[1],numpy.shape[0], numpy.shape[1] * 3,QtGui.QImage.Format_RGB888).rgbSwapped()
@@ -1012,7 +1012,7 @@ class ui_analyzePvScreen(QtWidgets.QWidget):
         self.btn_startAnalyze.setFlat(False)
         self.btn_startAnalyze.setObjectName("btn_startAnalyze")
         self.btn_startAnalyze.clicked.connect(lambda: self.gui.change_screen(5))
-        self.btn_startAnalyze.clicked.connect(self.logic.startVideo)
+        #self.btn_startAnalyze.clicked.connect(self.logic.startVideo)
 
 
     def create_label(self):

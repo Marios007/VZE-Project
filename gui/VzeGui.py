@@ -235,6 +235,7 @@ class VzeGui(QtWidgets.QMainWindow):
         #SL: Hier dann der Cancel der Analyse. Eventuell eine globale Variable mit True belegen, wenn die Analyse laufen soll
         # und dann beim Klicken des Abbrechen-Button auf False setzen.
         # In der Methode zum Video abspielen müsste dann nur in jedem Schleifendurchlauf diese abgefragt werden.
+        self.cleanup()
         self.change_screen(0)
 
     def show_Result(self):

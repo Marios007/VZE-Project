@@ -22,5 +22,7 @@ styleSmallButton="QPushButton:hover{\n""    border-radius:5px;\n""    border: 2p
 styleGridHeadline="color: rgb(255, 255, 255);\n""font: 12pt \"MS Shell Dlg 2\";"
 #style for SpinBox in DataInputScreen
 styleSpinBox="QSpinBox{\n""    font: 75 12pt \"MS Shell Dlg 2\" ;\n""    background-color: #000000;\n""    color:white\n""}"
+#style for labels in resultScreen
+styleResultLabel="qproperty-alignment: \'AlignVCenter | AlignCenter\';\n""font: 75 12pt \"MS Shell Dlg 2\" ;\n""    color:white\n"
 
 

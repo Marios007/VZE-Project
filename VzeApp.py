@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt, QThread
 from gui.VzeGui import *
 from preprocessor import *
 import abc
@@ -61,7 +62,6 @@ class openCvController(openCV_Interface):
 class VzeController(GuiInterface):
 
     logic = None
-    #opencv = openCvController()
     
     _fileName = None
     _compareResult = False
@@ -124,8 +124,7 @@ class VzeController(GuiInterface):
     def processCV(self):
         self.preprocessor.openCVMethod()
 
-    def startVideo(self):
-        self.preprocessor.playVideoStream(self.getFilePath())
+    
     
 
     def startAnalysis(self):

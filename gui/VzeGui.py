@@ -1,6 +1,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import gui.styles as styles
 import gui.image_ressources as image_ressources
+from preprocessor import *
+from PyQt5.QtCore import pyqtSlot
 import csv
 
 
@@ -279,8 +281,20 @@ class VzeGui(QtWidgets.QMainWindow):
         self.resultscreen.delete_grid()
         self.change_screen(0)
 
+    @pyqtSlot(QtGui.QImage)
+    def setImage(self, image):
+        """Updates the image_label with a new opencv image"""
+        self.analyzescreen.videoLayout.setPixmap(QtGui.QPixmap.fromImage(image))
 
-
+    def startVideo(self):
+        #self.preprocessor.playVideoStream(self.getFilePath())
+        # create the video capture thread
+        self.thread =  VideoThread()
+        # connect its signal to the update_image slot
+        self.thread.changePixmap.connect(self.setImage)
+        # start the thread
+        self.thread.start()
+    
 # Start Screen
 class ui_startscreen(QtWidgets.QWidget):
     def __init__(self, LogicInterface, Gui):
@@ -1086,7 +1100,7 @@ class ui_analyzePvScreen(QtWidgets.QWidget):
         self.btn_startAnalyze.setFlat(False)
         self.btn_startAnalyze.setObjectName("btn_startAnalyze")
         self.btn_startAnalyze.clicked.connect(lambda: self.gui.change_screen(5))
-        self.btn_startAnalyze.clicked.connect(self.logic.startVideo)
+        self.btn_startAnalyze.clicked.connect(self.gui.startVideo)
 
 
     def create_label(self):
@@ -1105,7 +1119,7 @@ class ui_analyzePvScreen(QtWidgets.QWidget):
         self.graphicsAnalyzePreview.setMinimumSize(QtCore.QSize(800, 420))
         self.graphicsAnalyzePreview.setMaximumSize(QtCore.QSize(800, 420))
         self.graphicsAnalyzePreview.setObjectName("graphicsAnalyzePreview")
-        self.graphicsAnalyzePreview
+        
 
     def create_spacer(self):
         self.spacerItem43 = QtWidgets.QSpacerItem(10, 10, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)

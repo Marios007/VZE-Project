@@ -1,5 +1,8 @@
 import cv2
 import filetype
+import numpy as np
+from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt, QThread
+from PyQt5.QtGui import QImage, QPixmap
 
 class imageProcessing():
     def __init__(self, logicInterface, vzeController):
@@ -125,21 +128,26 @@ class imageProcessing():
         else:
             return 1
 
-    def playVideoStream(self, path):
-        """
-        testmethod to play a video
-        """
-        print("play video " + str(path))
-        self.video = cv2.VideoCapture(path)
-        self.running = True
-        while(self.video.isOpened()):
-            read, frame = self.video.read()
-            if not read:
-                break
-            cv2.imshow("test", frame)
-            #self.ILogic.streaming(frame)
-            #SL: Hier muss eigentlich nur die Methode showImageOnAnalyzeScreen der VzeGui aufgerufen werden. Weiß aber noch nicht wie.
-            if cv2.waitKey(3) & 0xFF ==ord("q"):
-                break
-        self.video.release()
-        cv2.destroyAllWindows()
+
+class VideoThread(QThread):
+    changePixmap = pyqtSignal(QImage)
+
+    def run(self):
+        print("play video " + str("./gui/pics/DemoVideos/DemoVideo_schlechtesWetter.mp4"))
+        cap = cv2.VideoCapture("./gui/pics/DemoVideos/DemoVideo_schlechtesWetter.mp4")
+        while True:
+            read, frame = cap.read()
+            if read:
+                
+                rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                h, w, ch = rgbImage.shape
+                bytesPerLine = ch * w
+                convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
+                p = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
+                self.changePixmap.emit(p)
+                #self.ILogic.streaming(frame)
+                #SL: Hier muss eigentlich nur die Methode showImageOnAnalyzeScreen der VzeGui aufgerufen werden. Weiß aber noch nicht wie.
+                if cv2.waitKey(3) & 0xFF ==ord("q"):
+                    break
+            #self.video.release()
+            #cv2.destroyAllWindows()

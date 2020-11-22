@@ -143,22 +143,32 @@ class imageProcessing():
 class VideoThread(QThread):
     changePixmap = pyqtSignal(QImage)
 
+    def __init__(self, path, parent=None):
+        QThread.__init__(self, parent)
+        self.path = path
+        self._run_flag = True
+
     def run(self):
-        print("play video " + str("./gui/pics/DemoVideos/DemoVideo_schlechtesWetter.mp4"))
-        cap = cv2.VideoCapture("./gui/pics/DemoVideos/DemoVideo_schlechtesWetter.mp4")
-        while True:
-            read, frame = cap.read()
-            if read:
+        print("play video " + str(self.path))
+        self.cap = cv2.VideoCapture(self.path)
+        while self._run_flag:
+            read, frame = self.cap.read()
+            if not read:
+                break
                 
-                rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                h, w, ch = rgbImage.shape
-                bytesPerLine = ch * w
-                convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
-                p = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
-                self.changePixmap.emit(p)
-                #self.ILogic.streaming(frame)
-                #SL: Hier muss eigentlich nur die Methode showImageOnAnalyzeScreen der VzeGui aufgerufen werden. Weiß aber noch nicht wie.
-                if cv2.waitKey(3) & 0xFF ==ord("q"):
-                    break
-            #self.video.release()
-            #cv2.destroyAllWindows()
+            rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            h, w, ch = rgbImage.shape
+            bytesPerLine = ch * w
+            convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
+            p = convertToQtFormat.scaled(800, 480, Qt.KeepAspectRatio)
+            self.changePixmap.emit(p)
+            if cv2.waitKey(1) & 0xFF ==ord("q"):
+                break
+        print("done")
+        self.cap.release()
+
+    def stopVideo(self):
+        """Sets run flag to False and waits for thread to finish"""
+        self._run_flag = False
+        self.wait()
+        self.cap.release()

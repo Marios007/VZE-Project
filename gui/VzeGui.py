@@ -216,6 +216,7 @@ class VzeGui(QtWidgets.QMainWindow):
         # und dann beim Klicken des Abbrechen-Button auf False setzen.
         # In der Methode zum Video abspielen müsste dann nur in jedem Schleifendurchlauf diese abgefragt werden.
         self.cleanup()
+        self.thread.stopVideo()
         self.change_screen(0)
 
     def show_Result(self):
@@ -276,11 +277,12 @@ class VzeGui(QtWidgets.QMainWindow):
     def startVideo(self):
         #self.preprocessor.playVideoStream(self.getFilePath())
         # create the video capture thread
-        self.thread =  VideoThread()
+        self.thread =  VideoThread(self.logic.getFilePath())
         # connect its signal to the update_image slot
         self.thread.changePixmap.connect(self.setImage)
         # start the thread
         self.thread.start()
+        
     
 # Start Screen
 class ui_startscreen(QtWidgets.QWidget):

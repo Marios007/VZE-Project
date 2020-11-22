@@ -106,10 +106,7 @@ class VzeGui(QtWidgets.QMainWindow):
         go back to last screen and pop off last element from stack
         """
         print("print stack: " + str(self.stack_lastScreen))
-        lastScreen = self.stack_lastScreen.pop()
-        if(lastScreen == 0):
-            self.cleanup()
-        self.stackedWidget.setCurrentIndex(lastScreen)
+        self.stackedWidget.setCurrentIndex(self.stack_lastScreen.pop())
         return 
 
     def create_DemoDataGrid(self, demoID):
@@ -946,7 +943,7 @@ class ui_DIScreen(QtWidgets.QWidget):
             #print("SpinBox Value: " + spinboxItemValue)
             self.gui.array_dataInput[1][k] = spinboxItemValue
 
-            #Temporär die Ergebniszeile alles auf 0 setzen
+            #Temporär die Ergebniszeile alles auf spinboxItemValue setzen
             self.gui.array_dataInput[2][k] = spinboxItemValue
 
             i = i+1
@@ -1495,9 +1492,9 @@ class ui_ResultScreen(QtWidgets.QWidget):
                 self.lbl_header_eingabe.setText("Eingabe")
                 #self.lbl_header_eingabe.setAlignment(QtCore.Qt.AlignCenter)
                 self.lbl_header_eingabe.setObjectName("lbl_header_eingabe"+str(i))
-                self.gridLayout_Result.addWidget(self.lbl_header_eingabe, 0, i, 1, 1)
+                self.gridLayout_Result.addWidget(self.lbl_header_eingabe, 0, i, 1, 1, QtCore.Qt.AlignHCenter)
 
-                i=i+1
+            i=i+1
 
             self.lbl_header_erkannt = QtWidgets.QLabel(self.scrollAreaResult)
             sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -1511,7 +1508,7 @@ class ui_ResultScreen(QtWidgets.QWidget):
             self.lbl_header_erkannt.setText("Erkannt")
             #self.lbl_header_erkannt.setAlignment(QtCore.Qt.AlignCenter)
             self.lbl_header_erkannt.setObjectName("lbl_header_erkannt"+str(i))
-            self.gridLayout_Result.addWidget(self.lbl_header_erkannt, 0, i, 1, 1)
+            self.gridLayout_Result.addWidget(self.lbl_header_erkannt, 0, i, 1, 1, QtCore.Qt.AlignHCenter)
 
             i=i+1
 
@@ -1546,10 +1543,10 @@ class ui_ResultScreen(QtWidgets.QWidget):
                     self.lbl_eingabe.setMinimumSize(QtCore.QSize(40, 30))
                     self.lbl_eingabe.setMaximumSize(QtCore.QSize(40, 30))
                     self.lbl_eingabe.setObjectName("lbl_eingabe")
-                    self.lbl_eingabe.setStyleSheet(styles.styleText1)
+                    self.lbl_eingabe.setStyleSheet(styles.styleResultLabel)
                     self.lbl_eingabe.setText(self.sign_input)
-                    self.gridLayout_Result.addWidget(self.lbl_eingabe, line,column,1,1)
-                    column = column+1
+                    self.gridLayout_Result.addWidget(self.lbl_eingabe, line,column,1,1, QtCore.Qt.AlignHCenter)
+                column = column+1
 
                 self.lbl_erkannt = QtWidgets.QLabel(self.scrollAreaResult)
                 sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -1560,9 +1557,9 @@ class ui_ResultScreen(QtWidgets.QWidget):
                 self.lbl_erkannt.setMinimumSize(QtCore.QSize(40, 30))
                 self.lbl_erkannt.setMaximumSize(QtCore.QSize(40, 30))
                 self.lbl_erkannt.setObjectName("lbl_erkannt")
-                self.lbl_erkannt.setStyleSheet(styles.styleText1)
+                self.lbl_erkannt.setStyleSheet(styles.styleResultLabel)
                 self.lbl_erkannt.setText(self.sign_detected)
-                self.gridLayout_Result.addWidget(self.lbl_erkannt, line,column,1,1)
+                self.gridLayout_Result.addWidget(self.lbl_erkannt, line,column,1,1, QtCore.Qt.AlignHCenter)
 
                 column = column+1
 

@@ -107,7 +107,6 @@ class VzeController(GuiInterface):
 
     def setFilePath(self, filepath):
         self._fileName = filepath
-        #print(self._fileName)
 
     def getFilePath(self):
         return self._fileName

@@ -82,16 +82,18 @@ class VzeGui(QtWidgets.QMainWindow):
         #8
         self.infoscreen = ui_InfoScreen(self.logic, self)
 
-        self.verticalLayout.addWidget(self.stackedWidget)
-         
-     #    
+        self.verticalLayout.addWidget(self.stackedWidget) 
 
     def change_screen(self, nextScreen):
         """
-        change to next screen and save last screen to stack
+        change to next screen and save last screen to stack. When jump to screen 0 then initialize the stack 
         """
-        self.set_lastScreen()
-        self.stackedWidget.setCurrentIndex(nextScreen)
+        if (nextScreen == 0):
+            self.stackedWidget.setCurrentIndex(nextScreen)
+            self.stack_lastScreen = []
+        elif (nextScreen != 0):
+            self.set_lastScreen()
+            self.stackedWidget.setCurrentIndex(nextScreen)
         return
 
     def set_lastScreen(self):
@@ -99,7 +101,7 @@ class VzeGui(QtWidgets.QMainWindow):
         save the screen you are currently on onto a stack
         """
         self.stack_lastScreen.append(self.stackedWidget.currentIndex())
-        #print("Save last screen: " + str(self.stackedWidget.currentIndex()))
+        print("Save last screen: " + str(self.stackedWidget.currentIndex()))
  
     def change_screen_back(self):
         """

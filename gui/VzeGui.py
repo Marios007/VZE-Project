@@ -106,19 +106,20 @@ class VzeGui(QtWidgets.QMainWindow):
         go back to last screen and pop off last element from stack
         """
         print("print stack: " + str(self.stack_lastScreen))
-        self.stackedWidget.setCurrentIndex(self.stack_lastScreen.pop())
+        lastScreen = self.stack_lastScreen.pop()
+        if(lastScreen == 0):
+            self.cleanup()
+        self.stackedWidget.setCurrentIndex(lastScreen)
         return 
 
     def create_DemoDataGrid(self, demoID):
         """
-        This method is used for creating the dataGrid for displaying the demoData
+        creating the dataGrid for displaying the demoData
         """
         print("loading demo data grid for demovideo " + str(demoID))
 
-        #reset the variable demodatafile
-        demodatafile=""
-
         #set demodatafile according to the passed demoID
+        demodatafile=""
         if(demoID == 1):
             demodatafile=self.demo_datafile1
         elif (demoID == 2):
@@ -126,23 +127,17 @@ class VzeGui(QtWidgets.QMainWindow):
         else:
             print("Unknown error")
 
-        #delete the old grid
         self.demodatascreen.delete_grid()
-        #create the new grid according to the demoData
         self.demodatascreen.create_grid(demodatafile)
-        #change screen to demoDataScreen
         self.change_screen(6)
 
     def createGraphicsScene(self, numpy):
         """
-        This method is used for creating a graphicsScene from an image
+        This method is used for creating a graphicsScene from an image file
         """
-        #create pixmap from numpy array
         image = QtGui.QImage(numpy, numpy.shape[1],numpy.shape[0], numpy.shape[1] * 3,QtGui.QImage.Format_RGB888).rgbSwapped()
         pixmap = QtGui.QPixmap(image)
-        #scale pixmap to correct size
         pixmap_scaled = pixmap.scaled(790, 410)
-        #create graphicsScene
         graphicsScene = QtWidgets.QGraphicsScene(self)
         graphicsScene.addPixmap(pixmap_scaled)
         return graphicsScene
@@ -151,37 +146,27 @@ class VzeGui(QtWidgets.QMainWindow):
         """
         This method is used for displaying a previewImage on every previewScreen and the analyseScreen
         """
-        print("method showPreviewImage")
-        
-        #call method to create a graphicScene
+        #print("method showPreviewImage")
         graphicsScene = self.createGraphicsScene(filepath)
-        #display image on previewScreen, analyzePreviewScreen and analyseScreen
         self.previewscreen.graphicsPreview.setScene(graphicsScene)
         self.analyzepvscreen.graphicsAnalyzePreview.setScene(graphicsScene)
-        # self.analyzescreen.graphicsAnalyze.setScene(graphicsScene)
+        self.analyzescreen.graphicsAnalyze.setScene(graphicsScene)
 
     def showImageOnAnalyzeScreen(self, image):
         """
         This method is used for displaying an image on the AnalyzeScreen
         """
-        print("method showImageOnAnalyzeScreen")
-        
-        #call method to create a graphicScene
+        #print("method showImageOnAnalyzeScreen")
         graphicsScene = self.createGraphicsScene(image)
-        #display image on analyseScreen
         self.analyzescreen.graphicsAnalyze.setScene(graphicsScene) 
 
     def loadFile(self):
         """
         This method is used for uploading a file
         """
-        #Calling method loadFile in VzeApp.py
         status,message,image = self.logic.loadFile()
-        #if status is ok
         if(status == 0):
-            #load the created image as a preview
             self.showPreviewImage(image)
-            #change screen to analyzePreviewScreen
             self.change_screen(2)
         else:
             error = "Fehler beim Laden der Datei"
@@ -189,27 +174,20 @@ class VzeGui(QtWidgets.QMainWindow):
 
     def loadDemoVideo(self, filepath, demoID):
         """
-        This method is used for loading one of the demo-videos and go to the preview-screen
+        This method is used for loading one of the demo-videos, check if it exists, show its first image on the screens and go to the preview-screen
         """
-        #Check if video exists
         fileExists = self.logic.checkFilePath(filepath)
-        
         if(fileExists):
-            #Get the first image of the demo-video as PreviewImage
             image = self.logic.preprocessor.get_firstImage(filepath)
-            #Save the path to the demo-video in the variable filepath
             self.logic.setFilePath(filepath)
-            #load the created image as a preview
             self.showPreviewImage(image)
-            #load the data of the demovideo to the array
-            #set demodatafile according to the passed demoID
+            
             if(demoID == 1):
                 demodatafile=self.demo_datafile1
             elif (demoID == 2):
                 demodatafile=self.demo_datafile2
             self.loadDemoData(demodatafile)
             self.logic.setCompareResult(False)
-            #change screen to previewScreen
             self.change_screen(4)
         else:
             errorMessage = "Das Demovideo existiert nicht!\nBitte kontaktieren Sie den Support"
@@ -241,11 +219,17 @@ class VzeGui(QtWidgets.QMainWindow):
         self.change_screen(0)
 
     def show_Result(self):
+        """
+        method where the analysis is started and the gridContent of the resultscreen is filled
+        """
         self.logic.startAnalysis()
         self.resultscreen.create_gridContent()
         self.change_screen(7)
 
     def loadDemoData(self,filepath):
+        """
+        method to load the demodatafile into the resultarray
+        """
         with open(filepath, 'r') as csvfile:
             csv_reader = csv.reader(csvfile, delimiter=';')
             
@@ -272,6 +256,9 @@ class VzeGui(QtWidgets.QMainWindow):
         #    print()
 
     def cleanup(self):
+        """
+        method for clearing all variables
+        """
         print("CleanUp-Method")
         self.array_dataInput = [[0 for x in range(43)] for y in range(3)]
         self.logic.setCompareResult(False)
@@ -1468,7 +1455,9 @@ class ui_ResultScreen(QtWidgets.QWidget):
         self.lbl_result.setObjectName("lbl_result")
 
     def create_gridContent(self):
-
+        """
+        creating the gridContent according to the content of array_dataInput and compareResult
+        """
         if(self.logic.getCompareResult):
             print("Es wird eine Auswertung durchgeführt")
         else:
@@ -1616,7 +1605,7 @@ class ui_ResultScreen(QtWidgets.QWidget):
 
     def delete_grid(self):
         if(self.gridLayout_Result.itemAt(0) is None):
-            print("empty")
+            print("ResultGrid is empty")
         else:
             #print("not empty")
             count=self.gridLayout_Result.count()
@@ -1802,7 +1791,7 @@ class ui_DemoDataScreen(QtWidgets.QWidget):
         
    
         if(self.gridLayout_DemoData.itemAt(0) is None):
-            print("empty")
+            print("DemoData-Grid is empty")
         else:
             #print("not empty")
             count=self.gridLayout_DemoData.count()

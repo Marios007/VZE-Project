@@ -84,6 +84,7 @@ class VzeController(GuiInterface):
             if(status_type == -1):
                 return -1,"Dieser Dateityp wird nicht unterstützt\nUnterstütze Dateitypen:\n*.jpg *.jpeg *.gif *.png *.bmp *.avi *.mov *.mp4 *.mpeg",None
             print("File-Type-Check passed")
+            
             #Status 1 --> resolution OK, Status -1 --> resolution too high, Status -2 --> resolution too low
             status_res = self.preprocessor.check_fileResolution(status_type, filePath)
             if(status_res == -1):

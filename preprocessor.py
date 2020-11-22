@@ -56,6 +56,12 @@ class imageProcessing():
         
 
     def check_fileType(self, filepath):
+        """
+        method to check the fileType.
+            returns -1 in case of error
+            returns 1 if file is an image
+            returns 2 if file is a video and creates the previewImage from it
+        """
         print("method check_file in preprocessor")
         image = None
         kind = filetype.guess(filepath)
@@ -80,9 +86,12 @@ class imageProcessing():
 
 
     def check_fileResolution(self, fileType, filepath):
-        # -1 zurückgeben, wenn Auflösung zu hoch, 
-        # -2 zurückgeben, wenn Auflösung zu niedrig, 
-        # 1 zurückgeben, wenn alles passt
+        """
+        method to check the resolution of a file
+            returns -1 if resolution is too high
+            returns -2 if resolution is too low
+            returns 1 if resolution is ok
+        """
 
         if(fileType == 1):
             #File is an image
@@ -105,12 +114,14 @@ class imageProcessing():
         elif(width > 1920) or (heigth > 1080):
             return -1                
 
-        ##wenn alles erfüllt, dann True zurückgeben
         return 1
 
     def check_fileLength(self, filepath):
-        # -1 zurückgeben, wenn Video zu lang ist
-        #  1 zurückgeben, wenn alles passt
+        """
+        method to check the length of the video
+            returns -1 if video is too long
+            returns 1 if video is ok
+        """
 
         max_duration = 600
         vidcap=cv2.VideoCapture(filepath)

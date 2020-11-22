@@ -150,7 +150,7 @@ class VzeGui(QtWidgets.QMainWindow):
         graphicsScene = self.createGraphicsScene(filepath)
         self.previewscreen.graphicsPreview.setScene(graphicsScene)
         self.analyzepvscreen.graphicsAnalyzePreview.setScene(graphicsScene)
-        self.analyzescreen.graphicsAnalyze.setScene(graphicsScene)
+        #self.analyzescreen.graphicsAnalyze.setScene(graphicsScene)
 
     def showImageOnAnalyzeScreen(self, image):
         """

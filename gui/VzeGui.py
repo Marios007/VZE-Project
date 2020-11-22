@@ -268,17 +268,13 @@ class VzeGui(QtWidgets.QMainWindow):
         self.resultscreen.delete_grid()
         self.change_screen(0)
 
-    @pyqtSlot(QtGui.QImage)
-    def setImage(self, image):
-        """Updates the image_label with a new opencv image"""
-        self.analyzescreen.videoLayout.setPixmap(QtGui.QPixmap.fromImage(image))
+    def setVideoImage(self, img):
+        self.analyzescreen.videoLayout.setPixmap(QtGui.QPixmap.fromImage(img))
 
     def startVideo(self):
-        #self.preprocessor.playVideoStream(self.getFilePath())
-        # create the video capture thread
-        self.thread =  VideoThread(self.logic.getFilePath())
-        # connect its signal to the update_image slot
-        self.thread.changePixmap.connect(self.setImage)
+        # create the video capture thread and handover filepath and the VzeGui object
+        self.thread =  VideoThread(self.logic.getFilePath(), self)
+         
         # start the thread
         self.thread.start()
         

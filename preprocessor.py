@@ -141,12 +141,14 @@ class imageProcessing():
 
 
 class VideoThread(QThread):
-    changePixmap = pyqtSignal(QImage)
+    #changePixmap = pyqtSignal(QImage)
+    img = None
 
-    def __init__(self, path, parent=None):
+    def __init__(self, path, gui, parent=None):
         QThread.__init__(self, parent)
         self.path = path
         self._run_flag = True
+        self.gui = gui
 
     def run(self):
         print("play video " + str(self.path))
@@ -161,8 +163,10 @@ class VideoThread(QThread):
             bytesPerLine = ch * w
             convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
             p = convertToQtFormat.scaled(800, 480, Qt.KeepAspectRatio)
-            self.changePixmap.emit(p)
-            if cv2.waitKey(1) & 0xFF ==ord("q"):
+            #self.changePixmap.emit(p)
+            self.gui.setVideoImage(p)
+
+            if cv2.waitKey(10) & 0xFF ==ord("q"):
                 break
         print("done")
         self.cap.release()

@@ -1,5 +1,4 @@
 from PyQt5.QtWidgets import QFileDialog
-from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt, QThread
 from gui.VzeGui import *
 from preprocessor import *
 import abc
@@ -61,13 +60,11 @@ class openCvController(openCV_Interface):
 
 class VzeController(GuiInterface):
 
-    logic = None
-    
     _fileName = None
     _compareResult = False
+    preprocessor = None
 
-    def __init__(self, logic):
-        self.logic = logic
+    def __init__(self):
         self.preprocessor = imageProcessing(openCvController, self)
 
     def loadFile(self):
@@ -124,9 +121,6 @@ class VzeController(GuiInterface):
     def processCV(self):
         self.preprocessor.openCVMethod()
 
-    
-    
-
     def startAnalysis(self):
         #Method to start the analysis
         print("Method startAnalysis in VzeApp")  
@@ -140,7 +134,7 @@ class VzeApp(QtWidgets.QApplication):
         super(VzeApp, self).__init__(*args,**kwargs)
 
         #init logic
-        self.mainLogic = VzeController(self.mainLogic)
+        self.mainLogic = VzeController()
 
         #init gui
         self.mainWidget = VzeGui(self.mainLogic)

@@ -70,12 +70,12 @@ class ImageProcessing():
             print('Cannot guess file type!')
             return -1,None
 
-        elif(str(kind.mime).startswith("image")):
+        elif str(kind.mime).startswith("image"):
             print("File is an image")
             image = self.read_image(filepath)
             return 1,image
 
-        elif(str(kind.mime).startswith("video")):
+        elif str(kind.mime).startswith("video"):
             print("File is a video")
             image = self.get_firstImage(filepath)
             return 2,image
@@ -93,7 +93,7 @@ class ImageProcessing():
             returns 1 if resolution is ok
         """
 
-        if(fileType == 1):
+        if fileType == 1:
             #File is an image
             print("Image-Resolution-Check")
             img = self.read_image(filepath)
@@ -101,7 +101,7 @@ class ImageProcessing():
 
             print("ImageResolution: " + str(width) + "x" + str(heigth))
 
-        elif(fileType == 2):
+        elif fileType == 2:
             #File is a video
             print("Video-Resolution-Check")
             
@@ -109,9 +109,9 @@ class ImageProcessing():
 
             print("VideoResolution: " + str(width) + "x" + str(heigth))
 
-        if(width < 800) or (heigth < 600):
+        if width < 800 or heigth < 600:
             return -2
-        elif(width > 1920) or (heigth > 1080):
+        elif width > 1920 or heigth > 1080:
             return -1                
 
         return 1
@@ -134,7 +134,7 @@ class ImageProcessing():
 
         print("File has a length of " + str(duration) + " seconds")
 
-        if(duration > max_duration):
+        if duration > max_duration:
             return -1
         else:
             return 1

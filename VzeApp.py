@@ -75,25 +75,25 @@ class VzeController(GuiInterface):
         filePath, _ = QFileDialog.getOpenFileName(None, 'Open file',"C:\\", "Usable files (*.jpg *.jpeg *.gif *.png *.bmp *.avi *.mov *.mp4 *.mpeg)")
         
         #if user selects a file
-        if(filePath != ""):
+        if filePath != "":
             #Status 1 --> image, Status 2 --> video, Status -1 --> error
             status_type,image = self.preprocessor.check_fileType(filePath)
-            if(status_type == -1):
+            if status_type == -1 :
                 return -1,"Dieser Dateityp wird nicht unterstützt\nUnterstütze Dateitypen:\n*.jpg *.jpeg *.gif *.png *.bmp *.avi *.mov *.mp4 *.mpeg",None
             print("File-Type-Check passed")
             
             #Status 1 --> resolution OK, Status -1 --> resolution too high, Status -2 --> resolution too low
             status_res = self.preprocessor.check_fileResolution(status_type, filePath)
-            if(status_res == -1):
+            if status_res == -1:
                 return -1,"Die Auflösung ist zu hoch",None
-            if(status_res == -2):
+            if status_res == -2 :
                 return -1,"Die Auflösung ist zu gering",None
 
             print("File-Resolution-Check passed")
-            if(status_type == 2):
+            if status_type == 2 :
                 #Status 1 --> length OK, Status -1 --> video too long
                 status_len = self.preprocessor.check_fileLength(filePath)
-                if(status_len == -1):
+                if status_len == -1:
                     return -1,"Das Video ist leider zu lang",None
                 
             print("File-Length-Check passed")

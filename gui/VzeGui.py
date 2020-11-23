@@ -88,10 +88,10 @@ class VzeGui(QtWidgets.QMainWindow):
         """
         change to next screen and save last screen to stack. When jump to screen 0 then initialize the stack 
         """
-        if (nextScreen == 0):
+        if nextScreen == 0:
             self.stackedWidget.setCurrentIndex(nextScreen)
             self.stack_lastScreen = []
-        elif (nextScreen != 0):
+        elif nextScreen != 0:
             self.set_lastScreen()
             self.stackedWidget.setCurrentIndex(nextScreen)
         return
@@ -119,9 +119,9 @@ class VzeGui(QtWidgets.QMainWindow):
 
         #set demodatafile according to the passed demoID
         demodatafile=""
-        if(demoID == 1):
+        if demoID == 1:
             demodatafile=self.demo_datafile1
-        elif (demoID == 2):
+        elif demoID == 2:
             demodatafile=self.demo_datafile2
         else:
             print("Unknown error")
@@ -164,7 +164,7 @@ class VzeGui(QtWidgets.QMainWindow):
         This method is used for uploading a file
         """
         status,message,image = self.logic.loadFile()
-        if(status == 0):
+        if status == 0:
             self.showPreviewImage(image)
             self.change_screen(2)
         else:
@@ -176,14 +176,14 @@ class VzeGui(QtWidgets.QMainWindow):
         This method is used for loading one of the demo-videos, check if it exists, show its first image on the screens and go to the preview-screen
         """
         fileExists = self.logic.checkFilePath(filepath)
-        if(fileExists):
+        if fileExists:
             image = self.logic.preprocessor.get_firstImage(filepath)
             self.logic.setFilePath(filepath)
             self.showPreviewImage(image)
             
-            if(demoID == 1):
+            if demoID == 1:
                 demodatafile=self.demo_datafile1
-            elif (demoID == 2):
+            elif demoID == 2:
                 demodatafile=self.demo_datafile2
             self.loadDemoData(demodatafile)
             self.logic.setCompareResult(False)
@@ -849,9 +849,9 @@ class Ui_DIScreen(QtWidgets.QWidget):
         j = 0
         k = 0
         
-        while (i <= 10):    
-            while (j <= 7):
-                if(k<43):
+        while i <= 10:    
+            while j <= 7:
+                if k<43:
                     #print("sign: i:"+ str(i) + " j:"+ str(j) + " k:"+ str(k))
                     #create signs
                     self.name_sign = "lbl_sign_"+ str(k)
@@ -929,7 +929,7 @@ class Ui_DIScreen(QtWidgets.QWidget):
         i = 0
         k = 0
     
-        while(i < count):
+        while i < count:
             labelItem = self.gridLayout_DIScreen.itemAt(i).widget()
             labelItemValue = str(labelItem.objectName())
             #print("Label: " + str(labelItem))
@@ -993,10 +993,10 @@ class Ui_DIScreen(QtWidgets.QWidget):
         
         for j in range(len(self.gui.array_dataInput[0])):
             count = int(self.gui.array_dataInput[1][j])
-            if(count > 0):
+            if count > 0:
                 emptyCheck = False
            
-        if(emptyCheck):
+        if emptyCheck:
             title = "Keine Daten eingegeben"
             message = "Sie haben keine Daten eingegeben!\nDas bedeutet, dass in Ihrem Video keine Verkehrszeichen vorkommen!\nIst dies der Fall oder wenn Sie keinen Vergleich wünschen, nutzen Sie bitte den Button 'Überspringen'"
             self.gui.showPopup(title,message)
@@ -1325,7 +1325,7 @@ class Ui_analyzeScreen(QtWidgets.QWidget):
         This method is used for changing the enabled-status of the cancel- and the result button, when the analysis has finished
         """
          
-        if(self.btn_cancelAnalyze.isEnabled()):
+        if self.btn_cancelAnalyze.isEnabled():
             print("CancelBtn deactivated, ResultBtn activated")
             self.btn_showResult.setEnabled(True)
             self.btn_cancelAnalyze.setEnabled(False)
@@ -1455,7 +1455,7 @@ class Ui_ResultScreen(QtWidgets.QWidget):
         """
         creating the gridContent according to the content of array_dataInput and compareResult
         """
-        if(self.logic.getCompareResult):
+        if self.logic.getCompareResult:
             print("Es wird eine Auswertung durchgeführt")
         else:
             print("Die Ergebnisse werden nur angezeigt")
@@ -1479,7 +1479,7 @@ class Ui_ResultScreen(QtWidgets.QWidget):
 
             i=i+1
 
-            if(self.logic.getCompareResult()):
+            if self.logic.getCompareResult():
                 self.lbl_header_eingabe = QtWidgets.QLabel(self.scrollAreaResult)
                 sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
                 sizePolicy.setHorizontalStretch(0)
@@ -1522,7 +1522,7 @@ class Ui_ResultScreen(QtWidgets.QWidget):
             self.sign_input = str(self.gui.array_dataInput[1][j])
             self.sign_detected = str(self.gui.array_dataInput[2][j])
 
-            if( (self.sign_input != "0") or ( (self.logic.getCompareResult() == True) and (self.sign_detected != "0") ) ):
+            if (self.sign_input != "0") or ( (self.logic.getCompareResult() == True) and (self.sign_detected != "0") ) :
 
                 self.name_sign = QtWidgets.QLabel(self.scrollAreaResult)
                 self.name_sign.setMinimumSize(QtCore.QSize(48, 48))
@@ -1533,7 +1533,7 @@ class Ui_ResultScreen(QtWidgets.QWidget):
 
                 column = column+1
 
-                if(self.logic.getCompareResult()):
+                if self.logic.getCompareResult():
                     self.lbl_eingabe = QtWidgets.QLabel(self.scrollAreaResult)
                     sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
                     sizePolicy.setHorizontalStretch(0)
@@ -1563,7 +1563,7 @@ class Ui_ResultScreen(QtWidgets.QWidget):
 
                 column = column+1
 
-            if(column > 8):
+            if column > 8:
                 column = 0
                 line = line+1
              
@@ -1601,7 +1601,7 @@ class Ui_ResultScreen(QtWidgets.QWidget):
         self.verticalLayout_9.addLayout(self.lyth_bottom_Result)
 
     def delete_grid(self):
-        if(self.gridLayout_Result.itemAt(0) is None):
+        if self.gridLayout_Result.itemAt(0) is None:
             print("ResultGrid is empty")
         else:
             #print("not empty")
@@ -1750,7 +1750,7 @@ class Ui_DemoDataScreen(QtWidgets.QWidget):
             next(csv_reader)
 
             for line in csv_reader:
-                if(int(line[2]) > 0):
+                if int(line[2]) > 0:
 
                     self.sign_id = ":/signs/" + line[0]
                     self.sign_count = line[2]
@@ -1787,7 +1787,7 @@ class Ui_DemoDataScreen(QtWidgets.QWidget):
     def delete_grid(self):
         
    
-        if(self.gridLayout_DemoData.itemAt(0) is None):
+        if self.gridLayout_DemoData.itemAt(0) is None:
             print("DemoData-Grid is empty")
         else:
             #print("not empty")

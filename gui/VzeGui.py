@@ -56,31 +56,31 @@ class VzeGui(QtWidgets.QMainWindow):
         #Build UI with each screen
         print ("Build screens")
         #0
-        self.startscreen = ui_startscreen(self.logic, self)
+        self.startscreen = Ui_startscreen(self.logic, self)
         self.stackedWidget.addWidget(self.startscreen)
         #1
-        self.demoscreen = ui_demoscreen(self.logic, self)
+        self.demoscreen = Ui_demoscreen(self.logic, self)
         self.stackedWidget.addWidget(self.demoscreen)
         #2
-        self.previewscreen = ui_previewscreen(self.logic, self)
+        self.previewscreen = Ui_previewscreen(self.logic, self)
         self.stackedWidget.addWidget(self.previewscreen)
         #3
-        self.diScreen = ui_DIScreen(self.logic, self)
+        self.diScreen = Ui_DIScreen(self.logic, self)
         self.stackedWidget.addWidget(self.diScreen)
         #4
-        self.analyzepvscreen = ui_analyzePvScreen(self.logic, self)
+        self.analyzepvscreen = Ui_analyzePvScreen(self.logic, self)
         self.stackedWidget.addWidget(self.analyzepvscreen)
         #5
-        self.analyzescreen = ui_analyzeScreen(self.logic, self)
+        self.analyzescreen = Ui_analyzeScreen(self.logic, self)
         self.stackedWidget.addWidget(self.analyzescreen)
         #6
-        self.demodatascreen = ui_DemoDataScreen(self.logic, self)
+        self.demodatascreen = Ui_DemoDataScreen(self.logic, self)
         self.stackedWidget.addWidget(self.demodatascreen)
         #7
-        self.resultscreen = ui_ResultScreen(self.logic, self)
+        self.resultscreen = Ui_ResultScreen(self.logic, self)
         self.stackedWidget.addWidget(self.resultscreen)
         #8
-        self.infoscreen = ui_InfoScreen(self.logic, self)
+        self.infoscreen = Ui_InfoScreen(self.logic, self)
 
         self.verticalLayout.addWidget(self.stackedWidget) 
 
@@ -280,9 +280,9 @@ class VzeGui(QtWidgets.QMainWindow):
         
     
 # Start Screen
-class ui_startscreen(QtWidgets.QWidget):
+class Ui_startscreen(QtWidgets.QWidget):
     def __init__(self, LogicInterface, Gui):
-        super(ui_startscreen, self).__init__()
+        super(Ui_startscreen, self).__init__()
 
         self.logic = LogicInterface
         self.gui = Gui
@@ -392,9 +392,9 @@ class ui_startscreen(QtWidgets.QWidget):
 
 
 # Demo Screen
-class ui_demoscreen(QtWidgets.QWidget):
+class Ui_demoscreen(QtWidgets.QWidget):
     def __init__(self, LogicInterface, Gui):
-        super(ui_demoscreen, self).__init__()
+        super(Ui_demoscreen, self).__init__()
 
         self.logic = LogicInterface
         self.gui = Gui
@@ -549,9 +549,9 @@ class ui_demoscreen(QtWidgets.QWidget):
         
 
 # Preview Screen
-class ui_previewscreen(QtWidgets.QWidget):
+class Ui_previewscreen(QtWidgets.QWidget):
     def __init__(self, LogicInterface, Gui):
-        super(ui_previewscreen, self).__init__()
+        super(Ui_previewscreen, self).__init__()
 
         self.logic = LogicInterface
         self.gui = Gui
@@ -690,9 +690,9 @@ class ui_previewscreen(QtWidgets.QWidget):
         
 
 # DI Screen
-class ui_DIScreen(QtWidgets.QWidget):
+class Ui_DIScreen(QtWidgets.QWidget):
     def __init__(self, LogicInterface, Gui):
-        super(ui_DIScreen, self).__init__()
+        super(Ui_DIScreen, self).__init__()
 
         self.logic = LogicInterface
         self.gui = Gui
@@ -1007,9 +1007,9 @@ class ui_DIScreen(QtWidgets.QWidget):
         
 
 # Analyze Preview Screen
-class ui_analyzePvScreen(QtWidgets.QWidget):
+class Ui_analyzePvScreen(QtWidgets.QWidget):
     def __init__(self, LogicInterface, Gui):
-        super(ui_analyzePvScreen, self).__init__()
+        super(Ui_analyzePvScreen, self).__init__()
 
         self.logic = LogicInterface
         self.gui = Gui
@@ -1142,9 +1142,9 @@ class ui_analyzePvScreen(QtWidgets.QWidget):
         
 
 # Analyze Screen
-class ui_analyzeScreen(QtWidgets.QWidget):
+class Ui_analyzeScreen(QtWidgets.QWidget):
     def __init__(self, LogicInterface, Gui):
-        super(ui_analyzeScreen, self).__init__()
+        super(Ui_analyzeScreen, self).__init__()
 
         self.logic = LogicInterface
         self.gui = Gui
@@ -1338,9 +1338,9 @@ class ui_analyzeScreen(QtWidgets.QWidget):
       
 
 # Result Screen
-class ui_ResultScreen(QtWidgets.QWidget):
+class Ui_ResultScreen(QtWidgets.QWidget):
     def __init__(self, LogicInterface, Gui):
-        super(ui_ResultScreen, self).__init__()
+        super(Ui_ResultScreen, self).__init__()
 
         self.logic = LogicInterface
         self.gui = Gui
@@ -1620,9 +1620,9 @@ class ui_ResultScreen(QtWidgets.QWidget):
 
        
 # Demo Data Screen
-class ui_DemoDataScreen(QtWidgets.QWidget):
+class Ui_DemoDataScreen(QtWidgets.QWidget):
     def __init__(self, LogicInterface, Gui):
-        super(ui_DemoDataScreen, self).__init__()
+        super(Ui_DemoDataScreen, self).__init__()
 
         self.logic = LogicInterface
         self.gui = Gui
@@ -1828,9 +1828,9 @@ class ui_DemoDataScreen(QtWidgets.QWidget):
 
 
 # Info Screen
-class ui_InfoScreen(QtWidgets.QWidget):
+class Ui_InfoScreen(QtWidgets.QWidget):
     def __init__(self, LogicInterface, Gui):
-        super(ui_InfoScreen, self).__init__()
+        super(Ui_InfoScreen, self).__init__()
 
         self.logic = LogicInterface
         self.gui = Gui

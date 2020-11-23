@@ -65,7 +65,7 @@ class VzeController(GuiInterface):
     preprocessor = None
 
     def __init__(self):
-        self.preprocessor = imageProcessing(openCvController, self)
+        self.preprocessor = ImageProcessing(openCvController, self)
 
     def loadFile(self):
         """

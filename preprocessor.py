@@ -4,7 +4,7 @@ import numpy as np
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt, QThread
 from PyQt5.QtGui import QImage, QPixmap
 
-class imageProcessing():
+class ImageProcessing():
     def __init__(self, logicInterface, vzeController):
         self.ILogic = logicInterface
         self.vzeController = vzeController

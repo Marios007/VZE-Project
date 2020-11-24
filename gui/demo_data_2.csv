@@ -1,0 +1,44 @@
+﻿SignId;SignName;Count
+0;Speed limit (20km/h);0
+1;Speed limit (30km/h);0
+2;Speed limit (50km/h);0
+3;Speed limit (60km/h);0
+4;Speed limit (70km/h);1
+5;Speed limit (80km/h);0
+6;End of speed limit (80km/h);0
+7;Speed limit (100km/h);2
+8;Speed limit (120km/h);0
+9;No passing;1
+10;No passing for vehicles over 3.5 metric tons;0
+11;Right-of-way at the next intersection;0
+12;Priority road;7
+13;Yield;6
+14;Stop;0
+15;No vehicles;0
+16;Vehicles over 3.5 metric tons prohibited;0
+17;No entry;2
+18;General caution;1
+19;Dangerous curve to the left;0
+20;Dangerous curve to the right;0
+21;Double curve;0
+22;Bumpy road;0
+23;Slippery road;0
+24;Road narrows on the right;0
+25;Road work;0
+26;Traffic signals;0
+27;Pedestrians;0
+28;Children crossing;0
+29;Bicycles crossing;0
+30;Beware of ice/snow;0
+31;Wild animals crossing;0
+32;End of all speed and passing limits;0
+33;Turn right ahead;1
+34;Turn left ahead;0
+35;Ahead only;2
+36;Go straight or right;0
+37;Go straight or left;0
+38;Keep right;1
+39;Keep left;0
+40;Roundabout mandatory;1
+41;End of no passing;0
+42;End of no passing by vehicles over 3.5 metric tons;0

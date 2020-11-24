@@ -1,0 +1,44 @@
+ClassId;SignName;SignNameGerman
+0;Speed limit (20km/h);Max. 20km/h
+1;Speed limit (30km/h);Max. 30km/h
+2;Speed limit (50km/h);Max. 50km/h
+3;Speed limit (60km/h);Max. 60km/h
+4;Speed limit (70km/h);Max. 70km/h
+5;Speed limit (80km/h);Max. 80km/h
+6;End of speed limit (80km/h);Ende Max. 80km/h
+7;Speed limit (100km/h);Max. 100km/h
+8;Speed limit (120km/h);Max. 120km/h
+9;No passing;Ueberholverbot
+10;No passing for vehicles over 3.5 metric tons;Überholverbot für Fzg > 3,5t
+11;Right-of-way at the next intersection;Vorfahrt an der nächsten Kreuzung
+12;Priority road;Vorfahrt
+13;Yield;Vorfahrt gewähren
+14;Stop;Halt, Vorfahrt gewähren
+15;No vehicles;Verbot aller Fahrzeuge
+16;Vehicles over 3.5 metric tons prohibited;Verbot aller Fahrzeuge > 3,5t
+17;No entry;Einfahrt Verboten
+18;General caution;Gefahrenstelle
+19;Dangerous curve to the left;Kurve links
+20;Dangerous curve to the right;Kurve rechts
+21;Double curve;Doppelkurve
+22;Bumpy road;Unebene Fahrbahn
+23;Slippery road;Rutschgefahr
+24;Road narrows on the right;Rechts verengte Fahrbahn
+25;Road work;Arbeitsstelle
+26;Traffic signals;Lichtzeichenanlage
+27;Pedestrians;Fußgänger
+28;Children crossing;Kinder
+29;Bicycles crossing;Radfahrer
+30;Beware of ice/snow;Schnee-/Eisglätte
+31;Wild animals crossing;Wildwechsel
+32;End of all speed and passing limits;Ende aller Geschw. Und Überholverbote
+33;Turn right ahead;Fahrtrichtung rechts
+34;Turn left ahead;Fahrtrichtung links
+35;Ahead only;Fahrtrichtung geradeaus
+36;Go straight or right;Fahrtrichtung geradeaus oder rechts
+37;Go straight or left;Fahrtrichtung geradeaus oder links
+38;Keep right;Rechts vorbeifahren
+39;Keep left;Links vorbeifahren
+40;Roundabout mandatory;Kreisverkehr
+41;End of no passing;Ende Überholverbot
+42;End of no passing by vehicles over 3.5 metric tons;Ende Überholverbot für Fzg > 3,5t

@@ -186,7 +186,7 @@ class VzeGui(QtWidgets.QMainWindow):
             elif demoID == 2:
                 demodatafile=self.demo_datafile2
             self.loadDemoData(demodatafile)
-            self.logic.setCompareResult(False)
+            self.logic.setCompareResult(True)
             self.change_screen(4)
         else:
             errorMessage = "Das Demovideo existiert nicht!\nBitte kontaktieren Sie den Support"

@@ -2,7 +2,6 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import gui.styles as styles
 import gui.image_ressources as image_ressources
 from preprocessor import *
-from PyQt5.QtCore import pyqtSlot
 import csv
 
 

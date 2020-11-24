@@ -1,8 +1,8 @@
 import cv2
 import filetype
 import numpy as np
-from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt, QThread
-from PyQt5.QtGui import QImage, QPixmap
+from PyQt5.QtCore import Qt, QThread
+from PyQt5.QtGui import QImage
 
 class ImageProcessing():
     def __init__(self, logicInterface, vzeController):
@@ -141,9 +141,7 @@ class ImageProcessing():
 
 
 class VideoThread(QThread):
-    #changePixmap = pyqtSignal(QImage)
     img = None
-
     def __init__(self, path, gui, parent=None):
         QThread.__init__(self, parent)
         self.path = path
@@ -163,7 +161,6 @@ class VideoThread(QThread):
             bytesPerLine = ch * w
             convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
             p = convertToQtFormat.scaled(800, 480, Qt.KeepAspectRatio)
-            #self.changePixmap.emit(p)
             self.gui.setVideoImage(p)
 
             if cv2.waitKey(10) & 0xFF ==ord("q"):

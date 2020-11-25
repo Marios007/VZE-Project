@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QFileDialog
 from gui.VzeGui import *
-from preprocessor import *
+from ki.VzeKI import *
 import abc
 import os
 
@@ -65,7 +65,7 @@ class VzeController(GuiInterface):
     preprocessor = None
 
     def __init__(self):
-        self.preprocessor = ImageProcessing(openCvController, self)
+        self.preprocessor = VzeImageProcessing(openCvController, self)
 
     def loadFile(self):
         """

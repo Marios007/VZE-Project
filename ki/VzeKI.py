@@ -1,3 +1,4 @@
+from pickle import NONE
 import numpy as np
 import pandas as pd
 import cv2
@@ -10,8 +11,6 @@ from PyQt5.QtGui import QImage
 from pandas.core import frame
 
 class VzeImageProcessing():
-    def __init__(self):
-        pass
        
     def __init__(self, logicInterface, vzeController):
         self.ILogic = logicInterface
@@ -191,7 +190,7 @@ class VzeKI:
         YOLO_WEIGHTS_PATH = "./input/yolo/yolov3_ts.weights"
         YOLO_MEAN_PICKLE = "./input/yolo/mean_image_rgb.pickle"
 
-        self.VzeIP = VzeImageProcessing()      
+        self.VzeIP = VzeImageProcessing(None, None)      
         self.videoPath = videoPath
 
 
@@ -437,7 +436,8 @@ if __name__ == "__main__":
 
 
 
-    path_video = "./input/Ausschnitt_5.mp4"
+    #path_video = "./input/Ausschnitt_5.mp4"
+    path_video = "../gui/pics/DemoVideos/DemoVideo_gutesWetter.mp4"
 
     VzeInstance = VzeKI(path_video)
     VzeInstance.playVideo()

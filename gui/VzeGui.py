@@ -844,43 +844,43 @@ class Ui_DIScreen(QtWidgets.QWidget):
     
     def create_gridContent(self):
 
-        i = 0
-        j = 0
-        k = 0
+        row_count = 0
+        column_count = 0
+        sign_count = 0
         
-        while i <= 10:    
-            while j <= 7:
-                if k<43:
-                    #print("sign: i:"+ str(i) + " j:"+ str(j) + " k:"+ str(k))
+        while row_count <= 10:    
+            while column_count <= 7:
+                if sign_count<43:
+                    #print("sign: row_count:"+ str(row_count) + " column_count:"+ str(column_count) + " sign_count:"+ str(sign_count))
                     #create signs
-                    self.name_sign = "lbl_sign_"+ str(k)
-                    self.sign_id = ":/signs/" + str(k)
+                    self.name_sign = "lbl_sign_"+ str(sign_count)
+                    self.sign_id = ":/signs/" + str(sign_count)
                     self.name_sign = QtWidgets.QLabel(self.scrollAreaWidget_DIScreen)
                     self.name_sign.setMinimumSize(QtCore.QSize(48, 48))
                     self.name_sign.setMaximumSize(QtCore.QSize(48, 48))
-                    self.name_sign.setObjectName(str(k))
+                    self.name_sign.setObjectName(str(sign_count))
                     self.name_sign.setPixmap(QtGui.QPixmap(self.sign_id))
                     self.name_sign.setScaledContents(True)
 
-                    self.gridLayout_DIScreen.addWidget(self.name_sign, i,j,1,1)
+                    self.gridLayout_DIScreen.addWidget(self.name_sign, row_count,column_count,1,1)
                     
                     #j++ to create the spinbox next to sign (label)
-                    j =j+1
+                    column_count =column_count+1
 
                     # create spinboxes 
-                    # print("sb: i:"+ str(i) + " j:"+ str(j) + " k:"+ str(k))
-                    self.name_sb = "spinBox_"+ str(k)
+                    # print("sb: row_count:"+ str(row_count) + " column_count:"+ str(column_count) + " sign_count:"+ str(sign_count))
+                    self.name_sb = "spinBox_"+ str(sign_count)
                     self.name_sb = QtWidgets.QSpinBox(self.scrollAreaWidget_DIScreen)
                     self.name_sb.setMinimumSize(QtCore.QSize(50, 25))
                     self.name_sb.setMaximumSize(QtCore.QSize(50, 25))
                     self.name_sb.setStyleSheet(styles.styleSpinBox)
                     self.name_sb.setValue(0)
-                    self.gridLayout_DIScreen.addWidget(self.name_sb, i, j, 1, 1)
+                    self.gridLayout_DIScreen.addWidget(self.name_sb, row_count, column_count, 1, 1)
                     
-                j = j+1
-                k = k+1
-            j = 0
-            i = i+1
+                column_count = column_count+1
+                sign_count = sign_count+1
+            column_count = 0
+            row_count = row_count+1
 
     def create_spacer(self):
         self.spacerItem33 = QtWidgets.QSpacerItem(10, 10, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -921,32 +921,29 @@ class Ui_DIScreen(QtWidgets.QWidget):
         self.verticalLayout_11.addLayout(self.lyth_bottom_DIScreen)
 
     def save_gridContent(self):
-        i = 0
-        k = 0
-        
-        count = self.gridLayout_DIScreen.count() -1
-        i = 0
-        k = 0
+        entry_count = self.gridLayout_DIScreen.count() -1
+        item_count = 0
+        array_count = 0
     
-        while i < count:
-            labelItem = self.gridLayout_DIScreen.itemAt(i).widget()
+        while item_count < entry_count:
+            labelItem = self.gridLayout_DIScreen.itemAt(item_count).widget()
             labelItemValue = str(labelItem.objectName())
             #print("Label: " + str(labelItem))
             #print("Label Value: " + labelItemValue)
-            self.gui.array_dataInput[0][k] = labelItemValue
-            i = i+1
+            self.gui.array_dataInput[0][array_count] = labelItemValue
+            item_count = item_count+1
             
-            spinboxItem = self.gridLayout_DIScreen.itemAt(i).widget()
+            spinboxItem = self.gridLayout_DIScreen.itemAt(item_count).widget()
             spinboxItemValue = str(spinboxItem.value())
             #print("SpinBox: " + str(spinboxItem))
             #print("SpinBox Value: " + spinboxItemValue)
-            self.gui.array_dataInput[1][k] = spinboxItemValue
+            self.gui.array_dataInput[1][array_count] = spinboxItemValue
 
             #Temporär die Ergebniszeile alles auf spinboxItemValue setzen
-            self.gui.array_dataInput[2][k] = spinboxItemValue
+            self.gui.array_dataInput[2][array_count] = spinboxItemValue
 
-            i = i+1
-            k = k+1
+            item_count = item_count+1
+            array_count = array_count+1
 
         #Testausgabe des gesamten Arrays
         #for j in range(len(self.gui.array_dataInput[0])):
@@ -958,22 +955,19 @@ class Ui_DIScreen(QtWidgets.QWidget):
         self.check_gridContent()
 
     def reset_gridContent(self):
-        i = 0
-        k = 0
-        
-        count = self.gridLayout_DIScreen.count() -1
-        i = 0
-        k = 0
+        entry_count = self.gridLayout_DIScreen.count() -1
+        item_count = 0
+        array_count = 0
     
-        while(i < count):
-            labelItem = self.gridLayout_DIScreen.itemAt(i).widget()
+        while(item_count < entry_count):
+            labelItem = self.gridLayout_DIScreen.itemAt(item_count).widget()
             #labelItemValue = str(labelItem.objectName())
             #print("Label: " + str(labelItem))
             #print("Label Value: " + labelItemValue)
-            #self.gui.array_dataInput[0][k] = labelItemValue
-            i = i+1
+            #self.gui.array_dataInput[0][array_count] = labelItemValue
+            item_count = item_count+1
             
-            spinboxItem = self.gridLayout_DIScreen.itemAt(i).widget()
+            spinboxItem = self.gridLayout_DIScreen.itemAt(item_count).widget()
             #print("SpinBox: " + str(spinboxItem))
             #spinboxItemValue = str(spinboxItem.value())
             #print("SpinBox Value Before: " + spinboxItemValue)
@@ -982,17 +976,17 @@ class Ui_DIScreen(QtWidgets.QWidget):
             #print("SpinBox Value After: " + spinboxItemValue)
             
             #Wenn Array auch zurückgesetzt werden soll, diese Zeile hier rein
-            self.gui.array_dataInput[1][k] = spinboxItemValue
-            i = i+1
-            k = k+1
+            self.gui.array_dataInput[1][array_count] = spinboxItemValue
+            item_count = item_count+1
+            array_count = array_count+1
 
     def check_gridContent(self):
         
         emptyCheck = True
         
-        for j in range(len(self.gui.array_dataInput[0])):
-            count = int(self.gui.array_dataInput[1][j])
-            if count > 0:
+        for array_count in range(len(self.gui.array_dataInput[0])):
+            sign_count = int(self.gui.array_dataInput[1][array_count])
+            if sign_count > 0:
                 emptyCheck = False
            
         if emptyCheck:
@@ -1515,11 +1509,11 @@ class Ui_ResultScreen(QtWidgets.QWidget):
         line=1
         column=0
         
-        for j in range(len(self.gui.array_dataInput[0])):
+        for array_count in range(len(self.gui.array_dataInput[0])):
 
-            self.sign_id = ":/signs/" + str(self.gui.array_dataInput[0][j])
-            self.sign_input = str(self.gui.array_dataInput[1][j])
-            self.sign_detected = str(self.gui.array_dataInput[2][j])
+            self.sign_id = ":/signs/" + str(self.gui.array_dataInput[0][array_count])
+            self.sign_input = str(self.gui.array_dataInput[1][array_count])
+            self.sign_detected = str(self.gui.array_dataInput[2][array_count])
 
             if (self.sign_input != "0") or ( (self.logic.getCompareResult() == True) and (self.sign_detected != "0") ) :
 
@@ -1604,18 +1598,18 @@ class Ui_ResultScreen(QtWidgets.QWidget):
             print("ResultGrid is empty")
         else:
             #print("not empty")
-            count=self.gridLayout_Result.count()
-            i = count-1
-            while(i >= 0):
+            item_count=self.gridLayout_Result.count()
+            item_counter = item_count-1
+            while(item_counter >= 0):
                 #print("removing item " + str(i))
-                item = self.gridLayout_Result.itemAt(i)
+                item = self.gridLayout_Result.itemAt(item_counter)
                 #Unschön, aber notwendig, da sonst letztes Element immer angezeigt wird.
                 widget = item.widget()
                 widget.setText("")
                 widget.setPixmap(QtGui.QPixmap("None"))
                 #Löschen des Elementes aus dem GridLayout
                 self.gridLayout_Result.removeItem(item)
-                i=i-1  
+                item_counter=item_counter-1  
 
        
 # Demo Data Screen

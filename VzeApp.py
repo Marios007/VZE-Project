@@ -100,7 +100,7 @@ class VzeController(GuiInterface):
             self.setFilePath(filePath)
             return 0,"Datei erfolgreich ausgewählt",image
         else:
-            return -1,"Es wurde keine Datei ausgewählt",None
+            return -2,"Es wurde keine Datei ausgewählt",None
 
     def setFilePath(self, filepath):
         self._fileName = filepath

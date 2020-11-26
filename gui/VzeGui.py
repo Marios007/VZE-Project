@@ -166,6 +166,10 @@ class VzeGui(QtWidgets.QMainWindow):
         if status == 0:
             self.showPreviewImage(image)
             self.change_screen(2)
+        elif status == -1:
+            print(message)
+            title = "Fehler beim Laden der Datei"
+            self.showPopup(title, message)
         else:
             print(message)
 
@@ -197,6 +201,7 @@ class VzeGui(QtWidgets.QMainWindow):
         """
         method for showing a popup with a title and a message (with Warning Icon)
         """
+        print("popup method")
         self.popMsg = QtWidgets.QMessageBox()
         self.popMsg.setWindowTitle(title)
         self.popMsg.setText(message)

@@ -225,7 +225,7 @@ class VzeGui(QtWidgets.QMainWindow):
         """
         method where the analysis is started and the gridContent of the resultscreen is filled
         """
-        self.logic.startAnalysis()
+        self.resultscreen.set_ResultLabel()
         self.resultscreen.create_gridContent()
         self.change_screen(7)
 
@@ -1435,7 +1435,6 @@ class Ui_ResultScreen(QtWidgets.QWidget):
         self.lbl_headline_Result = QtWidgets.QLabel(self)
         self.lbl_headline_Result.setStyleSheet(styles.styleHeadlines)
         self.lbl_headline_Result.setText("Auswertung")
-
         self.lbl_result = QtWidgets.QLabel(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -1444,16 +1443,41 @@ class Ui_ResultScreen(QtWidgets.QWidget):
         self.lbl_result.setSizePolicy(sizePolicy)
         self.lbl_result.setMinimumSize(QtCore.QSize(80, 80))
         self.lbl_result.setMaximumSize(QtCore.QSize(80, 80))
-        self.lbl_result.setStyleSheet("QLabel{\n""    font: bold 18pt \"MS Shell Dlg 2\" ;\n""    background-color: #00AA00;\n""    border-radius: 40px;\n""    color:white\n""}")
-        self.lbl_result.setText("99%")
+        #self.lbl_result.setStyleSheet()
+        self.lbl_result.setText("")
         self.lbl_result.setAlignment(QtCore.Qt.AlignCenter)
         self.lbl_result.setObjectName("lbl_result")
+
+    def set_ResultLabel(self):
+        if(self.logic.getCompareResult()):        
+            percentage = self.logic.startAnalysis()
+            if((percentage > 100) or (percentage < 0)):
+                print("Calculation resulted in impossible percentage")
+                self.lbl_result.setText("")
+                self.lbl_result.setStyleSheet(None)
+            else:
+                if(percentage <= 5):
+                    print("Showing green percentage label")
+                    self.lbl_result.setStyleSheet(styles.stylePercentageGreen)
+                elif((percentage >5) and (percentage < 10)):
+                    print("Showing yellow percentage label")
+                    self.lbl_result.setStyleSheet(styles.stylePercentageYellow)
+                elif(percentage > 10):
+                    print("Showing red percentage label")
+                    self.lbl_result.setStyleSheet(styles.stylePercentageRed)
+                
+                print("Showing percentage label with " + str(percentage) + "%")
+                self.lbl_result.setText(str(percentage)+"%")
+        else:
+            print("No compareResult calculation necessary")
+            self.lbl_result.setText("")
+            self.lbl_result.setStyleSheet(None)
 
     def create_gridContent(self):
         """
         creating the gridContent according to the content of array_dataInput and compareResult
         """
-        if self.logic.getCompareResult:
+        if(self.logic.getCompareResult()):
             print("Es wird eine Auswertung durchgeführt")
         else:
             print("Die Ergebnisse werden nur angezeigt")

@@ -109,6 +109,7 @@ class VzeController(GuiInterface):
         return self._fileName
 
     def setCompareResult(self,compare):
+        print("compareResult is set to " + str(compare))
         self._compareResult = compare
 
     def getCompareResult(self):
@@ -123,7 +124,17 @@ class VzeController(GuiInterface):
 
     def startAnalysis(self):
         #Method to start the analysis
-        print("Method startAnalysis in VzeApp")  
+        print("Method startAnalysis in VzeApp")
+        percentage=0
+        
+        #Hier die Berechnung ausführen:
+        # | (erkannte Schilder - eingegebene Schilder) / eingegebene Schilder | * 100
+
+        print("Hinweis: Die Berechnung ist aktuell noch nicht implementiert. Es wird immer percentage=0 gesetzt")
+        
+
+        
+        return percentage
 
 class VzeApp(QtWidgets.QApplication):
 

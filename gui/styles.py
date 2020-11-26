@@ -25,4 +25,9 @@ styleSpinBox="QSpinBox{\n""    font: 75 12pt \"MS Shell Dlg 2\" ;\n""    backgro
 #style for labels in resultScreen
 styleResultLabel="qproperty-alignment: \'AlignVCenter | AlignCenter\';\n""font: 75 12pt \"MS Shell Dlg 2\" ;\n""    color:white\n"
 
+#Percentage label in ResultScreen in all different colors
+stylePercentageGreen="QLabel{\n""    font: bold 18pt \"MS Shell Dlg 2\" ;\n""    background-color: #00AA00;\n""    border-radius: 40px;\n""    color:white\n""}"
+stylePercentageYellow="QLabel{\n""    font: bold 18pt \"MS Shell Dlg 2\" ;\n""    background-color: #AAAA00;\n""    border-radius: 40px;\n""    color:white\n""}"
+stylePercentageRed="QLabel{\n""    font: bold 18pt \"MS Shell Dlg 2\" ;\n""    background-color: #AA0000;\n""    border-radius: 40px;\n""    color:white\n""}"
+
 

@@ -23,6 +23,10 @@ class VzeImageProcessing():
         height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
         return cap, height, width
 
+    def read_image(self, path):
+        self.image = cv2.imread(path)
+        return self.image
+
     def get_dimensions(self, image):
         return image.shape[:2]
 
@@ -137,6 +141,12 @@ class VzeImageProcessing():
 
             print("ImageResolution: " + str(width) + "x" + str(heigth))
 
+            if (width < 800 or heigth < 600):
+                return -2
+            elif (width > 6000 or heigth > 4000):
+                return -1    
+
+
         elif fileType == 2:
             #File is a video
             print("Video-Resolution-Check")
@@ -145,10 +155,10 @@ class VzeImageProcessing():
 
             print("VideoResolution: " + str(width) + "x" + str(heigth))
 
-        if (width < 800 or heigth < 600):
-            return -2
-        elif (width > 1920 or heigth > 1080):
-            return -1                
+            if (width < 800 or heigth < 600):
+                return -2
+            elif (width > 1920 or heigth > 1080):
+                return -1                
 
         return 1
 

@@ -167,8 +167,7 @@ class VzeGui(QtWidgets.QMainWindow):
             self.showPreviewImage(image)
             self.change_screen(2)
         else:
-            error = "Fehler beim Laden der Datei"
-            self.showPopup(error, message)
+            print(message)
 
     def loadDemoVideo(self, filepath, demoID):
         """

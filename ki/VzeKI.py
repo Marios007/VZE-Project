@@ -9,6 +9,8 @@ from keras.models import load_model
 from PyQt5.QtCore import Qt, QThread
 from PyQt5.QtGui import QImage
 from pandas.core import frame
+# for debugging inside thread
+#import pydevd
 
 class VzeImageProcessing():
        
@@ -91,7 +93,7 @@ class VzeImageProcessing():
         else:
             print("PreviewImage could not be created!")
             return None
-        
+
         vidcap.release()
 
     def check_fileType(self, filepath):
@@ -397,6 +399,7 @@ class VideoThread(QThread):
         self.gui = gui
 
     def run(self):
+        #pydevd.settrace(suspend=False)
         print("play video " + str(self.path))
         self.cap = cv2.VideoCapture(self.path)
         while self._run_flag:

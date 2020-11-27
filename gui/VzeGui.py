@@ -268,6 +268,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.demodatascreen.delete_grid()
         self.diScreen.reset_gridContent()
         self.resultscreen.delete_grid()
+        self.deactivateResultBtn()
         self.change_screen(0)
 
     def setVideoImage(self, img):
@@ -284,6 +285,11 @@ class VzeGui(QtWidgets.QMainWindow):
     
     def activateResultBtn(self):
         self.analyzescreen.btn_showResult.setEnabled(True)
+        self.analyzescreen.changeButtonEnabled()
+
+    def deactivateResultBtn(self):
+        self.analyzescreen.btn_showResult.setEnabled(False)
+        self.analyzescreen.changeButtonEnabled()
         
     
 # Start Screen

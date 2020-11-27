@@ -28,35 +28,6 @@ class GuiInterface(abc.ABC):
     def startAnalysis(self):
         return
 
-class openCV_Interface(abc.ABC):
-
-    def openCVMethod(self):
-        return
-
-    def startVideo(self):
-        return
-
-    def streaming(self):
-        return
-
-
-class openCvController(openCV_Interface):
-    
-    logic = None
-
-    def __init__(self, logic):
-        self.logic = logic
-
-    def openCVMethod(self):
-        print("openCVMethod")
-        return
-
-    def startVideo(self):
-        return
-
-    def streaming(self, frame):
-        return
-
 
 class VzeController(GuiInterface):
 
@@ -66,7 +37,7 @@ class VzeController(GuiInterface):
     preprocessor = None
 
     def __init__(self):
-        self.preprocessor = VzeImageProcessing(openCvController, self)
+        self.preprocessor = VzeImageProcessing(self)
 
     def loadFile(self):
         """
@@ -80,7 +51,7 @@ class VzeController(GuiInterface):
             #Status 1 --> image, Status 2 --> video, Status -1 --> error
             status_type,image = self.preprocessor.check_fileType(filePath)
             if status_type == -1 :
-                return -1,"Dieser Dateityp wird nicht unterstützt\nUnterstütze Dateitypen:\n*.jpg *.jpeg *.gif *.png *.bmp *.avi *.mov *.mp4 *.mpeg",None
+                return -1,"Dieser Dateityp wird nicht unterstützt.\nUnterstütze Dateitypen:\n*.jpg *.jpeg *.gif *.png *.bmp *.avi *.mov *.mp4 *.mpeg",None
             print("File-Type-Check passed")
             
             #Status 1 --> resolution OK, Status -1 --> resolution too high, Status -2 --> resolution too low
@@ -119,9 +90,6 @@ class VzeController(GuiInterface):
     def checkFilePath(self,filepath):
         status = os.path.exists(filepath)
         return status
-
-    def processCV(self):
-        self.preprocessor.openCVMethod()
 
     def startAnalysis(self):
         #Method to start the analysis

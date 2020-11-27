@@ -12,10 +12,8 @@ from pandas.core import frame
 
 class VzeImageProcessing():
        
-    def __init__(self, logicInterface, vzeController):
-        self.ILogic = logicInterface
+    def __init__(self, vzeController):
         self.vzeController = vzeController
-
 
     def read_video(self, path):
         cap = cv2.VideoCapture(path)
@@ -415,7 +413,9 @@ class VideoThread(QThread):
 
             if cv2.waitKey(10) & 0xFF ==ord("q"):
                 break
-        print("done")
+        print("Video finished")
+        # activate result button, once video is finished
+        self.gui.activateResultBtn()
         self.cap.release()
 
     def stopVideo(self):

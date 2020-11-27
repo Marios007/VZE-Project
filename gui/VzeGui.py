@@ -99,13 +99,13 @@ class VzeGui(QtWidgets.QMainWindow):
         save the screen you are currently on onto a stack
         """
         self.stack_lastScreen.append(self.stackedWidget.currentIndex())
-        print("Save last screen: " + str(self.stackedWidget.currentIndex()))
+        #print("Save last screen: " + str(self.stackedWidget.currentIndex()))
  
     def change_screen_back(self):
         """
         go back to last screen and pop off last element from stack
         """
-        print("print stack: " + str(self.stack_lastScreen))
+        #print("print stack: " + str(self.stack_lastScreen))
         self.stackedWidget.setCurrentIndex(self.stack_lastScreen.pop())
         return 
 
@@ -190,7 +190,7 @@ class VzeGui(QtWidgets.QMainWindow):
             self.logic.setCompareResult(True)
             self.change_screen(4)
         else:
-            errorMessage = "Das Demovideo existiert nicht!\nBitte kontaktieren Sie den Support"
+            errorMessage = "Das Demovideo existiert nicht!\nBitte kontaktieren Sie den Support."
             errorTitle = "Fehler Demovideo"
             print("The given demoVideo does not exist: " + filepath)
             self.showPopup(errorTitle, errorMessage)
@@ -276,10 +276,14 @@ class VzeGui(QtWidgets.QMainWindow):
     def startVideo(self):
         # create the video capture thread and handover filepath and the VzeGui object
         self.thread =  VideoThread(self.logic.getFilePath(), self)
+        # call the real KI method later  
         #self.thread =  VideoThreadKI(self.logic.getFilePath(), self)
          
         # start the thread
         self.thread.start()
+    
+    def activateResultBtn(self):
+        self.analyzescreen.btn_showResult.setEnabled(True)
         
     
 # Start Screen
@@ -1219,9 +1223,10 @@ class Ui_analyzeScreen(QtWidgets.QWidget):
         self.btn_showResult.setMaximumSize(QtCore.QSize(220, 40))
         self.btn_showResult.setStyleSheet(styles.styleBluebuttonsmall)
         self.btn_showResult.setText("Zur Auswertung")
-        #self.btn_showResult.setEnabled(False)
+        self.btn_showResult.setEnabled(False)
         self.btn_showResult.setObjectName("btn_showResult")
         self.btn_showResult.clicked.connect(self.gui.show_Result)
+
 
 
     def create_label(self):

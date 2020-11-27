@@ -62,6 +62,7 @@ class VzeController(GuiInterface):
 
     _fileName = None
     _compareResult = False
+    array_dataInput = [[0 for x in range(43)] for y in range(3)]
     preprocessor = None
 
     def __init__(self):
@@ -125,16 +126,38 @@ class VzeController(GuiInterface):
     def startAnalysis(self):
         #Method to start the analysis
         print("Method startAnalysis in VzeApp")
-        percentage=0
-        
-        #Hier die Berechnung ausführen:
-        # | (erkannte Schilder - eingegebene Schilder) / eingegebene Schilder | * 100
 
-        print("Hinweis: Die Berechnung ist aktuell noch nicht implementiert. Es wird immer percentage=0 gesetzt")
-        
+        percentage_result=0
+        sign_id = ""
+        sign_detected = 0
+        sign_input = 0
+        sign_count = 43
+        percentage_counter = 0
 
-        
-        return percentage
+        #Testausgabe des gesamten Arrays
+        for array_count in range(len(self.array_dataInput[0])):
+            percentage = 0
+            sign_id = self.array_dataInput[0][array_count]
+            sign_input = int(self.array_dataInput[1][array_count])
+            sign_detected = int(self.array_dataInput[2][array_count])
+
+            #percentage must only be calculated when customer expects the sign
+            if(sign_input > 0):
+                #Hier die Berechnung ausführen:
+                # | (erkannte Schilder - eingegebene Schilder) / eingegebene Schilder | * 100
+                sum = (sign_detected - sign_input)
+                diff = abs(sum / sign_input)
+                percentage = diff * 100
+                percentage_counter = percentage_counter + percentage
+                #print("SignId: " + str(sign_id) + "; Input: " + str(sign_input) + "; Detected: " + str(sign_detected) + "; Percentage: " + str(percentage))
+            
+            #print("Percentage Counter: " + str(percentage_counter))
+                        
+        percentage_result = int(round(percentage_counter / 43, 0))
+        #print("Percentage Result: " + str(percentage_result))
+
+
+        return percentage_result
 
 class VzeApp(QtWidgets.QApplication):
 

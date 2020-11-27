@@ -8,7 +8,6 @@ import csv
 class VzeGui(QtWidgets.QMainWindow):
 
     stack_lastScreen = []
-    array_dataInput = [[0 for x in range(43)] for y in range(3)]
     demo_video1 = "./gui/pics/DemoVideos/DemoVideo_gutesWetter.mp4"
     demo_video2 = "./gui/pics/DemoVideos/DemoVideo_schlechtesWetter.mp4"
     demo_datafile1='./gui/demo_data_1.csv'
@@ -243,19 +242,19 @@ class VzeGui(QtWidgets.QMainWindow):
                 self.sign_id = line[0]
                 self.sign_count = line[2]
 
-                self.array_dataInput[0][i] = self.sign_id
-                self.array_dataInput[1][i] = self.sign_count
-                self.array_dataInput[2][i] = self.sign_count
+                self.logic.array_dataInput[0][i] = self.sign_id
+                self.logic.array_dataInput[1][i] = self.sign_count
+                self.logic.array_dataInput[2][i] = self.sign_count
                 i=i+1
 
         csvfile.close()
 
         print("Demo-Data loaded")
         #Testausgabe des gesamten Arrays
-        #for j in range(len(self.array_dataInput[0])):
-        #    print(self.array_dataInput[0][j], end=' ')
-        #    print(self.array_dataInput[1][j], end=' ')
-        #    print(self.array_dataInput[2][j], end=' ')
+        #for j in range(len(self.logic.array_dataInput[0])):
+        #    print(self.logic.array_dataInput[0][j], end=' ')
+        #    print(self.logic.array_dataInput[1][j], end=' ')
+        #    print(self.logic.array_dataInput[2][j], end=' ')
         #    print()
 
     def cleanup(self):
@@ -263,7 +262,7 @@ class VzeGui(QtWidgets.QMainWindow):
         method for clearing all variables
         """
         print("CleanUp-Method")
-        self.array_dataInput = [[0 for x in range(43)] for y in range(3)]
+        self.logic.array_dataInput = [[0 for x in range(43)] for y in range(3)]
         self.logic.setCompareResult(False)
         self.logic.setFilePath("")
         self.demodatascreen.delete_grid()
@@ -935,26 +934,26 @@ class Ui_DIScreen(QtWidgets.QWidget):
             labelItemValue = str(labelItem.objectName())
             #print("Label: " + str(labelItem))
             #print("Label Value: " + labelItemValue)
-            self.gui.array_dataInput[0][array_count] = labelItemValue
+            self.logic.array_dataInput[0][array_count] = labelItemValue
             item_count = item_count+1
             
             spinboxItem = self.gridLayout_DIScreen.itemAt(item_count).widget()
             spinboxItemValue = str(spinboxItem.value())
             #print("SpinBox: " + str(spinboxItem))
             #print("SpinBox Value: " + spinboxItemValue)
-            self.gui.array_dataInput[1][array_count] = spinboxItemValue
+            self.gui.logic.array_dataInput[1][array_count] = spinboxItemValue
 
             #Temporär die Ergebniszeile alles auf spinboxItemValue setzen
-            self.gui.array_dataInput[2][array_count] = spinboxItemValue
+            self.gui.logic.array_dataInput[2][array_count] = spinboxItemValue
 
             item_count = item_count+1
             array_count = array_count+1
 
         #Testausgabe des gesamten Arrays
-        #for j in range(len(self.gui.array_dataInput[0])):
-        #    print(self.gui.array_dataInput[0][j], end=' ')
-        #    print(self.gui.array_dataInput[1][j], end=' ')
-        #    print(self.gui.array_dataInput[2][j], end=' ')
+        #for j in range(len(self.logic.array_dataInput[0])):
+        #    print(self.logic.array_dataInput[0][j], end=' ')
+        #    print(self.logic.array_dataInput[1][j], end=' ')
+        #    print(self.logic.array_dataInput[2][j], end=' ')
         #    print()
 
         self.check_gridContent()
@@ -969,7 +968,7 @@ class Ui_DIScreen(QtWidgets.QWidget):
             #labelItemValue = str(labelItem.objectName())
             #print("Label: " + str(labelItem))
             #print("Label Value: " + labelItemValue)
-            #self.gui.array_dataInput[0][array_count] = labelItemValue
+            #self.logic.array_dataInput[0][array_count] = labelItemValue
             item_count = item_count+1
             
             spinboxItem = self.gridLayout_DIScreen.itemAt(item_count).widget()
@@ -981,7 +980,7 @@ class Ui_DIScreen(QtWidgets.QWidget):
             #print("SpinBox Value After: " + spinboxItemValue)
             
             #Wenn Array auch zurückgesetzt werden soll, diese Zeile hier rein
-            self.gui.array_dataInput[1][array_count] = spinboxItemValue
+            self.logic.array_dataInput[1][array_count] = spinboxItemValue
             item_count = item_count+1
             array_count = array_count+1
 
@@ -989,8 +988,8 @@ class Ui_DIScreen(QtWidgets.QWidget):
         
         emptyCheck = True
         
-        for array_count in range(len(self.gui.array_dataInput[0])):
-            sign_count = int(self.gui.array_dataInput[1][array_count])
+        for array_count in range(len(self.logic.array_dataInput[0])):
+            sign_count = int(self.logic.array_dataInput[1][array_count])
             if sign_count > 0:
                 emptyCheck = False
            
@@ -1538,11 +1537,11 @@ class Ui_ResultScreen(QtWidgets.QWidget):
         line=1
         column=0
         
-        for array_count in range(len(self.gui.array_dataInput[0])):
+        for array_count in range(len(self.logic.array_dataInput[0])):
 
-            self.sign_id = ":/signs/" + str(self.gui.array_dataInput[0][array_count])
-            self.sign_input = str(self.gui.array_dataInput[1][array_count])
-            self.sign_detected = str(self.gui.array_dataInput[2][array_count])
+            self.sign_id = ":/signs/" + str(self.logic.array_dataInput[0][array_count])
+            self.sign_input = str(self.logic.array_dataInput[1][array_count])
+            self.sign_detected = str(self.logic.array_dataInput[2][array_count])
 
             if (self.sign_input != "0") or ( (self.logic.getCompareResult() == True) and (self.sign_detected != "0") ) :
 

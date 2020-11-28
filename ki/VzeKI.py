@@ -195,14 +195,17 @@ class VzeKI:
     def __init__(self, videoPath: str):
         # Konstruktor lädt Labels, CNN-Model und YOLO-Modell
         # Definition Konstanten zur Initialisierung
-        LABEL_PATH = "./input/labels/signnames.csv"
-        CNN_MODEL_PATH = "./input/cnn/test_model"
-        YOLO_CONFIG_PATH = "./input/yolo/yolov3_ts.cfg"
-        YOLO_WEIGHTS_PATH = "./input/yolo/yolov3_ts.weights"
-        YOLO_MEAN_PICKLE = "./input/yolo/mean_image_rgb.pickle"
+        LABEL_PATH = "./ki/input/labels/signnames.csv"
+        CNN_MODEL_PATH = "./ki/input/cnn/test_model"
+        YOLO_CONFIG_PATH = "./ki/input/yolo/yolov3_ts.cfg"
+        YOLO_WEIGHTS_PATH = "./ki/input/yolo/yolov3_ts.weights"
+        YOLO_MEAN_PICKLE = "./ki/input/yolo/mean_image_rgb.pickle"
 
-        self.VzeIP = VzeImageProcessing(None, None)      
+        self.VzeIP = VzeImageProcessing(None)      
         self.videoPath = videoPath
+        self.currentTime = 0
+        self.previousTime = 0
+        self.frames_count = 1
 
 
         # Labels laden
@@ -232,11 +235,7 @@ class VzeKI:
         self.layers_names_output = [self.yolo_network.getLayerNames()[i[0] - 1] for i in self.yolo_network.getUnconnectedOutLayers()]
 
 
-    def calculate_time(self, estimated_time, frames_count, start_time, end_time):
-        estimated_time += (end_time - start_time)/cv2.getTickFrequency()
-        fps = round((frames_count / estimated_time), 1)
-        print("calculating time {0:.3f} seconds - FPS: {1}".format(estimated_time, fps))
-        return estimated_time, fps
+    ### KI-Methoden
 
     def yolo_detection(self, image):
         self.yolo_network.setInput(cv2.dnn.blobFromImage(image, 1 / 255.0, self.DNN_DIM, swapRB=True, crop=False))
@@ -321,13 +320,28 @@ class VzeKI:
 
             return self.VzeIP.print_boxes_on_image(image, bounding_boxes_final, sign_names, probabilities)
     
-    def processFrame(self, frame):
+    ### Hilfsmethoden
 
+    def calculate_time(self, currentTime):
+                
+        timeDifference = (currentTime - self.previousTime)/cv2.getTickFrequency()
+        if timeDifference != 0:
+            #fps = round((self.frames_count / timeDifference), 1)
+            fps = round(1/timeDifference, 1)
+        else:
+            fps = 1
+        self.frames_count += 1
+        self.previousTime = currentTime
+        print("calculating time {0:.3f} seconds - FPS: {1}".format(timeDifference, fps))
+        return timeDifference, fps
+
+    def processFrame(self, frame, currentTime):
+
+        
         frame = self.VzeIP.resize_image(frame, 50)           
         height, width = self.VzeIP.get_dimensions(frame)
         frame = self.detect_signs(frame, height, width)
-        end_time = cv2.getTickCount()
-        self.estimated_time, fps = self.calculate_time(self.estimated_time, self.frames_count, self.start_time, end_time)
+        self.estimated_time, fps = self.calculate_time(currentTime)
         text_info = "time {0:.3f} s - fps: {1}".format(self.estimated_time, fps)
         frame = self.VzeIP.print_text_on_image(frame, text_info, 20, 20, 0.5, [0,0,255], 2)
         return frame
@@ -343,11 +357,6 @@ class VzeKI:
 
         while(cap.isOpened()):
             self.start_time = cv2.getTickCount()
-            ret, frame = cap.read()
-            if not ret:
-                break
-            frame = self.processFrame(frame)
-            self.VzeIP.show_image("bounding_boxes", frame)
             out.write(frame)            
             self.frames_count+=1
             if cv2.waitKey(10) & 0xFF ==ord("q"):
@@ -358,21 +367,23 @@ class VzeKI:
 
 
 class VideoThreadKI(QThread):
-    img = None
     def __init__(self, path, gui, parent=None):
         QThread.__init__(self, parent)
         self.path = path
         self._run_flag = True
         self.gui = gui
+        self.ki = VzeKI(self.path)
 
     def run(self):
         print("play video " + str(self.path))
         self.cap = cv2.VideoCapture(self.path)
         while self._run_flag:
+            currentTime = cv2.getTickCount()
             read, frame = self.cap.read()
             if not read:
                 break
-                
+
+            frame = self.ki.processFrame(frame, currentTime)
             rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             h, w, ch = rgbImage.shape
             bytesPerLine = ch * w
@@ -382,6 +393,7 @@ class VideoThreadKI(QThread):
 
             if cv2.waitKey(10) & 0xFF ==ord("q"):
                 break
+
         print("done")
         self.cap.release()
 
@@ -429,29 +441,16 @@ class VideoThread(QThread):
         self.cap.release()
 
 
-# class VzeObject:
-#     frame 
-#     frameId = 1
-#     numDetectSigns = 0
-#     detectedSigns = [] #array with Shield objects
+class VzeObject:
+    frame = None 
+    frameId = 1
+    numDetectSigns = 0
+    detectedSigns = [] #array with Shield objects
     
-#     def __init__(self, id):
-#         return
+    def __init__(self, id):
+         return
 
-# class Shield:
-#     shieldId   # 0 - 42 
-#     box_W_H = W,H
-#     coordinateXY = X,Y
-
-
-
-
-if __name__ == "__main__":
-
-
-
-    #path_video = "./input/Ausschnitt_5.mp4"
-    path_video = "../gui/pics/DemoVideos/DemoVideo_gutesWetter.mp4"
-
-    VzeInstance = VzeKI(path_video)
-    VzeInstance.playVideo()
+class Shield:
+     shieldId = 1  # 0 - 42 
+     box_W_H = 0,0
+     coordinateXY = 0,0

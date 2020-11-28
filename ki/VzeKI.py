@@ -326,7 +326,6 @@ class VzeKI:
                 
         timeDifference = (currentTime - self.previousTime)/cv2.getTickFrequency()
         if timeDifference != 0:
-            #fps = round((self.frames_count / timeDifference), 1)
             fps = round(1/timeDifference, 1)
         else:
             fps = 1
@@ -344,26 +343,26 @@ class VzeKI:
         self.estimated_time, fps = self.calculate_time(currentTime)
         text_info = "time {0:.3f} s - fps: {1}".format(self.estimated_time, fps)
         frame = self.VzeIP.print_text_on_image(frame, text_info, 20, 20, 0.5, [0,0,255], 2)
-        return frame
+        return VzeObject(frame, self.frames_count)
 
 
-    def playVideo(self):
-        self.frames_count = 1
-        self.estimated_time = 0
-        cap = cv2.VideoCapture(self.videoPath)
-        frame_width = int(cap.get(3)/2)
-        frame_height = int(cap.get(4)/2)
-        out = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc(*"MJPG"), 10, (frame_width,frame_height))
+    # def playVideo(self):
+    #     self.frames_count = 1
+    #     self.estimated_time = 0
+    #     cap = cv2.VideoCapture(self.videoPath)
+    #     frame_width = int(cap.get(3)/2)
+    #     frame_height = int(cap.get(4)/2)
+    #     out = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc(*"MJPG"), 10, (frame_width,frame_height))
 
-        while(cap.isOpened()):
-            self.start_time = cv2.getTickCount()
-            out.write(frame)            
-            self.frames_count+=1
-            if cv2.waitKey(10) & 0xFF ==ord("q"):
-                break
-        cap.release()
-        out.release()
-        cv2.destroyAllWindows()
+    #     while(cap.isOpened()):
+    #         self.start_time = cv2.getTickCount()
+    #         out.write(frame)            
+    #         self.frames_count+=1
+    #         if cv2.waitKey(10) & 0xFF ==ord("q"):
+    #             break
+    #     cap.release()
+    #     out.release()
+    #     cv2.destroyAllWindows()
 
 
 class VideoThreadKI(QThread):
@@ -383,13 +382,10 @@ class VideoThreadKI(QThread):
             if not read:
                 break
 
-            frame = self.ki.processFrame(frame, currentTime)
-            rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            h, w, ch = rgbImage.shape
-            bytesPerLine = ch * w
-            convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
-            p = convertToQtFormat.scaled(800, 480, Qt.KeepAspectRatio)
-            self.gui.setVideoImage(p)
+            currentObject = self.ki.processFrame(frame, currentTime)
+
+
+            self.gui.setVideoImage(currentObject)
 
             if cv2.waitKey(10) & 0xFF ==ord("q"):
                 break
@@ -442,13 +438,20 @@ class VideoThread(QThread):
 
 
 class VzeObject:
-    frame = None 
-    frameId = 1
     numDetectSigns = 0
     detectedSigns = [] #array with Shield objects
     
-    def __init__(self, id):
-         return
+    def __init__(self, processedFrame, counter):
+         self.frame = self.convertQt(processedFrame)
+         self.frameId = counter
+
+
+    def convertQt(self, inputFrame):
+        rgbImage = cv2.cvtColor(inputFrame, cv2.COLOR_BGR2RGB)
+        h, w, ch = rgbImage.shape
+        bytesPerLine = ch * w
+        convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
+        return convertToQtFormat.scaled(800, 480, Qt.KeepAspectRatio)
 
 class Shield:
      shieldId = 1  # 0 - 42 

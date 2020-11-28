@@ -2,7 +2,7 @@ import sys
 from VzeApp import VzeApp
 
 def main(*args, **kwargs):
-    print ("Starting VZE")
+    print("Starting VZE")
 
     app = VzeApp(sys.argv)
 

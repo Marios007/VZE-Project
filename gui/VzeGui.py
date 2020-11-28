@@ -10,13 +10,13 @@ class VzeGui(QtWidgets.QMainWindow):
     stack_lastScreen = []
     demo_video1 = "./gui/pics/DemoVideos/DemoVideo_gutesWetter.mp4"
     demo_video2 = "./gui/pics/DemoVideos/DemoVideo_schlechtesWetter.mp4"
-    demo_datafile1='./gui/demo_data_1.csv'
-    demo_datafile2='./gui/demo_data_2.csv'
+    demo_datafile1 = "./gui/demo_data_1.csv"
+    demo_datafile2 = "./gui/demo_data_2.csv"
 
     def __init__(self, logicInterface):
         QtWidgets.QMainWindow.__init__(self)
-        print ("loading UI")
-       
+        print("loading UI")
+
         self.logic = logicInterface
 
         # Setting Window Title and Icon
@@ -24,10 +24,10 @@ class VzeGui(QtWidgets.QMainWindow):
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/icons/logo_schild"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.setWindowIcon(icon)
-    
-       # Size of window is always 0,65 times of availabe window
+
+        # Size of window is always 0,65 times of availabe window
         self.size = QtWidgets.QDesktopWidget().availableGeometry()
-        self.setMinimumSize( self.size.width() * 0.65, self.size.height() * 0.65)
+        self.setMinimumSize(self.size.width() * 0.65, self.size.height() * 0.65)
 
         # Main widget
         window = QtWidgets.QWidget()
@@ -38,53 +38,53 @@ class VzeGui(QtWidgets.QMainWindow):
         # Set vertical layout for main window
         self.verticalLayout = QtWidgets.QVBoxLayout(window)
         self.verticalLayout.setObjectName("verticalLayout")
-        
+
         # Set stacked widget
         self.stackedWidget = QtWidgets.QStackedWidget(window)
         self.stackedWidget.setStyleSheet(styles.styleBackground)
         self.stackedWidget.setObjectName("stackedWidget")
-        
+
         self.build_screens()
-        #define startscreen
+        # define startscreen
         self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(window)
 
     def build_screens(self):
 
-        #Build UI with each screen
-        print ("Build screens")
-        #0
+        # Build UI with each screen
+        print("Build screens")
+        # 0
         self.startscreen = Ui_startscreen(self.logic, self)
         self.stackedWidget.addWidget(self.startscreen)
-        #1
+        # Screen ID 1
         self.demoscreen = Ui_demoscreen(self.logic, self)
         self.stackedWidget.addWidget(self.demoscreen)
-        #2
+        # Screen ID 2
         self.previewscreen = Ui_previewscreen(self.logic, self)
         self.stackedWidget.addWidget(self.previewscreen)
-        #3
+        # Screen ID 3
         self.diScreen = Ui_DIScreen(self.logic, self)
         self.stackedWidget.addWidget(self.diScreen)
-        #4
+        # Screen ID 4
         self.analyzepvscreen = Ui_analyzePvScreen(self.logic, self)
         self.stackedWidget.addWidget(self.analyzepvscreen)
-        #5
+        # Screen ID 5
         self.analyzescreen = Ui_analyzeScreen(self.logic, self)
         self.stackedWidget.addWidget(self.analyzescreen)
-        #6
+        # Screen ID 6
         self.demodatascreen = Ui_DemoDataScreen(self.logic, self)
         self.stackedWidget.addWidget(self.demodatascreen)
-        #7
+        # Screen ID 7
         self.resultscreen = Ui_ResultScreen(self.logic, self)
         self.stackedWidget.addWidget(self.resultscreen)
-        #8
+        # Screen ID 8
         self.infoscreen = Ui_InfoScreen(self.logic, self)
 
-        self.verticalLayout.addWidget(self.stackedWidget) 
+        self.verticalLayout.addWidget(self.stackedWidget)
 
     def change_screen(self, nextScreen):
         """
-        change to next screen and save last screen to stack. When jump to screen 0 then initialize the stack 
+        change to next screen and save last screen to stack. When jump to screen 0 then initialize the stack
         """
         if nextScreen == 0:
             self.stackedWidget.setCurrentIndex(nextScreen)
@@ -99,15 +99,15 @@ class VzeGui(QtWidgets.QMainWindow):
         save the screen you are currently on onto a stack
         """
         self.stack_lastScreen.append(self.stackedWidget.currentIndex())
-        #print("Save last screen: " + str(self.stackedWidget.currentIndex()))
- 
+        # print("Save last screen: " + str(self.stackedWidget.currentIndex()))
+
     def change_screen_back(self):
         """
         go back to last screen and pop off last element from stack
         """
-        #print("print stack: " + str(self.stack_lastScreen))
+        # print("print stack: " + str(self.stack_lastScreen))
         self.stackedWidget.setCurrentIndex(self.stack_lastScreen.pop())
-        return 
+        return
 
     def create_DemoDataGrid(self, demoID):
         """
@@ -115,12 +115,12 @@ class VzeGui(QtWidgets.QMainWindow):
         """
         print("loading demo data grid for demovideo " + str(demoID))
 
-        #set demodatafile according to the passed demoID
-        demodatafile=""
+        # set demodatafile according to the passed demoID
+        demodatafile = ""
         if demoID == 1:
-            demodatafile=self.demo_datafile1
+            demodatafile = self.demo_datafile1
         elif demoID == 2:
-            demodatafile=self.demo_datafile2
+            demodatafile = self.demo_datafile2
         else:
             print("Unknown error")
 
@@ -132,36 +132,36 @@ class VzeGui(QtWidgets.QMainWindow):
         """
         This method is used for creating a graphicsScene from an image file
         """
-        image = QtGui.QImage(numpy, numpy.shape[1],numpy.shape[0], numpy.shape[1] * 3,QtGui.QImage.Format_RGB888).rgbSwapped()
+        image = QtGui.QImage(numpy, numpy.shape[1], numpy.shape[0], numpy.shape[1] * 3, QtGui.QImage.Format_RGB888).rgbSwapped()
         pixmap = QtGui.QPixmap(image)
         pixmap_scaled = pixmap.scaled(790, 410)
         graphicsScene = QtWidgets.QGraphicsScene(self)
         graphicsScene.addPixmap(pixmap_scaled)
         return graphicsScene
-    
+
     def showPreviewImage(self, filepath):
         """
         This method is used for displaying a previewImage on every previewScreen and the analyseScreen
         """
-        #print("method showPreviewImage")
+        # print("method showPreviewImage")
         graphicsScene = self.createGraphicsScene(filepath)
         self.previewscreen.graphicsPreview.setScene(graphicsScene)
         self.analyzepvscreen.graphicsAnalyzePreview.setScene(graphicsScene)
-        #self.analyzescreen.graphicsAnalyze.setScene(graphicsScene)
+        # self.analyzescreen.graphicsAnalyze.setScene(graphicsScene)
 
     def showImageOnAnalyzeScreen(self, image):
         """
         This method is used for displaying an image on the AnalyzeScreen
         """
-        #print("method showImageOnAnalyzeScreen")
+        # print("method showImageOnAnalyzeScreen")
         graphicsScene = self.createGraphicsScene(image)
-        self.analyzescreen.graphicsAnalyze.setScene(graphicsScene) 
+        self.analyzescreen.graphicsAnalyze.setScene(graphicsScene)
 
     def loadFile(self):
         """
         This method is used for uploading a file
         """
-        status,message,image = self.logic.loadFile()
+        status, message, image = self.logic.loadFile()
         if status == 0:
             self.showPreviewImage(image)
             self.change_screen(2)
@@ -174,14 +174,15 @@ class VzeGui(QtWidgets.QMainWindow):
 
     def loadDemoVideo(self, filepath, demoID):
         """
-        This method is used for loading one of the demo-videos, check if it exists, show its first image on the screens and go to the preview-screen
+        This method is used for loading one of the demo-videos, check if it exists,
+        show its first image on the screens and go to the preview-screen
         """
         fileExists = self.logic.checkFilePath(filepath)
         if fileExists:
             image = self.logic.preprocessor.get_firstImage(filepath)
             self.logic.setFilePath(filepath)
             self.showPreviewImage(image)
-            
+
             if demoID == 1:
                 demodatafile=self.demo_datafile1
             elif demoID == 2:
@@ -196,7 +197,7 @@ class VzeGui(QtWidgets.QMainWindow):
             self.showPopup(errorTitle, errorMessage)
             self.change_screen(0)
 
-    def showPopup(self,title,message):
+    def showPopup(self, title, message):
         """
         method for showing a popup with a title and a message (with Warning Icon)
         """
@@ -213,7 +214,7 @@ class VzeGui(QtWidgets.QMainWindow):
         """
         method to cancel the Analysis of the current file and get back to the startscreen
         """
-        #SL: Hier dann der Cancel der Analyse. Eventuell eine globale Variable mit True belegen, wenn die Analyse laufen soll
+        # SL: Hier dann der Cancel der Analyse. Eventuell eine globale Variable mit True belegen, wenn die Analyse laufen soll
         # und dann beim Klicken des Abbrechen-Button auf False setzen.
         # In der Methode zum Video abspielen müsste dann nur in jedem Schleifendurchlauf diese abgefragt werden.
         self.cleanup()
@@ -228,13 +229,13 @@ class VzeGui(QtWidgets.QMainWindow):
         self.resultscreen.create_gridContent()
         self.change_screen(7)
 
-    def loadDemoData(self,filepath):
+    def loadDemoData(self, filepath):
         """
         method to load the demodatafile into the resultarray
         """
         with open(filepath, 'r') as csvfile:
             csv_reader = csv.reader(csvfile, delimiter=';')
-            
+
             next(csv_reader)
 
             i = 0
@@ -245,17 +246,17 @@ class VzeGui(QtWidgets.QMainWindow):
                 self.logic.array_dataInput[0][i] = self.sign_id
                 self.logic.array_dataInput[1][i] = self.sign_count
                 self.logic.array_dataInput[2][i] = self.sign_count
-                i=i+1
+                i = i+1
 
         csvfile.close()
 
         print("Demo-Data loaded")
-        #Testausgabe des gesamten Arrays
-        #for j in range(len(self.logic.array_dataInput[0])):
-        #    print(self.logic.array_dataInput[0][j], end=' ')
-        #    print(self.logic.array_dataInput[1][j], end=' ')
-        #    print(self.logic.array_dataInput[2][j], end=' ')
-        #    print()
+        # Testausgabe des gesamten Arrays
+        # for j in range(len(self.logic.array_dataInput[0])):
+        #     print(self.logic.array_dataInput[0][j], end=' ')
+        #     print(self.logic.array_dataInput[1][j], end=' ')
+        #     print(self.logic.array_dataInput[2][j], end=' ')
+        #     print()
 
     def cleanup(self):
         """
@@ -276,13 +277,12 @@ class VzeGui(QtWidgets.QMainWindow):
 
     def startVideo(self):
         # create the video capture thread and handover filepath and the VzeGui object
-        self.thread =  VideoThread(self.logic.getFilePath(), self)
-        # call the real KI method later  
-        #self.thread =  VideoThreadKI(self.logic.getFilePath(), self)
-         
+        self.thread = VideoThread(self.logic.getFilePath(), self)
+        # call the real KI method later
+        # self.thread =  VideoThreadKI(self.logic.getFilePath(), self)
         # start the thread
         self.thread.start()
-    
+
     def activateResultBtn(self):
         self.analyzescreen.btn_showResult.setEnabled(True)
         self.analyzescreen.changeButtonEnabled()
@@ -290,8 +290,8 @@ class VzeGui(QtWidgets.QMainWindow):
     def deactivateResultBtn(self):
         self.analyzescreen.btn_showResult.setEnabled(False)
         self.analyzescreen.changeButtonEnabled()
-        
-    
+
+
 # Start Screen
 class Ui_startscreen(QtWidgets.QWidget):
     def __init__(self, LogicInterface, Gui):
@@ -301,15 +301,13 @@ class Ui_startscreen(QtWidgets.QWidget):
         self.gui = Gui
 
         self.setObjectName("Start Screen")
-        
         self.create_layout()
         self.create_button()
         self.create_label()
         self.create_spacer()
         self.add_items()
-        
+
     def create_layout(self):
-    
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.lyth_headline = QtWidgets.QHBoxLayout()
@@ -353,14 +351,13 @@ class Ui_startscreen(QtWidgets.QWidget):
         self.btn_loadFile.setToolTip('Laden eines Videos oder Bildes')
         self.btn_loadFile.clicked.connect(self.gui.loadFile)
 
-
         self.btn_demoToDemo = QtWidgets.QPushButton(self)
         self.btn_demoToDemo.setMinimumSize(QtCore.QSize(350, 220))
         self.btn_demoToDemo.setStyleSheet(styles.styleBluebuttonbig2)
         self.btn_demoToDemo.setText(("Demo auswählen"))
         self.btn_demoToDemo.setToolTip('Demo Videos wählen')
         self.btn_demoToDemo.clicked.connect(lambda: self.gui.change_screen(1))
-    
+
     def create_label(self):
 
         self.lbl_willkommen = QtWidgets.QLabel(self)
@@ -390,7 +387,7 @@ class Ui_startscreen(QtWidgets.QWidget):
         self.lyth_smallText.addItem(self.spacerItem2)
         self.lytv_bigCenter.addLayout(self.lyth_smallText)
         self.lyth_bigBtn.addItem(self.spacerItem3)
-        self.lyth_bigBtn.addWidget(self.btn_loadFile)  
+        self.lyth_bigBtn.addWidget(self.btn_loadFile)
         self.lyth_bigBtn.addItem(self.spacerItem4)
         self.lyth_bigBtn.addItem(self.spacerItem5)
         self.lyth_bigBtn.addWidget(self.btn_demoToDemo)
@@ -418,12 +415,12 @@ class Ui_demoscreen(QtWidgets.QWidget):
         self.create_label()
         self.create_spacer()
         self.add_items()
-        
+
     def create_layout(self):
-    
+
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
-        
+
         self.lyth_headline_demoscreen = QtWidgets.QHBoxLayout()
         self.lyth_headline_demoscreen.setContentsMargins(20, 0, 20, 0)
         self.lyth_headline_demoscreen.setSpacing(6)
@@ -433,7 +430,7 @@ class Ui_demoscreen(QtWidgets.QWidget):
         self.lytv_bigCenter_demoScreen.setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
         self.lytv_bigCenter_demoScreen.setContentsMargins(0, -1, 0, -1)
         self.lytv_bigCenter_demoScreen.setObjectName("lytv_bigCenter_demoScreen")
-        
+
         self.lyth_smallText_Demo = QtWidgets.QHBoxLayout()
         self.lyth_smallText_Demo.setContentsMargins(20, 0, -1, -1)
         self.lyth_smallText_Demo.setObjectName("lyth_smallText_Demo")
@@ -462,13 +459,13 @@ class Ui_demoscreen(QtWidgets.QWidget):
         self.btn_demoSonne.setMinimumSize(QtCore.QSize(350, 220))
         self.btn_demoSonne.setStyleSheet(styles.styleBluebuttonbig3)
         self.btn_demoSonne.setText(("Video mit Sonne"))
-        self.btn_demoSonne.clicked.connect(lambda: self.gui.loadDemoVideo(self.gui.demo_video1,1))
-        
+        self.btn_demoSonne.clicked.connect(lambda: self.gui.loadDemoVideo(self.gui.demo_video1, 1))
+
         self.btn_demoRegen = QtWidgets.QPushButton(self)
         self.btn_demoRegen.setMinimumSize(QtCore.QSize(350, 220))
         self.btn_demoRegen.setStyleSheet(styles.styleBluebuttonbig4)
         self.btn_demoRegen.setText(("Video mit Regen"))
-        self.btn_demoRegen.clicked.connect(lambda: self.gui.loadDemoVideo(self.gui.demo_video2,2))
+        self.btn_demoRegen.clicked.connect(lambda: self.gui.loadDemoVideo(self.gui.demo_video2, 2))
 
         self.btn_dataSonne = QtWidgets.QPushButton(self)
         self.btn_dataSonne.setMinimumSize(QtCore.QSize(55, 55))
@@ -496,10 +493,10 @@ class Ui_demoscreen(QtWidgets.QWidget):
         icon2.addPixmap(QtGui.QPixmap(":/icons/back_icon"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_back_demoscreen.setIcon(icon2)
         self.btn_back_demoscreen.setIconSize(QtCore.QSize(20, 20))
-        self.btn_back_demoscreen.clicked.connect(lambda: self.gui.change_screen_back())  
-    
+        self.btn_back_demoscreen.clicked.connect(lambda: self.gui.change_screen_back())
+
     def create_label(self):
-        
+
         self.lbl_demo = QtWidgets.QLabel(self)
         self.lbl_demo.setStyleSheet(styles.styleHeadlines)
         self.lbl_demo.setObjectName("lbl_demo")
@@ -509,7 +506,7 @@ class Ui_demoscreen(QtWidgets.QWidget):
         self.label_demotext.setStyleSheet(styles.styleText1)
         self.label_demotext.setObjectName("label_demotext")
         self.label_demotext.setText(("Wählen Sie ein Demovideo aus"))
-    
+
     def create_spacer(self):
 
         self.spacerItem10 = QtWidgets.QSpacerItem(10, 10, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -559,8 +556,6 @@ class Ui_demoscreen(QtWidgets.QWidget):
         self.lyth_bottom_demoscreen.addItem(self.spacerItem23)
         self.verticalLayout_3.addLayout(self.lyth_bottom_demoscreen)
 
-        
-
 # Preview Screen
 class Ui_previewscreen(QtWidgets.QWidget):
     def __init__(self, LogicInterface, Gui):
@@ -581,7 +576,7 @@ class Ui_previewscreen(QtWidgets.QWidget):
     def create_layout(self):
         self.verticalLayout_4 = QtWidgets.QVBoxLayout(self)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
-        
+
         self.lyth_headline_previewScreen = QtWidgets.QHBoxLayout()
         self.lyth_headline_previewScreen.setContentsMargins(20, 0, 20, 0)
         self.lyth_headline_previewScreen.setSpacing(6)
@@ -670,7 +665,7 @@ class Ui_previewscreen(QtWidgets.QWidget):
         self.spacerItem30 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.spacerItem31 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.spacerItem32 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
-       
+
     def create_otherObjects(self):
         self.graphicsPreview = QtWidgets.QGraphicsView(self)
         self.graphicsPreview.setMinimumSize(QtCore.QSize(800, 420))
@@ -700,7 +695,7 @@ class Ui_previewscreen(QtWidgets.QWidget):
         self.lyth_bottom_previewScreen.addItem(self.spacerItem32)
         self.lyth_bottom_previewScreen.addWidget(self.btn_next_preview)
         self.verticalLayout_4.addLayout(self.lyth_bottom_previewScreen)
-        
+
 
 # DI Screen
 class Ui_DIScreen(QtWidgets.QWidget):
@@ -718,7 +713,7 @@ class Ui_DIScreen(QtWidgets.QWidget):
         self.create_spacer()
         self.create_gridContent()
         self.add_items()
-    
+
     def create_layout(self):
         self.verticalLayout_11 = QtWidgets.QVBoxLayout(self)
         self.verticalLayout_11.setObjectName("verticalLayout_11")
@@ -827,7 +822,7 @@ class Ui_DIScreen(QtWidgets.QWidget):
         self.btn_skip.setObjectName("btn_skip")
         self.btn_skip.clicked.connect(lambda: self.logic.setCompareResult(False))
         self.btn_skip.clicked.connect(lambda: self.gui.change_screen(4))
-        
+
 
         self.btn_DInext = QtWidgets.QPushButton(self)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -974,22 +969,22 @@ class Ui_DIScreen(QtWidgets.QWidget):
         array_count = 0
     
         while(item_count < entry_count):
-            labelItem = self.gridLayout_DIScreen.itemAt(item_count).widget()
-            #labelItemValue = str(labelItem.objectName())
-            #print("Label: " + str(labelItem))
-            #print("Label Value: " + labelItemValue)
-            #self.logic.array_dataInput[0][array_count] = labelItemValue
+            # labelItem = self.gridLayout_DIScreen.itemAt(item_count).widget()
+            # labelItemValue = str(labelItem.objectName())
+            # print("Label: " + str(labelItem))
+            # print("Label Value: " + labelItemValue)
+            # self.logic.array_dataInput[0][array_count] = labelItemValue
             item_count = item_count+1
             
             spinboxItem = self.gridLayout_DIScreen.itemAt(item_count).widget()
-            #print("SpinBox: " + str(spinboxItem))
-            #spinboxItemValue = str(spinboxItem.value())
-            #print("SpinBox Value Before: " + spinboxItemValue)
+            # print("SpinBox: " + str(spinboxItem))
+            # spinboxItemValue = str(spinboxItem.value())
+            # print("SpinBox Value Before: " + spinboxItemValue)
             spinboxItem.setValue(0)
             spinboxItemValue = str(spinboxItem.value())
-            #print("SpinBox Value After: " + spinboxItemValue)
+            # print("SpinBox Value After: " + spinboxItemValue)
             
-            #Wenn Array auch zurückgesetzt werden soll, diese Zeile hier rein
+            # Wenn Array auch zurückgesetzt werden soll, diese Zeile hier rein
             self.logic.array_dataInput[1][array_count] = spinboxItemValue
             item_count = item_count+1
             array_count = array_count+1

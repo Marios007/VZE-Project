@@ -12,6 +12,7 @@ from pandas.core import frame
 # for debugging inside thread
 #import pydevd
 
+
 class VzeImageProcessing():
        
     def __init__(self, vzeController):

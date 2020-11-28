@@ -347,25 +347,6 @@ class VzeKI:
         return VzeObject(frame, self.frames_count)
 
 
-    # def playVideo(self):
-    #     self.frames_count = 1
-    #     self.estimated_time = 0
-    #     cap = cv2.VideoCapture(self.videoPath)
-    #     frame_width = int(cap.get(3)/2)
-    #     frame_height = int(cap.get(4)/2)
-    #     out = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc(*"MJPG"), 10, (frame_width,frame_height))
-
-    #     while(cap.isOpened()):
-    #         self.start_time = cv2.getTickCount()
-    #         out.write(frame)            
-    #         self.frames_count+=1
-    #         if cv2.waitKey(10) & 0xFF ==ord("q"):
-    #             break
-    #     cap.release()
-    #     out.release()
-    #     cv2.destroyAllWindows()
-
-
 class VideoThreadKI(QThread):
     def __init__(self, path, gui, parent=None):
         QThread.__init__(self, parent)
@@ -386,7 +367,7 @@ class VideoThreadKI(QThread):
             currentObject = self.ki.processFrame(frame, currentTime)
 
 
-            self.gui.setVideoImage(currentObject)
+            self.gui.processKIData(currentObject)
 
             if cv2.waitKey(10) & 0xFF ==ord("q"):
                 break
@@ -445,7 +426,12 @@ class VzeObject:
     def __init__(self, processedFrame, counter):
          self.frame = self.convertQt(processedFrame)
          self.frameId = counter
-         self.detectedSigns.append(TrafficSign())
+         self.detectedSigns.append(TrafficSign(1, (8,6), (2,2)))
+         self.detectedSigns.append(TrafficSign(5, (7,7), (23,23)))
+         self.detectedSigns.append(TrafficSign(9, (22,83), (89,100)))
+         print(self.detectedSigns[0].signID)
+         print(self.detectedSigns[1].signID)
+         print(self.detectedSigns[2].signID)
 
     def addSign(self, sign):
         self.numDetectSigns += 1
@@ -459,6 +445,7 @@ class VzeObject:
         return convertToQtFormat.scaled(800, 480, Qt.KeepAspectRatio)
 
 class TrafficSign:
-     signID = 1  # 0 - 42 
-     box_W_H = 0,0
-     coordinateXY = 0,0
+    def __init__(self, signID, box_W_H, coordinateXY):
+        self.signID = signID
+        self.box_W_H = box_W_H
+        self.coordinateXY = coordinateXY

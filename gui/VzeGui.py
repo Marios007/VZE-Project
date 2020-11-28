@@ -272,6 +272,17 @@ class VzeGui(QtWidgets.QMainWindow):
         self.deactivateResultBtn()
         self.change_screen(0)
 
+    def processKIData(self, inputObject):
+        img = inputObject.frame
+        id = inputObject.frameId
+        detectedSigns = inputObject.detectedSigns
+        self.setSideLabels(detectedSigns[0].signID)
+        self.setVideoImage(img)
+
+    def setSideLabels(self, sign1):
+        self.sign_id = ":/signs/" + str(sign1)
+        self.analyzescreen.label_IconTop.setPixmap(QtGui.QPixmap(self.sign_id))
+
     def setVideoImage(self, img):
         self.analyzescreen.videoLayout.setPixmap(QtGui.QPixmap.fromImage(img))
 
@@ -279,7 +290,7 @@ class VzeGui(QtWidgets.QMainWindow):
         # create the video capture thread and handover filepath and the VzeGui object
         self.thread = VideoThread(self.logic.getFilePath(), self)
         # call the real KI method later
-        # self.thread =  VideoThreadKI(self.logic.getFilePath(), self)
+        #self.thread =  VideoThreadKI(self.logic.getFilePath(), self)
         # start the thread
         self.thread.start()
 
@@ -1250,16 +1261,19 @@ class Ui_analyzeScreen(QtWidgets.QWidget):
         self.label_IconTop.setMinimumSize(QtCore.QSize(75, 75))
         self.label_IconTop.setMaximumSize(QtCore.QSize(75, 75))
         self.label_IconTop.setObjectName("label_IconTop")
+        self.label_IconTop.setScaledContents(True)
 
         self.label_IconMid = QtWidgets.QLabel(self)
         self.label_IconMid.setMinimumSize(QtCore.QSize(75, 75))
         self.label_IconMid.setMaximumSize(QtCore.QSize(75, 75))
         self.label_IconMid.setObjectName("label_IconMid")
+        self.label_IconMid.setScaledContents(True)
 
         self.label_IconBottom = QtWidgets.QLabel(self)
         self.label_IconBottom.setMinimumSize(QtCore.QSize(75, 75))
         self.label_IconBottom.setMaximumSize(QtCore.QSize(75, 75))
         self.label_IconBottom.setObjectName("label_IconBottom")
+        self.label_IconBottom.setScaledContents(True)
 
 
     def create_preview(self):

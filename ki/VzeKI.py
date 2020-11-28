@@ -257,8 +257,10 @@ class VzeKI:
         arr_output_layer3 = np.array(output_from_yolo_network[2], dtype=np.float32)
         # concetanate arrays
         arr_output_layers = np.vstack((arr_output_layer1,arr_output_layer2,arr_output_layer3))
+        
         # create index array with indexes if probability is higher than the min value
         max_output_layers = np.argwhere(arr_output_layers[:,5:]>self.PROBABILITY_MINIMUM)
+
         # create array with the relevant detected boxes and confidences
         if max_output_layers.size == 0:
             return image
@@ -331,7 +333,6 @@ class VzeKI:
             fps = 1
         self.frames_count += 1
         self.previousTime = currentTime
-        print("calculating time {0:.3f} seconds - FPS: {1}".format(timeDifference, fps))
         return timeDifference, fps
 
     def processFrame(self, frame, currentTime):
@@ -389,9 +390,10 @@ class VideoThreadKI(QThread):
 
             if cv2.waitKey(10) & 0xFF ==ord("q"):
                 break
-
-        print("done")
         self.cap.release()
+        self.gui.activateResultBtn()        
+        print("done")
+        
 
     def stopVideo(self):
         """Sets run flag to False and waits for thread to finish"""
@@ -437,14 +439,17 @@ class VideoThread(QThread):
         self.cap.release()
 
 
-class VzeObject:
-    numDetectSigns = 0
-    detectedSigns = [] #array with Shield objects
-    
+class VzeObject:  
+    numDetectSigns = 1
+    detectedSigns = []
     def __init__(self, processedFrame, counter):
          self.frame = self.convertQt(processedFrame)
          self.frameId = counter
+         self.detectedSigns.append(TrafficSign())
 
+    def addSign(self, sign):
+        self.numDetectSigns += 1
+        self.detectedSigns.append(sign) 
 
     def convertQt(self, inputFrame):
         rgbImage = cv2.cvtColor(inputFrame, cv2.COLOR_BGR2RGB)
@@ -453,7 +458,7 @@ class VzeObject:
         convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
         return convertToQtFormat.scaled(800, 480, Qt.KeepAspectRatio)
 
-class Shield:
-     shieldId = 1  # 0 - 42 
+class TrafficSign:
+     signID = 1  # 0 - 42 
      box_W_H = 0,0
      coordinateXY = 0,0

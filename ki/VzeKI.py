@@ -12,6 +12,9 @@ from pandas.core import frame
 # for debugging inside thread
 #import pydevd
 
+import tensorflow as tf
+from tensorflow.python.client import device_lib
+
 
 import tensorflow as tf
 
@@ -240,6 +243,11 @@ class VzeKI:
 
         # Layer initialsieren
         self.layers_names_output = [self.yolo_network.getLayerNames()[i[0] - 1] for i in self.yolo_network.getUnconnectedOutLayers()]
+
+        # set CUDA as the preferable backend and target
+        #self.yolo_network.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
+        #self.yolo_network.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
+
 
 
     ### KI-Methoden

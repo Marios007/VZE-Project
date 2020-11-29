@@ -262,7 +262,7 @@ class VzeKI:
         number_traffic_signs = 0
         results = []
         sign_names = np.array([])
-
+        
         #for one anchor box: [tx, ty, tw, th, obj score, class probs.]
         output_from_yolo_network = self.yolo_detection(image)
         
@@ -278,7 +278,7 @@ class VzeKI:
 
         # create array with the relevant detected boxes and confidences
         if max_output_layers.size == 0:
-            return image
+            returnObject = VzeObject(image)
         else:
             arr_output_layers_relevant = arr_output_layers[max_output_layers[:,0]]
             confidences = np.amax(arr_output_layers_relevant[:,5:], axis=1)
@@ -334,8 +334,16 @@ class VzeKI:
 
             # checkpoint
             #print("class: {0} - predict: {1} - probability: {2}".format(prediction, sign_names , probabilities))        
-
-            return self.VzeIP.print_boxes_on_image(image, bounding_boxes_final, sign_names, probabilities)
+            #prediction ist ein Array der detektierten Schilder-IDs
+            #probablity enthält die Wahrscheinlichkeit der einzelnen Schilder
+            #bounding_boxes enthält die jeweiligen den XY-Wert der Box sowie Breite und Höhe der Box
+            
+            returnObject = VzeObject(self.VzeIP.print_boxes_on_image(image, bounding_boxes_final, sign_names, probabilities))
+            for i in range(len(bounding_boxes_final)):
+                returnObject.addSign(TrafficSign(prediction[i],(bounding_boxes_final[i][2],bounding_boxes_final[i][3]),(bounding_boxes_final[i][0],bounding_boxes_final[i][1]),probabilities[i]))
+                print("SchildID: {0} - Wahrscheinlichkeit: {1} - X: {2} - Y: {3} - Breite x Höhe: {4} x {5}".format(prediction[i], probabilities[i], bounding_boxes_final[i][0],bounding_boxes_final[i][1],bounding_boxes_final[i][2],bounding_boxes_final[i][3]))
+        
+        return returnObject
     
     ### Hilfsmethoden
 
@@ -355,11 +363,13 @@ class VzeKI:
         
         frame = self.VzeIP.resize_image(frame, 50)           
         height, width = self.VzeIP.get_dimensions(frame)
-        frame = self.detect_signs(frame, height, width)
+        returnedObject = self.detect_signs(frame, height, width)
         self.estimated_time, fps = self.calculate_time(currentTime)
         text_info = "time {0:.3f} s - fps: {1}".format(self.estimated_time, fps)
-        frame = self.VzeIP.print_text_on_image(frame, text_info, 20, 20, 0.5, [0,0,255], 2)
-        return VzeObject(frame, self.frames_count)
+        returnedObject.frame = self.VzeIP.print_text_on_image(returnedObject.frame, text_info, 20, 20, 0.5, [0,0,255], 2)
+        returnedObject.frameId = self.frames_count
+        returnedObject.convertQt()
+        return returnedObject
 
 
 class VideoThreadKI(QThread):
@@ -436,28 +446,26 @@ class VideoThread(QThread):
 
 
 class VzeObject:  
-    numDetectSigns = 1
-    detectedSigns = []
-    def __init__(self, processedFrame, counter):
-         self.frame = self.convertQt(processedFrame)
-         self.frameId = counter
-         self.detectedSigns.append(TrafficSign(1, (8,6), (2,2)))
-         self.detectedSigns.append(TrafficSign(5, (7,7), (23,23)))
-         self.detectedSigns.append(TrafficSign(9, (22,83), (89,100)))
+    def __init__(self, processedFrame):
+         self.frame = processedFrame
+         self.frameId = 0
+         self.numDetectSigns = 0
+         self.detectedSigns = []
 
     def addSign(self, sign):
         self.numDetectSigns += 1
         self.detectedSigns.append(sign) 
 
-    def convertQt(self, inputFrame):
-        rgbImage = cv2.cvtColor(inputFrame, cv2.COLOR_BGR2RGB)
+    def convertQt(self):
+        rgbImage = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
         h, w, ch = rgbImage.shape
         bytesPerLine = ch * w
         convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
-        return convertToQtFormat.scaled(800, 480, Qt.KeepAspectRatio)
+        self.frame = convertToQtFormat.scaled(800, 480, Qt.KeepAspectRatio)
 
 class TrafficSign:
-    def __init__(self, signID, box_W_H, coordinateXY):
+    def __init__(self, signID, box_W_H, coordinateXY, prob):
+        self.prob = prob
         self.signID = signID
         self.box_W_H = box_W_H
         self.coordinateXY = coordinateXY

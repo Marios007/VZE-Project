@@ -287,10 +287,36 @@ class VzeGui(QtWidgets.QMainWindow):
         self.change_screen(constants.START_SCREEN)
 
     def processKIData(self, inputObject):
+
         img = inputObject.frame
         id = inputObject.frameId
+        print("frameID: " + str(id))
+        numDetectSigns = inputObject.numDetectSigns
+        print("numDetectedSigns: " + str(numDetectSigns))
         detectedSigns = inputObject.detectedSigns
-        self.setSideLabels(detectedSigns[0].signID)
+        print("detectedSigns: " + str(detectedSigns))
+
+        if numDetectSigns == 1:
+            sign1 = detectedSigns[0]
+            print("Sign1: " + str(sign1.signID))
+            self.setSideLabels(sign1.signID)
+
+        if numDetectSigns == 2:
+            sign1 = detectedSigns[0]
+            sign2 = detectedSigns[1]
+            print("Sign1: " + str(sign1.signID))
+            print("Sign2: " + str(sign2.signID))
+
+        if numDetectSigns == 3:
+            sign1 = detectedSigns[0]
+            sign2 = detectedSigns[1]
+            sign3 = detectedSigns[2]
+            print("Sign1: " + str(sign1.signID))
+            print("Sign2: " + str(sign2.signID))
+            print("Sign3: " + str(sign3.signID))
+
+
+        # show the frame o GUI
         self.setVideoImage(img)
 
     def setSideLabels(self, sign1):
@@ -302,9 +328,9 @@ class VzeGui(QtWidgets.QMainWindow):
 
     def startVideo(self):
         # create the video capture thread and handover filepath and the VzeGui object
-        #self.thread = VideoThread(self.logic.getFilePath(), self)
+        # self.thread = VideoThread(self.logic.getFilePath(), self)
         # call the real KI method later
-        self.thread =  VideoThreadKI(self.logic.getFilePath(), self)
+        self.thread = VideoThreadKI(self.logic.getFilePath(), self)
         # start the thread
         self.thread.start()
 

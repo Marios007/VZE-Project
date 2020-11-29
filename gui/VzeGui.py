@@ -215,6 +215,9 @@ class VzeGui(QtWidgets.QMainWindow):
         """
         print("popup method")
         self.popMsg = MyMessageBox()
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/icons/logo_schild"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.popMsg.setWindowIcon(icon)
         self.popMsg.setWindowTitle(title)
         self.popMsg.setText(message)
         self.popMsg.setIcon(QtWidgets.QMessageBox.Warning)

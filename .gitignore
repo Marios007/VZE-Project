@@ -23,3 +23,5 @@ gui/pics/Remove/testVideo2.py
 gui/pics/Remove/testVideo.py
 ki/__pycache__/VzeKI.cpython-37.pyc
 ki/input/yolo/yolov3_ts.weights
+__pycache__/constants.cpython-37.pyc
+.gitignore

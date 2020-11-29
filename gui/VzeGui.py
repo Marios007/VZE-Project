@@ -644,7 +644,7 @@ class Ui_previewscreen(QtWidgets.QWidget):
         self.btn_info_previewScreen.clicked.connect(lambda: self.gui.infoscreen.show())
 
         self.btn_back_previewScreen = QtWidgets.QPushButton(self)
-        self.btn_back_previewScreen.setMinimumSize(QtCore.QSize(0, 0))
+        self.btn_back_previewScreen.setMinimumSize(QtCore.QSize(40, 40))
         self.btn_back_previewScreen.setMaximumSize(QtCore.QSize(40, 40))
         self.btn_back_previewScreen.setStyleSheet(styles.styleSmallButton)
         icon2 = QtGui.QIcon()
@@ -812,7 +812,7 @@ class Ui_DIScreen(QtWidgets.QWidget):
         self.btn_info_DIScreen.clicked.connect(lambda: self.gui.infoscreen.show())
 
         self.btn_back_DI = QtWidgets.QPushButton(self)
-        self.btn_back_DI.setMinimumSize(QtCore.QSize(0, 0))
+        self.btn_back_DI.setMinimumSize(QtCore.QSize(40, 40))
         self.btn_back_DI.setMaximumSize(QtCore.QSize(40, 40))
         self.btn_back_DI.setStyleSheet(styles.styleSmallButton)
         icon2 = QtGui.QIcon()
@@ -1097,7 +1097,7 @@ class Ui_analyzePvScreen(QtWidgets.QWidget):
         self.btn_info_AnalyzePreview.clicked.connect(lambda: self.gui.infoscreen.show())
 
         self.btn_back_AnalyzePreview = QtWidgets.QPushButton(self)
-        self.btn_back_AnalyzePreview.setMinimumSize(QtCore.QSize(0, 0))
+        self.btn_back_AnalyzePreview.setMinimumSize(QtCore.QSize(40, 40))
         self.btn_back_AnalyzePreview.setMaximumSize(QtCore.QSize(40, 40))
         self.btn_back_AnalyzePreview.setStyleSheet(styles.styleSmallButton)
         icon2 = QtGui.QIcon()

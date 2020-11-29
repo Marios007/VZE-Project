@@ -13,6 +13,8 @@ from pandas.core import frame
 #import pydevd
 
 
+import tensorflow as tf
+
 class VzeImageProcessing():
        
     def __init__(self, vzeController):
@@ -197,7 +199,7 @@ class VzeKI:
         # Konstruktor lädt Labels, CNN-Model und YOLO-Modell
         # Definition Konstanten zur Initialisierung
         LABEL_PATH = "./ki/input/labels/signnames.csv"
-        CNN_MODEL_PATH = "./ki/input/cnn/test_model"
+        CNN_MODEL_PATH = "./ki/input/cnn/fit_gen"
         YOLO_CONFIG_PATH = "./ki/input/yolo/yolov3_ts.cfg"
         YOLO_WEIGHTS_PATH = "./ki/input/yolo/yolov3_ts.weights"
         YOLO_MEAN_PICKLE = "./ki/input/yolo/mean_image_rgb.pickle"
@@ -207,6 +209,10 @@ class VzeKI:
         self.currentTime = 0
         self.previousTime = 0
         self.frames_count = 1
+
+        physical_devices = tf.config.experimental.list_physical_devices('GPU')
+        if len(physical_devices) > 0:
+            tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
 
         # Labels laden
@@ -430,9 +436,6 @@ class VzeObject:
          self.detectedSigns.append(TrafficSign(1, (8,6), (2,2)))
          self.detectedSigns.append(TrafficSign(5, (7,7), (23,23)))
          self.detectedSigns.append(TrafficSign(9, (22,83), (89,100)))
-         print(self.detectedSigns[0].signID)
-         print(self.detectedSigns[1].signID)
-         print(self.detectedSigns[2].signID)
 
     def addSign(self, sign):
         self.numDetectSigns += 1

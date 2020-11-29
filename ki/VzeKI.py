@@ -90,12 +90,13 @@ class VzeImageProcessing():
         success,image = vidcap.read()
 
         if success:
+            vidcap.release()
             return image
         else:
             print("PreviewImage could not be created!")
+            vidcap.release()
             return None
 
-        vidcap.release()
 
     def check_fileType(self, filepath):
         """

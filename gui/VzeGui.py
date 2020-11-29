@@ -5,6 +5,18 @@ from ki.VzeKI import VideoThread
 import csv
 
 
+class MyMessageBox(QtWidgets.QMessageBox):
+    def __init__(self):
+        QtWidgets.QMessageBox.__init__(self)
+        #self.setSizeGripEnabled(False)
+
+    def event(self, e):
+        result = QtWidgets.QMessageBox.event(self, e)
+        self.setFixedSize(600,200)
+
+
+        return result
+
 class VzeGui(QtWidgets.QMainWindow):
 
     stack_lastScreen = []
@@ -202,6 +214,13 @@ class VzeGui(QtWidgets.QMainWindow):
         method for showing a popup with a title and a message (with Warning Icon)
         """
         print("popup method")
+        self.popMsg = MyMessageBox()
+        self.popMsg.setWindowTitle(title)
+        self.popMsg.setText(message)
+        self.popMsg.setIcon(QtWidgets.QMessageBox.Warning)
+        self.popMsg.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        self.popMsg.exec_()
+        """
         self.popMsg = QtWidgets.QMessageBox()
         self.popMsg.setWindowTitle(title)
         self.popMsg.setText(message)
@@ -209,6 +228,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.popMsg.setStandardButtons(QtWidgets.QMessageBox.Ok)
         self.popMsg.setStyleSheet("")
         self.popMsg.exec_()
+        """
 
     def cancel_Analyze(self):
         """

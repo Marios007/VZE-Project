@@ -288,36 +288,42 @@ class VzeGui(QtWidgets.QMainWindow):
 
     def processKIData(self, inputObject):
 
-        img = inputObject.frame
+        self.img = inputObject.frame
         id = inputObject.frameId
-        print("frameID: " + str(id))
         numDetectSigns = inputObject.numDetectSigns
-        print("numDetectedSigns: " + str(numDetectSigns))
-        detectedSigns = inputObject.detectedSigns
-        print("detectedSigns: " + str(detectedSigns))
+        self.detectedSigns = inputObject.detectedSigns
 
-        if numDetectSigns == 1:
-            sign1 = detectedSigns[0]
-            print("Sign1: " + str(sign1.signID))
-            self.setSideLabels(sign1.signID)
+        print("frameID:{0} - numDetectedSigns:{1} - ".format(id, numDetectSigns))
 
-        if numDetectSigns == 2:
-            sign1 = detectedSigns[0]
-            sign2 = detectedSigns[1]
-            print("Sign1: " + str(sign1.signID))
-            print("Sign2: " + str(sign2.signID))
+        # if numDetectSigns == 1:
+        #     sign1 = self.detectedSigns[0]
+        #     print("Sign1: " + str(sign1.signID))
+        #     self.setSideLabels(sign1.signID)
 
-        if numDetectSigns == 3:
-            sign1 = detectedSigns[0]
-            sign2 = detectedSigns[1]
-            sign3 = detectedSigns[2]
-            print("Sign1: " + str(sign1.signID))
-            print("Sign2: " + str(sign2.signID))
-            print("Sign3: " + str(sign3.signID))
+        # elif numDetectSigns == 2:
+        #     sign1 = self.detectedSigns[0]
+        #     sign2 = self.detectedSigns[1]
+        #     print("Sign1: " + str(sign1.signID))
+        #     print("Sign2: " + str(sign2.signID))
 
+        # elif numDetectSigns == 3:
+        #     sign1 = self.detectedSigns[0]
+        #     sign2 = self.detectedSigns[1]
+        #     sign3 = self.detectedSigns[2]
+        #     print("Sign1: " + str(sign1.signID))
+        #     print("Sign2: " + str(sign2.signID))
+        #     print("Sign3: " + str(sign3.signID))
+
+        for i in range(numDetectSigns):
+            self.countSigns(self.detectedSigns[i])
 
         # show the frame o GUI
-        self.setVideoImage(img)
+        self.setVideoImage(self.img)
+
+    def countSigns(self, signObj):
+        print("signID:{0} - prob:{1} - box_W_H:{2} - ccordXY:{4} ".format(signObj.signID, signObj.prob, signObj.box_W_H, signObj.coordinateXY ))
+        return
+    
 
     def setSideLabels(self, sign1):
         self.sign_id = ":/signs/" + str(sign1)

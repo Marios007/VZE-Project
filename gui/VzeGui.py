@@ -321,7 +321,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.setVideoImage(self.img)
 
     def countSigns(self, signObj):
-        print("signID:{0} - prob:{1} - box_W_H:{2} - ccordXY:{4} ".format(signObj.signID, signObj.prob, signObj.box_W_H, signObj.coordinateXY ))
+        print("signID:{0} - prob:{1} - box_W_H:{2} - ccordXY:{3}  ".format(signObj.signID, signObj.prob, signObj.box_W_H, signObj.coordinateXY ))
         return
     
 

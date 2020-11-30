@@ -30,6 +30,8 @@ class GuiInterface(abc.ABC):
     def startAnalysis(self):
         return
 
+    def setResultArray(self, signID):
+        return
 
 class VzeController(GuiInterface):
 
@@ -126,6 +128,10 @@ class VzeController(GuiInterface):
         percentage_result = 100 - percentage_result
         # print("Percentage Result: " + str(percentage_result))
         return percentage_result
+
+    def setResultArray(self, signID):
+        self.array_dataInput[signID,2] += 1
+        return
 
 
 class VzeApp(QApplication):

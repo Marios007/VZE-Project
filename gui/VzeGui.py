@@ -301,20 +301,35 @@ class VzeGui(QtWidgets.QMainWindow):
         self.detectedSigns = inputObject.detectedSigns
         print("frameID:{0} - numDetectedSigns:{1}".format(self.id, self.numDetectSigns))
 
-        if self.numDetectSigns > 0:
-            self.countSigns(self.detectedSigns, self.numDetectSigns)
+        self.countSigns(self.detectedSigns, self.numDetectSigns)
 
         # show the frame on the GUI
         self.setVideoImage(self.img)
 
 
-    def countSigns(self, signArray, numDetectSigns):        
+    def countSigns(self, signArray, numDetectSigns): 
         for i in range(numDetectSigns):
             signObj = signArray[i]
+            dict = {}
+            if signObj.prob >= 95.:
+                if signObj.SignId in dict:
+                    if dict[signObj.signID]>15:
+                        self.logic.setResultArray(self, signObj.signID)
+                        self.setSideLabels(signObj.signID)
+                    else:
+                        dict[signObj.signID] = dict[signObj.signID]+1
+                else:
+                    dict = {signObj.signID : 1}
+            
             print("frameID:frame:{0} - signID:{1} - prob:{2} - box_W_H:{3} - ccordXY:{4}".format(self.id, signObj.signID, signObj.prob, signObj.box_W_H, signObj.coordinateXY ))
 
-        return
+        
     
+        #self.logic.setResultArray(self, signID)
+
+        return
+        
+
 
     def setSideLabels(self, sign1):
         self.sign_id = ":/signs/" + str(sign1)
@@ -324,10 +339,10 @@ class VzeGui(QtWidgets.QMainWindow):
         self.analyzescreen.videoLayout.setPixmap(QtGui.QPixmap.fromImage(img))
 
     def startVideo(self):
-        # create the video capture thread and handover filepath and the VzeGui object
+        # create the video capture thread and handover filepath and the VzeGui class as object
         self.thread = VideoThread(self.logic.getFilePath(), self)
         # call the real KI method later
-        #self.thread = VideoThreadKI(self.logic.getFilePath(), self)
+        # self.thread = VideoThreadKI(self.logic.getFilePath(), self)
         # start the thread
         self.thread.start()
 

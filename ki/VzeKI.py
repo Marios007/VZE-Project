@@ -461,7 +461,7 @@ class VzeObject:
         h, w, ch = rgbImage.shape
         bytesPerLine = ch * w
         convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
-        self.frame = convertToQtFormat.scaled(constants.ANALYZEIMAGE_WIDTH, constants.ANALYZEIMAGE_HEIGTH, Qt.KeepAspectRatio)
+        self.frame = convertToQtFormat.scaled(800, 480, Qt.KeepAspectRatio)
 
 class TrafficSign:
     def __init__(self, signID, box_W_H, coordinateXY, prob):

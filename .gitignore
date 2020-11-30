@@ -25,3 +25,7 @@ ki/__pycache__/VzeKI.cpython-37.pyc
 ki/input/yolo/yolov3_ts.weights
 __pycache__/constants.cpython-37.pyc
 .gitignore
+__pycache__/
+ki/__pycache__/
+__pycache__/*
+ki/__pycache__/*

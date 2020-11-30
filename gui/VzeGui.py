@@ -167,9 +167,10 @@ class VzeGui(QtWidgets.QMainWindow):
         This method is used for displaying a previewImage on every previewScreen and the analyseScreen
         """
         # print("method showPreviewImage")
-        pixmap_scaled = self.createPixmap(numpy)
-        self.previewscreen.videoLayout.setPixmap(pixmap_scaled)
-        self.analyzepvscreen.videoLayout.setPixmap(pixmap_scaled)
+        pixmap = self.createPixmap(numpy)
+        self.previewscreen.imageLayout.setPixmap(pixmap)
+        self.analyzepvscreen.imageLayout.setPixmap(pixmap)
+        self.analyzescreen.videoLayout.setPixmap(pixmap)
 
 
     def loadFile(self):
@@ -715,10 +716,10 @@ class Ui_previewscreen(QtWidgets.QWidget):
         self.spacerItem32 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
 
     def create_otherObjects(self):
-        self.videoLayout = QtWidgets.QLabel(self)
-        self.videoLayout.setText("")
-        self.videoLayout.setMinimumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
-        self.videoLayout.setMaximumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
+        self.imageLayout = QtWidgets.QLabel(self)
+        self.imageLayout.setText("")
+        self.imageLayout.setMinimumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
+        self.imageLayout.setMaximumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
         # self.graphicsPreview = QtWidgets.QGraphicsView(self)
         # self.graphicsPreview.setMinimumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
         # self.graphicsPreview.setMaximumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
@@ -735,7 +736,7 @@ class Ui_previewscreen(QtWidgets.QWidget):
         self.lytv_bigCenter_previewScreen.addLayout(self.lyth_smallText_previewScreen)
         self.lyth_centerBig.addItem(self.spacerItem27)
         #self.lyth_centerBig.addWidget(self.graphicsPreview)
-        self.lyth_centerBig.addWidget(self.videoLayout)
+        self.lyth_centerBig.addWidget(self.imageLayout)
         self.lyth_centerBig.addItem(self.spacerItem28)
         self.lyth_centerBig.addItem(self.spacerItem29)
         self.lytv_bigCenter_previewScreen.addLayout(self.lyth_centerBig)
@@ -1153,10 +1154,10 @@ class Ui_analyzePvScreen(QtWidgets.QWidget):
         self.label_AnalyzePreview.setObjectName("label_AnalyzePreview")
 
     def create_preview(self):
-        self.videoLayout = QtWidgets.QLabel(self)
-        self.videoLayout.setText("")
-        self.videoLayout.setMinimumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
-        self.videoLayout.setMaximumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
+        self.imageLayout = QtWidgets.QLabel(self)
+        self.imageLayout.setText("")
+        self.imageLayout.setMinimumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
+        self.imageLayout.setMaximumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
         # self.graphicsAnalyzePreview = QtWidgets.QGraphicsView(self)
         # self.graphicsAnalyzePreview.setMinimumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
         # self.graphicsAnalyzePreview.setMaximumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
@@ -1185,7 +1186,7 @@ class Ui_analyzePvScreen(QtWidgets.QWidget):
         self.lytv_bigCenter_AnalyzePreview.addLayout(self.lyth_smallText_AnalyzePreview)
         self.lyth_centerBig_AnalyzePreview.addItem(self.spacerItem46)
         #self.lyth_centerBig_AnalyzePreview.addWidget(self.graphicsAnalyzePreview)
-        self.lyth_centerBig_AnalyzePreview.addWidget(self.videoLayout)
+        self.lyth_centerBig_AnalyzePreview.addWidget(self.imageLayout)
         self.lyth_centerBig_AnalyzePreview.addItem(self.spacerItem47)
         self.lyth_centerBig_AnalyzePreview.addItem(self.spacerItem48)
         self.lytv_bigCenter_AnalyzePreview.addLayout(self.lyth_centerBig_AnalyzePreview)

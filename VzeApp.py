@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QFileDialog, QApplication
 from gui.VzeGui import VzeGui
 from ki.VzeKI import VzeImageProcessing
+import constants as constants
 import abc
 import os
 
@@ -100,15 +101,15 @@ class VzeController(GuiInterface):
         sign_id = ""
         sign_detected = 0
         sign_input = 0
-        sign_count = 43
+        sign_count = constants.TOTAL_NUMBER_SIGNS
         percentage_counter = 0
 
         # Testausgabe des gesamten Arrays
         for array_count in range(len(self.array_dataInput[0])):
             percentage = 0
-            sign_id = self.array_dataInput[0][array_count]
-            sign_input = int(self.array_dataInput[1][array_count])
-            sign_detected = int(self.array_dataInput[2][array_count])
+            sign_id = self.array_dataInput[constants.DATA_ARRAY_SIGN_ID][array_count]
+            sign_input = int(self.array_dataInput[constants.DATA_ARRAY_SIGN_INPUT][array_count])
+            sign_detected = int(self.array_dataInput[constants.DATA_ARRAY_SIGN_DETECTED][array_count])
 
             # percentage must only be calculated when customer expects the sign
             if(sign_input > 0):
@@ -121,7 +122,8 @@ class VzeController(GuiInterface):
                 # print("SignId: " + str(sign_id) + "; Input: " + str(sign_input) + "; Detected: " + str(sign_detected) + "; Percentage: " + str(percentage))
             # print("Percentage Counter: " + str(percentage_counter))
 
-        percentage_result = int(round(percentage_counter / 43, 0))
+        percentage_result = int(round(percentage_counter / sign_count, 0))
+        percentage_result = 100 - percentage_result
         # print("Percentage Result: " + str(percentage_result))
         return percentage_result
 

@@ -5,6 +5,7 @@ import cv2
 import pickle
 import filetype
 from keras.models import load_model
+import constants as constants
 #For KI Thread
 from PyQt5.QtCore import Qt, QThread
 from PyQt5.QtGui import QImage
@@ -148,9 +149,9 @@ class VzeImageProcessing():
 
             print("ImageResolution: " + str(width) + "x" + str(heigth))
 
-            if (width < 800 or heigth < 600):
+            if (width < constants.IMAGE_MIN_WIDTH or heigth < constants.IMAGE_MIN_HEIGTH):
                 return -2
-            elif (width > 6000 or heigth > 4000):
+            elif (width > constants.IMAGE_MAX_WIDTH or heigth > constants.IMAGE_MAX_HEIGTH):
                 return -1    
 
 
@@ -162,9 +163,9 @@ class VzeImageProcessing():
 
             print("VideoResolution: " + str(width) + "x" + str(heigth))
 
-            if (width < 800 or heigth < 600):
+            if (width < constants.VIDEO_MIN_WIDTH or heigth < constants.VIDEO_MIN_HEIGTH):
                 return -2
-            elif (width > 1920 or heigth > 1080):
+            elif (width > constants.VIDEO_MAX_WIDTH or heigth > constants.VIDEO_MAX_HEIGTH):
                 return -1                
 
         return 1
@@ -176,7 +177,6 @@ class VzeImageProcessing():
             returns 1 if video is ok
         """
 
-        max_duration = 600
         vidcap=cv2.VideoCapture(filepath)
         
         fps = vidcap.get(cv2.CAP_PROP_FPS)      # OpenCV2 version 2 used "CV_CAP_PROP_FPS"
@@ -187,7 +187,7 @@ class VzeImageProcessing():
 
         print("File has a length of " + str(duration) + " seconds")
 
-        if duration > max_duration:
+        if duration > constants.VIDEO_MAX_DURATION:
             return -1
         else:
             return 1
@@ -461,7 +461,7 @@ class VzeObject:
         h, w, ch = rgbImage.shape
         bytesPerLine = ch * w
         convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
-        self.frame = convertToQtFormat.scaled(800, 480, Qt.KeepAspectRatio)
+        self.frame = convertToQtFormat.scaled(constants.ANALYZEIMAGE_WIDTH, constants.ANALYZEIMAGE_HEIGTH, Qt.KeepAspectRatio)
 
 class TrafficSign:
     def __init__(self, signID, box_W_H, coordinateXY, prob):

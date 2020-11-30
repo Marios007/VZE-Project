@@ -140,34 +140,37 @@ class VzeGui(QtWidgets.QMainWindow):
         self.demodatascreen.create_grid(demodatafile)
         self.change_screen(constants.DEMO_DATA_SCREEN)
 
-    def createGraphicsScene(self, numpy):
+# Methode wird vmtl nicht mehr benötigt
+#     def createGraphicsScene(self, numpy):
+#         """
+#         This method is used for creating a graphicsScene from an image file
+#         """
+#         image = QtGui.QImage(numpy, numpy.shape[1], numpy.shape[0], numpy.shape[1] * 3, QtGui.QImage.Format_RGB888).rgbSwapped()
+#         pixmap = QtGui.QPixmap(image)
+#         pixmap_scaled = pixmap.scaled(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH)
+#         graphicsScene = QtWidgets.QGraphicsScene(self)
+#         graphicsScene.addPixmap(pixmap_scaled)
+#         return graphicsScene
+
+
+    def createPixmap(self, numpy):
         """
         This method is used for creating a graphicsScene from an image file
         """
         image = QtGui.QImage(numpy, numpy.shape[1], numpy.shape[0], numpy.shape[1] * 3, QtGui.QImage.Format_RGB888).rgbSwapped()
         pixmap = QtGui.QPixmap(image)
-        pixmap_scaled = pixmap.scaled(constants.PIXMAP_SCALE_WIDTH, constants.PIXMAP_SCALE_HEIGTH)
-        graphicsScene = QtWidgets.QGraphicsScene(self)
-        graphicsScene.addPixmap(pixmap_scaled)
-        return graphicsScene
+        pixmap_scaled = pixmap.scaled(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH)
+        return pixmap_scaled
 
-    def showPreviewImage(self, filepath):
+    def showPreviewImage(self, numpy):
         """
         This method is used for displaying a previewImage on every previewScreen and the analyseScreen
         """
         # print("method showPreviewImage")
-        graphicsScene = self.createGraphicsScene(filepath)
-        self.previewscreen.graphicsPreview.setScene(graphicsScene)
-        self.analyzepvscreen.graphicsAnalyzePreview.setScene(graphicsScene)
-        # self.analyzescreen.graphicsAnalyze.setScene(graphicsScene)
+        pixmap_scaled = self.createPixmap(numpy)
+        self.previewscreen.videoLayout.setPixmap(pixmap_scaled)
+        self.analyzepvscreen.videoLayout.setPixmap(pixmap_scaled)
 
-    def showImageOnAnalyzeScreen(self, image):
-        """
-        This method is used for displaying an image on the AnalyzeScreen
-        """
-        # print("method showImageOnAnalyzeScreen")
-        graphicsScene = self.createGraphicsScene(image)
-        self.analyzescreen.graphicsAnalyze.setScene(graphicsScene)
 
     def loadFile(self):
         """
@@ -321,9 +324,9 @@ class VzeGui(QtWidgets.QMainWindow):
 
     def startVideo(self):
         # create the video capture thread and handover filepath and the VzeGui object
-        # self.thread = VideoThread(self.logic.getFilePath(), self)
+        self.thread = VideoThread(self.logic.getFilePath(), self)
         # call the real KI method later
-        self.thread = VideoThreadKI(self.logic.getFilePath(), self)
+        #self.thread = VideoThreadKI(self.logic.getFilePath(), self)
         # start the thread
         self.thread.start()
 
@@ -712,10 +715,14 @@ class Ui_previewscreen(QtWidgets.QWidget):
         self.spacerItem32 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
 
     def create_otherObjects(self):
-        self.graphicsPreview = QtWidgets.QGraphicsView(self)
-        self.graphicsPreview.setMinimumSize(QtCore.QSize(constants.GRAPHICS_PREVIEW_WIDTH, constants.GRAPHICS_PREVIEW_HEIGTH))
-        self.graphicsPreview.setMaximumSize(QtCore.QSize(constants.GRAPHICS_PREVIEW_WIDTH, constants.GRAPHICS_PREVIEW_HEIGTH))
-        self.graphicsPreview.setObjectName("graphicsPreview")
+        self.videoLayout = QtWidgets.QLabel(self)
+        self.videoLayout.setText("")
+        self.videoLayout.setMinimumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
+        self.videoLayout.setMaximumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
+        # self.graphicsPreview = QtWidgets.QGraphicsView(self)
+        # self.graphicsPreview.setMinimumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
+        # self.graphicsPreview.setMaximumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
+        # self.graphicsPreview.setObjectName("graphicsPreview")
 
     def add_items(self):
         self.lyth_headline_previewScreen.addWidget(self.lbl_headline_preview)
@@ -727,7 +734,8 @@ class Ui_previewscreen(QtWidgets.QWidget):
         self.lyth_smallText_previewScreen.addItem(self.spacerItem26)
         self.lytv_bigCenter_previewScreen.addLayout(self.lyth_smallText_previewScreen)
         self.lyth_centerBig.addItem(self.spacerItem27)
-        self.lyth_centerBig.addWidget(self.graphicsPreview)
+        #self.lyth_centerBig.addWidget(self.graphicsPreview)
+        self.lyth_centerBig.addWidget(self.videoLayout)
         self.lyth_centerBig.addItem(self.spacerItem28)
         self.lyth_centerBig.addItem(self.spacerItem29)
         self.lytv_bigCenter_previewScreen.addLayout(self.lyth_centerBig)
@@ -1145,10 +1153,14 @@ class Ui_analyzePvScreen(QtWidgets.QWidget):
         self.label_AnalyzePreview.setObjectName("label_AnalyzePreview")
 
     def create_preview(self):
-        self.graphicsAnalyzePreview = QtWidgets.QGraphicsView(self)
-        self.graphicsAnalyzePreview.setMinimumSize(QtCore.QSize(constants.GRAPHICS_PREVIEW_WIDTH, constants.GRAPHICS_PREVIEW_HEIGTH))
-        self.graphicsAnalyzePreview.setMaximumSize(QtCore.QSize(constants.GRAPHICS_PREVIEW_WIDTH, constants.GRAPHICS_PREVIEW_HEIGTH))
-        self.graphicsAnalyzePreview.setObjectName("graphicsAnalyzePreview")
+        self.videoLayout = QtWidgets.QLabel(self)
+        self.videoLayout.setText("")
+        self.videoLayout.setMinimumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
+        self.videoLayout.setMaximumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
+        # self.graphicsAnalyzePreview = QtWidgets.QGraphicsView(self)
+        # self.graphicsAnalyzePreview.setMinimumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
+        # self.graphicsAnalyzePreview.setMaximumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
+        # self.graphicsAnalyzePreview.setObjectName("graphicsAnalyzePreview")
         
 
     def create_spacer(self):
@@ -1172,7 +1184,8 @@ class Ui_analyzePvScreen(QtWidgets.QWidget):
         self.lyth_smallText_AnalyzePreview.addItem(self.spacerItem45)
         self.lytv_bigCenter_AnalyzePreview.addLayout(self.lyth_smallText_AnalyzePreview)
         self.lyth_centerBig_AnalyzePreview.addItem(self.spacerItem46)
-        self.lyth_centerBig_AnalyzePreview.addWidget(self.graphicsAnalyzePreview)
+        #self.lyth_centerBig_AnalyzePreview.addWidget(self.graphicsAnalyzePreview)
+        self.lyth_centerBig_AnalyzePreview.addWidget(self.videoLayout)
         self.lyth_centerBig_AnalyzePreview.addItem(self.spacerItem47)
         self.lyth_centerBig_AnalyzePreview.addItem(self.spacerItem48)
         self.lytv_bigCenter_AnalyzePreview.addLayout(self.lyth_centerBig_AnalyzePreview)
@@ -1313,12 +1326,12 @@ class Ui_analyzeScreen(QtWidgets.QWidget):
 
         self.videoLayout = QtWidgets.QLabel(self)
         self.videoLayout.setText("")
-        self.videoLayout.setMinimumSize(QtCore.QSize(constants.GRAPHICS_PREVIEW_WIDTH, constants.GRAPHICS_PREVIEW_HEIGTH))
-        self.videoLayout.setMaximumSize(QtCore.QSize(constants.GRAPHICS_PREVIEW_WIDTH, constants.GRAPHICS_PREVIEW_HEIGTH))
+        self.videoLayout.setMinimumSize(QtCore.QSize(constants.ANALYZEIMAGE_WIDTH, constants.ANALYZEIMAGE_HEIGTH))
+        self.videoLayout.setMaximumSize(QtCore.QSize(constants.ANALYZEIMAGE_WIDTH, constants.ANALYZEIMAGE_HEIGTH))
         
         # self.graphicsAnalyze = QtWidgets.QGraphicsView(self)
-        # self.graphicsAnalyze.setMinimumSize(QtCore.QSize(constants.GRAPHICS_PREVIEW_WIDTH, constants.GRAPHICS_PREVIEW_HEIGTH))
-        # self.graphicsAnalyze.setMaximumSize(QtCore.QSize(constants.GRAPHICS_PREVIEW_WIDTH, constants.GRAPHICS_PREVIEW_HEIGTH))
+        # self.graphicsAnalyze.setMinimumSize(QtCore.QSize(constants.ANALYZEIMAGE_WIDTH, constants.ANALYZEIMAGE_HEIGTH))
+        # self.graphicsAnalyze.setMaximumSize(QtCore.QSize(constants.ANALYZEIMAGE_WIDTH, constants.ANALYZEIMAGE_HEIGTH))
         # self.graphicsAnalyze.setObjectName("graphicsAnalyze")
 
     
@@ -1508,13 +1521,13 @@ class Ui_ResultScreen(QtWidgets.QWidget):
                 self.lbl_result.setText("")
                 self.lbl_result.setStyleSheet(None)
             else:
-                if(percentage <= constants.PERCENTAGE_GREEN_TO_YELLOW):
+                if(percentage >= constants.PERCENTAGE_GREEN_TO_YELLOW):
                     print("Showing green percentage label")
                     self.lbl_result.setStyleSheet(styles.stylePercentageGreen)
-                elif((percentage > constants.PERCENTAGE_GREEN_TO_YELLOW) and (percentage < constants.PERCENTAGE_YELLOW_TO_RED)):
+                elif((percentage < constants.PERCENTAGE_GREEN_TO_YELLOW) and (percentage > constants.PERCENTAGE_YELLOW_TO_RED)):
                     print("Showing yellow percentage label")
                     self.lbl_result.setStyleSheet(styles.stylePercentageYellow)
-                elif(percentage > constants.PERCENTAGE_YELLOW_TO_RED):
+                elif(percentage < constants.PERCENTAGE_YELLOW_TO_RED):
                     print("Showing red percentage label")
                     self.lbl_result.setStyleSheet(styles.stylePercentageRed)
                 

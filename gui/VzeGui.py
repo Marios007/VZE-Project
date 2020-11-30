@@ -287,41 +287,28 @@ class VzeGui(QtWidgets.QMainWindow):
         self.change_screen(constants.START_SCREEN)
 
     def processKIData(self, inputObject):
-
+        """
+        Method is receiving the frame and all data from the AI and process it
+        inputObject is a VzeKIObject
+        """
         self.img = inputObject.frame
-        id = inputObject.frameId
-        numDetectSigns = inputObject.numDetectSigns
+        self.id = inputObject.frameId
+        self.numDetectSigns = inputObject.numDetectSigns
         self.detectedSigns = inputObject.detectedSigns
+        print("frameID:{0} - numDetectedSigns:{1}".format(self.id, self.numDetectSigns))
 
-        print("frameID:{0} - numDetectedSigns:{1} - ".format(id, numDetectSigns))
+        if self.numDetectSigns > 0:
+            self.countSigns(self.detectedSigns, self.numDetectSigns)
 
-        # if numDetectSigns == 1:
-        #     sign1 = self.detectedSigns[0]
-        #     print("Sign1: " + str(sign1.signID))
-        #     self.setSideLabels(sign1.signID)
-
-        # elif numDetectSigns == 2:
-        #     sign1 = self.detectedSigns[0]
-        #     sign2 = self.detectedSigns[1]
-        #     print("Sign1: " + str(sign1.signID))
-        #     print("Sign2: " + str(sign2.signID))
-
-        # elif numDetectSigns == 3:
-        #     sign1 = self.detectedSigns[0]
-        #     sign2 = self.detectedSigns[1]
-        #     sign3 = self.detectedSigns[2]
-        #     print("Sign1: " + str(sign1.signID))
-        #     print("Sign2: " + str(sign2.signID))
-        #     print("Sign3: " + str(sign3.signID))
-
-        for i in range(numDetectSigns):
-            self.countSigns(self.detectedSigns[i])
-
-        # show the frame o GUI
+        # show the frame on the GUI
         self.setVideoImage(self.img)
 
-    def countSigns(self, signObj):
-        print("signID:{0} - prob:{1} - box_W_H:{2} - ccordXY:{3}  ".format(signObj.signID, signObj.prob, signObj.box_W_H, signObj.coordinateXY ))
+
+    def countSigns(self, signArray, numDetectSigns):        
+        for i in range(numDetectSigns):
+            signObj = signArray[i]
+            print("frameID:frame:{0} - signID:{1} - prob:{2} - box_W_H:{3} - ccordXY:{4}".format(self.id, signObj.signID, signObj.prob, signObj.box_W_H, signObj.coordinateXY ))
+
         return
     
 

@@ -61,6 +61,8 @@ class VzeGui(QtWidgets.QMainWindow):
         self.stackedWidget.setCurrentIndex(constants.START_SCREEN)
         QtCore.QMetaObject.connectSlotsByName(window)
 
+        self.dict = {}
+
     def build_screens(self):
 
         # Build UI with each screen
@@ -310,26 +312,25 @@ class VzeGui(QtWidgets.QMainWindow):
     def countSigns(self, signArray, numDetectSigns): 
         for i in range(numDetectSigns):
             signObj = signArray[i]
-            dict = {}
+            
             if signObj.prob >= 95.:
-                if signObj.SignId in dict:
-                    if dict[signObj.signID]>15:
-                        self.logic.setResultArray(self, signObj.signID)
+                print("SignProb:" + str(signObj.prob))
+                if signObj.signID in self.dict:
+                    if self.dict[signObj.signID]==15:
+                        #self.logic.setResultArray(signObj.signID)
                         self.setSideLabels(signObj.signID)
                     else:
-                        dict[signObj.signID] = dict[signObj.signID]+1
+                        print("+1 in dict for id " +  str(signObj.signID))
+                        self.dict[signObj.signID] = self.dict[signObj.signID]+1
                 else:
-                    dict = {signObj.signID : 1}
-            
+                    print("add to dict" +  str(signObj.signID))
+                    self.dict.update({signObj.signID : 1})
+            print(self.dict)
             print("frameID:frame:{0} - signID:{1} - prob:{2} - box_W_H:{3} - ccordXY:{4}".format(self.id, signObj.signID, signObj.prob, signObj.box_W_H, signObj.coordinateXY ))
 
-        
     
-        #self.logic.setResultArray(self, signID)
-
         return
         
-
 
     def setSideLabels(self, sign1):
         self.sign_id = ":/signs/" + str(sign1)
@@ -340,9 +341,9 @@ class VzeGui(QtWidgets.QMainWindow):
 
     def startVideo(self):
         # create the video capture thread and handover filepath and the VzeGui class as object
-        self.thread = VideoThread(self.logic.getFilePath(), self)
+        # self.thread = VideoThread(self.logic.getFilePath(), self)
         # call the real KI method later
-        # self.thread = VideoThreadKI(self.logic.getFilePath(), self)
+        self.thread = VideoThreadKI(self.logic.getFilePath(), self)
         # start the thread
         self.thread.start()
 

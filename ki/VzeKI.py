@@ -341,7 +341,7 @@ class VzeKI:
             returnObject = VzeObject(self.VzeIP.print_boxes_on_image(image, bounding_boxes_final, sign_names, probabilities))
             for i in range(len(bounding_boxes_final)):
                 returnObject.addSign(TrafficSign(prediction[i],(bounding_boxes_final[i][2],bounding_boxes_final[i][3]),(bounding_boxes_final[i][0],bounding_boxes_final[i][1]),probabilities[i]))
-                print("SchildID: {0} - Wahrscheinlichkeit: {1} - X: {2} - Y: {3} - Breite x Höhe: {4} x {5}".format(prediction[i], probabilities[i], bounding_boxes_final[i][0],bounding_boxes_final[i][1],bounding_boxes_final[i][2],bounding_boxes_final[i][3]))
+                # print("SchildID: {0} - Wahrscheinlichkeit: {1} - X: {2} - Y: {3} - Breite x Höhe: {4} x {5}".format(prediction[i], probabilities[i], bounding_boxes_final[i][0],bounding_boxes_final[i][1],bounding_boxes_final[i][2],bounding_boxes_final[i][3]))
         
         return returnObject
     
@@ -461,7 +461,7 @@ class VzeObject:
         h, w, ch = rgbImage.shape
         bytesPerLine = ch * w
         convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
-        self.frame = convertToQtFormat.scaled(800, 480, Qt.KeepAspectRatio)
+        self.frame = convertToQtFormat.scaled(850, 480, Qt.KeepAspectRatio)
 
 class TrafficSign:
     def __init__(self, signID, box_W_H, coordinateXY, prob):

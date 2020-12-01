@@ -145,19 +145,6 @@ class VzeGui(QtWidgets.QMainWindow):
         self.demodatascreen.create_grid(demodatafile)
         self.change_screen(constants.DEMO_DATA_SCREEN)
 
-# Methode wird vmtl nicht mehr benötigt
-#     def createGraphicsScene(self, numpy):
-#         """
-#         This method is used for creating a graphicsScene from an image file
-#         """
-#         image = QtGui.QImage(numpy, numpy.shape[1], numpy.shape[0], numpy.shape[1] * 3, QtGui.QImage.Format_RGB888).rgbSwapped()
-#         pixmap = QtGui.QPixmap(image)
-#         pixmap_scaled = pixmap.scaled(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH)
-#         graphicsScene = QtWidgets.QGraphicsScene(self)
-#         graphicsScene.addPixmap(pixmap_scaled)
-#         return graphicsScene
-
-
     def createPixmap(self, numpy):
         """
         This method is used for creating a graphicsScene from an image file
@@ -321,7 +308,7 @@ class VzeGui(QtWidgets.QMainWindow):
                 print("SignProb:" + str(signObj.prob))
                 if signObj.signID in self.dict:
                     if self.dict[signObj.signID]==15:
-                        #self.logic.setResultArray(signObj.signID)
+                        self.logic.setResultArray(signObj.signID)
                         self.setSideLabels(signObj.signID)
                         self.dict[signObj.signID] = self.dict[signObj.signID]+1
                     else:

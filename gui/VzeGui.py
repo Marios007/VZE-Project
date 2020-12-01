@@ -300,7 +300,9 @@ class VzeGui(QtWidgets.QMainWindow):
         self.numDetectSigns = inputObject.numDetectSigns
         self.detectedSigns = inputObject.detectedSigns
         print("frameID:{0} - numDetectedSigns:{1}".format(self.id, self.numDetectSigns))
-        self.countSigns(self.detectedSigns, self.numDetectSigns)
+        
+        if not self.logic.isPicture:
+            self.countSigns(self.detectedSigns, self.numDetectSigns)
 
     def countSigns(self, signArray, numDetectSigns): 
         for i in range(numDetectSigns):

@@ -482,3 +482,5 @@ class TrafficSign:
         self.signID = signID
         self.box_W_H = box_W_H
         self.coordinateXY = coordinateXY
+
+

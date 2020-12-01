@@ -5,6 +5,8 @@ import constants as constants
 from ki.VzeKI import VideoThread
 from ki.VzeKI import VideoThreadKI
 import csv
+from collections import deque
+from gui.RingBuffer import RingBuffer
 
 
 class MyMessageBox(QtWidgets.QMessageBox):
@@ -30,7 +32,8 @@ class VzeGui(QtWidgets.QMainWindow):
         print("loading UI")
 
         self.logic = logicInterface
-
+        # ringbuffer to store 3 last detected shields
+        self.initRingBuffer()
         # Setting Window Title and Icon
         self.setWindowTitle("VerkehrsZeichenErkennung VZE")
         icon = QtGui.QIcon()
@@ -290,6 +293,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.diScreen.reset_gridContent()
         self.resultscreen.delete_grid()
         self.deactivateResultBtn()
+        self.initRingBuffer()
         self.change_screen(constants.START_SCREEN)
 
     def processKIData(self, inputObject):
@@ -298,15 +302,15 @@ class VzeGui(QtWidgets.QMainWindow):
         inputObject is a VzeKIObject
         """
         self.img = inputObject.frame
+        # show the frame on the GUI
+        self.setVideoImage(self.img)
+
         self.id = inputObject.frameId
         self.numDetectSigns = inputObject.numDetectSigns
         self.detectedSigns = inputObject.detectedSigns
         print("frameID:{0} - numDetectedSigns:{1}".format(self.id, self.numDetectSigns))
-
         self.countSigns(self.detectedSigns, self.numDetectSigns)
 
-        # show the frame on the GUI
-        self.setVideoImage(self.img)
 
 
     def countSigns(self, signArray, numDetectSigns): 
@@ -319,6 +323,7 @@ class VzeGui(QtWidgets.QMainWindow):
                     if self.dict[signObj.signID]==15:
                         #self.logic.setResultArray(signObj.signID)
                         self.setSideLabels(signObj.signID)
+                        self.dict[signObj.signID] = self.dict[signObj.signID]+1
                     else:
                         print("+1 in dict for id " +  str(signObj.signID))
                         self.dict[signObj.signID] = self.dict[signObj.signID]+1
@@ -327,14 +332,21 @@ class VzeGui(QtWidgets.QMainWindow):
                     self.dict.update({signObj.signID : 1})
             print(self.dict)
             print("frameID:frame:{0} - signID:{1} - prob:{2} - box_W_H:{3} - ccordXY:{4}".format(self.id, signObj.signID, signObj.prob, signObj.box_W_H, signObj.coordinateXY ))
-
-    
         return
         
 
-    def setSideLabels(self, sign1):
-        self.sign_id = ":/signs/" + str(sign1)
-        self.analyzescreen.label_IconTop.setPixmap(QtGui.QPixmap(self.sign_id))
+    def setSideLabels(self, detetedSign):
+        detetedSignID = ":/signs/" + str(detetedSign)
+        self.ringBuffer.append(detetedSignID)
+        list =(self.ringBuffer.get())
+        if len(list) > 0:
+            self.analyzescreen.label_IconBottom.setPixmap(QtGui.QPixmap(list[0]))
+        if len(list) > 1:
+            self.analyzescreen.label_IconMid.setPixmap(QtGui.QPixmap(list[1]))
+        if len(list) > 2:
+            self.analyzescreen.label_IconTop.setPixmap(QtGui.QPixmap(list[2]))
+
+
 
     def setVideoImage(self, img):
         self.analyzescreen.videoLayout.setPixmap(QtGui.QPixmap.fromImage(img))
@@ -354,6 +366,9 @@ class VzeGui(QtWidgets.QMainWindow):
     def deactivateResultBtn(self):
         self.analyzescreen.btn_showResult.setEnabled(False)
         self.analyzescreen.changeButtonEnabled()
+
+    def initRingBuffer(self):
+        self.ringBuffer = RingBuffer(3)
 
 
 # Start Screen

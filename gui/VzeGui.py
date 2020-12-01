@@ -303,6 +303,8 @@ class VzeGui(QtWidgets.QMainWindow):
         
         if not self.logic.isPicture:
             self.countSigns(self.detectedSigns, self.numDetectSigns)
+        else:
+            self.countSignsInPic(self.detectedSigns, self.numDetectSigns)
 
     def countSigns(self, signArray, numDetectSigns): 
         for i in range(numDetectSigns):
@@ -326,6 +328,14 @@ class VzeGui(QtWidgets.QMainWindow):
             print(self.logic.isPicture)
         return
         
+    def countSignsInPic(self, signArray, numDetectSigns): 
+         for i in range(numDetectSigns):
+            signObj = signArray[i]
+
+            if signObj.prob >= 93.:
+                self.setSideLabels(signObj.signID)
+                self.logic.setResultArray(signObj.signID)
+
 
     def setSideLabels(self, detetedSign):
         detetedSignID = ":/signs/" + str(detetedSign)

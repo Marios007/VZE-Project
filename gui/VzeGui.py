@@ -276,12 +276,12 @@ class VzeGui(QtWidgets.QMainWindow):
         self.logic.array_dataInput = [[0 for x in range(constants.TOTAL_NUMBER_SIGNS)] for y in range(constants.DATA_ARRAY_COLUMN_COUNT)]
         self.logic.setCompareResult(False)
         self.logic.setFilePath("")
+        self.analyzescreen.deleteSignLabel()
         self.demodatascreen.delete_grid()
         self.diScreen.reset_gridContent()
         self.resultscreen.delete_grid()
         self.deactivateResultBtn()
         self.initRingBuffer()
-        self.analyzescreen.deleteSignLabel()
         self.change_screen(constants.START_SCREEN)
 
     def processKIData(self, inputObject):
@@ -328,11 +328,11 @@ class VzeGui(QtWidgets.QMainWindow):
         self.ringBuffer.append(detetedSignID)
         list =(self.ringBuffer.get())
         if len(list) > 0:
-            self.analyzescreen.label_IconBottom.setPixmap(QtGui.QPixmap(list[0]))
+            self.analyzescreen.label_IconTop.setPixmap(QtGui.QPixmap(list[0]))
         if len(list) > 1:
             self.analyzescreen.label_IconMid.setPixmap(QtGui.QPixmap(list[1]))
         if len(list) > 2:
-            self.analyzescreen.label_IconTop.setPixmap(QtGui.QPixmap(list[2]))
+            self.analyzescreen.label_IconBottom.setPixmap(QtGui.QPixmap(list[2]))
 
 
 
@@ -1418,7 +1418,6 @@ class Ui_analyzeScreen(QtWidgets.QWidget):
             self.btn_cancelAnalyze.setEnabled(True)
 
     def deleteSignLabel(self):
-    
         self.label_IconBottom.setPixmap(QtGui.QPixmap("None"))
         self.label_IconMid.setPixmap(QtGui.QPixmap("None"))
         self.label_IconTop.setPixmap(QtGui.QPixmap("None"))

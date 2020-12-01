@@ -39,9 +39,11 @@ class VzeController(GuiInterface):
     _compareResult = False
     array_dataInput = [[0 for x in range(43)] for y in range(3)]
     preprocessor = None
+    isPicture = None
 
     def __init__(self):
         self.preprocessor = VzeImageProcessing(self)
+        self.isPicture = None
 
     def loadFile(self):
         """
@@ -54,6 +56,8 @@ class VzeController(GuiInterface):
         if filePath != "":
             # Status 1 --> image, Status 2 --> video, Status -1 --> error
             status_type,image = self.preprocessor.check_fileType(filePath)
+            if status_type == 1: self.isPicture = True
+            if status_type == 2: self.isPicture = False
             if status_type == -1 :
                 return -1,"Dieser Dateityp wird nicht unterstützt.\nUnterstütze Dateitypen:\n*.jpg *.jpeg *.gif *.png *.bmp *.avi *.mov *.mp4 *.mpeg",None
             print("File-Type-Check passed")

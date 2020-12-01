@@ -34,6 +34,8 @@ class VzeGui(QtWidgets.QMainWindow):
         self.logic = logicInterface
         # ringbuffer to store 3 last detected shields
         self.ringBuffer = RingBuffer(3)
+        # dict for counting shields
+        self.dict = {}
         # Setting Window Title and Icon
         self.setWindowTitle("VerkehrsZeichenErkennung VZE")
         icon = QtGui.QIcon()
@@ -64,7 +66,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.stackedWidget.setCurrentIndex(constants.START_SCREEN)
         QtCore.QMetaObject.connectSlotsByName(window)
 
-        self.dict = {}
+        
 
     def build_screens(self):
 
@@ -282,6 +284,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.resultscreen.delete_grid()
         self.deactivateResultBtn()
         self.initRingBuffer()
+        self.dict = {}
         self.change_screen(constants.START_SCREEN)
 
     def processKIData(self, inputObject):
@@ -299,16 +302,14 @@ class VzeGui(QtWidgets.QMainWindow):
         print("frameID:{0} - numDetectedSigns:{1}".format(self.id, self.numDetectSigns))
         self.countSigns(self.detectedSigns, self.numDetectSigns)
 
-
-
     def countSigns(self, signArray, numDetectSigns): 
         for i in range(numDetectSigns):
             signObj = signArray[i]
             
-            if signObj.prob >= 95.:
+            if signObj.prob >= 96.:
                 print("SignProb:" + str(signObj.prob))
                 if signObj.signID in self.dict:
-                    if self.dict[signObj.signID]==15:
+                    if self.dict[signObj.signID]==10:
                         self.logic.setResultArray(signObj.signID)
                         self.setSideLabels(signObj.signID)
                         self.dict[signObj.signID] = self.dict[signObj.signID]+1
@@ -320,13 +321,15 @@ class VzeGui(QtWidgets.QMainWindow):
                     self.dict.update({signObj.signID : 1})
             print(self.dict)
             print("frameID:frame:{0} - signID:{1} - prob:{2} - box_W_H:{3} - ccordXY:{4}".format(self.id, signObj.signID, signObj.prob, signObj.box_W_H, signObj.coordinateXY ))
+            print(self.logic.isPicture)
         return
         
 
     def setSideLabels(self, detetedSign):
         detetedSignID = ":/signs/" + str(detetedSign)
         self.ringBuffer.append(detetedSignID)
-        list =(self.ringBuffer.get())
+        list = self.ringBuffer.get()
+        list.reverse()
         if len(list) > 0:
             self.analyzescreen.label_IconTop.setPixmap(QtGui.QPixmap(list[0]))
         if len(list) > 1:
@@ -1349,12 +1352,7 @@ class Ui_analyzeScreen(QtWidgets.QWidget):
         self.videoLayout.setMinimumSize(QtCore.QSize(constants.ANALYZEIMAGE_WIDTH, constants.ANALYZEIMAGE_HEIGTH))
         self.videoLayout.setMaximumSize(QtCore.QSize(constants.ANALYZEIMAGE_WIDTH, constants.ANALYZEIMAGE_HEIGTH))
         
-        # self.graphicsAnalyze = QtWidgets.QGraphicsView(self)
-        # self.graphicsAnalyze.setMinimumSize(QtCore.QSize(constants.ANALYZEIMAGE_WIDTH, constants.ANALYZEIMAGE_HEIGTH))
-        # self.graphicsAnalyze.setMaximumSize(QtCore.QSize(constants.ANALYZEIMAGE_WIDTH, constants.ANALYZEIMAGE_HEIGTH))
-        # self.graphicsAnalyze.setObjectName("graphicsAnalyze")
 
-    
     def create_spacer(self):
         self.spacerItem53 = QtWidgets.QSpacerItem(10, 10, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.spacerItem54 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -1422,9 +1420,6 @@ class Ui_analyzeScreen(QtWidgets.QWidget):
         self.label_IconMid.setPixmap(QtGui.QPixmap("None"))
         self.label_IconTop.setPixmap(QtGui.QPixmap("None"))
         
-       
-
-      
 
 # Result Screen
 class Ui_ResultScreen(QtWidgets.QWidget):

@@ -399,10 +399,7 @@ class VideoThreadKI(QThread):
             read, frame = self.cap.read()
             if not read:
                 break
-
             currentObject = self.ki.processFrame(frame, currentTime)
-
-
             self.gui.processKIData(currentObject)
 
             if cv2.waitKey(10) & 0xFF ==ord("q"):

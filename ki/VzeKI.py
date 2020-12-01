@@ -288,10 +288,13 @@ class VzeKI:
             # xmin, ymin, box_width, box_height
             min_point_offset = 0.998
             box_size_offset = 1.2
+
             bounding_boxes = np.array([(box_current[:,0]-(box_current[:,2]/2))*min_point_offset,
                                     (box_current[:,1]-(box_current[:,3]/2))*min_point_offset,
                                     box_current[:,2]*box_size_offset,
                                     box_current[:,3]*box_size_offset], dtype=int).T
+            # to prevent negativ values after box calculation
+            bounding_boxes = bounding_boxes.clip(min=0)
 
             # NMSBoxes dont accept an array, adress this issue later
             bounding_boxes_list = np.ndarray.tolist(bounding_boxes)

@@ -197,12 +197,14 @@ class VzeKI:
     DNN_DIM = (416, 416)
     PROBABILITY_MINIMUM = 0.25
     THRESHOLD = 0.25
+    BOX_SIZE_THRESHOLD = 20
 
     def __init__(self, videoPath: str):
         # Konstruktor lädt Labels, CNN-Model und YOLO-Modell
         # Definition Konstanten zur Initialisierung
         LABEL_PATH = "./ki/input/labels/signnames.csv"
         CNN_MODEL_PATH = "./ki/input/cnn/fit_gen"
+        #CNN_MODEL_PATH = "./ki/input/cnn/test_model"
         YOLO_CONFIG_PATH = "./ki/input/yolo/yolov3_ts.cfg"
         YOLO_WEIGHTS_PATH = "./ki/input/yolo/yolov3_ts.weights"
         YOLO_MEAN_PICKLE = "./ki/input/yolo/mean_image_rgb.pickle"
@@ -272,7 +274,7 @@ class VzeKI:
         arr_output_layer3 = np.array(output_from_yolo_network[2], dtype=np.float32)
         # concetanate arrays
         arr_output_layers = np.vstack((arr_output_layer1,arr_output_layer2,arr_output_layer3))
-        
+
         # create index array with indexes if probability is higher than the min value
         max_output_layers = np.argwhere(arr_output_layers[:,5:]>self.PROBABILITY_MINIMUM)
 
@@ -287,62 +289,71 @@ class VzeKI:
             # xmin, ymin, box_width, box_height
             min_point_offset = 0.998
             box_size_offset = 1.2
+
             bounding_boxes = np.array([(box_current[:,0]-(box_current[:,2]/2))*min_point_offset,
                                     (box_current[:,1]-(box_current[:,3]/2))*min_point_offset,
                                     box_current[:,2]*box_size_offset,
-                                    box_current[:,3]*box_size_offset], dtype=int).T
+                                    box_current[:,3]*box_size_offset], dtype=int).T.clip(min=0) # to prevent negativ values after box calculation
 
-            # NMSBoxes dont accept an array, adress this issue later
-            bounding_boxes_list = np.ndarray.tolist(bounding_boxes)
+            # get all bounding boxes and corresponding confidences with box_height and box_width grater than box_threshold
+            min_size_bounding_boxes = np.argwhere(bounding_boxes[:,2:]>self.BOX_SIZE_THRESHOLD)
+            if min_size_bounding_boxes.size == 0:
+                returnObject = VzeObject(image)
+            else:
+                bounding_boxes = bounding_boxes[min_size_bounding_boxes[:,0]]
+                confidences = confidences[min_size_bounding_boxes[:,0]]
+                    
+                # NMSBoxes dont accept an array
+                bounding_boxes_list = np.ndarray.tolist(bounding_boxes)
 
-            # non-maximum suppression of given bounding boxes, deletes duplicates, contains number of kept indicies
-            results = cv2.dnn.NMSBoxes(bounding_boxes_list, confidences, self.PROBABILITY_MINIMUM, self.THRESHOLD)
+                # non-maximum suppression of given bounding boxes, deletes duplicates, contains number of kept indicies
+                results = cv2.dnn.NMSBoxes(bounding_boxes_list, confidences, self.PROBABILITY_MINIMUM, self.THRESHOLD)
 
-            # only for fps analysis
-            number_traffic_signs = len(results)
+                # only for fps analysis
+                number_traffic_signs = len(results)
 
-            bounding_boxes_final = bounding_boxes[results.flatten()]
-            
-            captured_signs_array = np.array([[[]]])
+                bounding_boxes_final = bounding_boxes[results.flatten()]
+                
+                captured_signs_array = np.array([[[]]])
 
-            #creating images of detected traffic signs
-            for i in range(len(bounding_boxes_final)):
-                captured_sign = image[bounding_boxes_final[i,1]:bounding_boxes_final[i,1]+bounding_boxes_final[i,3],
-                                    bounding_boxes_final[i,0]:bounding_boxes_final[i,0]+bounding_boxes_final[i,2],:]
+                #creating images of detected traffic signs
+                for i in range(len(bounding_boxes_final)):
+                    captured_sign = image[bounding_boxes_final[i,1]:bounding_boxes_final[i,1]+bounding_boxes_final[i,3],
+                                        bounding_boxes_final[i,0]:bounding_boxes_final[i,0]+bounding_boxes_final[i,2],:]
+                    # Checkpoint
+                    #show_image("sign" + str(i), captured_sign)
+                    captured_sign = self.VzeIP.preprocessing_images(captured_sign)
+                    # Checkpoint
+                    #show_image("sign" + str(i), captured_sign[0,:,:,0],)
+                    #print("processing_done")
+                    captured_signs_array = np.vstack([captured_signs_array,captured_sign]) if captured_signs_array.size else captured_sign
+                    # Checkpoint
+                    #print(captured_signs_array.shape)
+
+
                 # Checkpoint
-                #show_image("sign" + str(i), captured_sign)
-                captured_sign = self.VzeIP.preprocessing_images(captured_sign)
-                # Checkpoint
-                #show_image("sign" + str(i), captured_sign[0,:,:,0],)
-                #print("processing_done")
-                captured_signs_array = np.vstack([captured_signs_array,captured_sign]) if captured_signs_array.size else captured_sign
-                # Checkpoint
-                #print(captured_signs_array.shape)
-
-
-            # Checkpoint
-            # for i in range(len(captured_signs_array)):
-            #     show_image("arr", captured_signs_array[i])
-            #     cv2.waitKey(250)
-    
-            # feeding the images through the cnn (parallel processed)
-            probabilities_all = self.model.predict_proba(captured_signs_array)
-            prediction = np.argmax(probabilities_all, axis = 1)
-            sign_names = self.labels.iloc[prediction, 2]
-            sign_names = np.array(sign_names)
-            probabilities = probabilities_all[np.arange(probabilities_all.shape[0])[:, None],prediction.reshape(prediction.shape[0],1)[:]]*100
-
-            # checkpoint
-            #print("class: {0} - predict: {1} - probability: {2}".format(prediction, sign_names , probabilities))        
-            #prediction ist ein Array der detektierten Schilder-IDs
-            #probablity enthält die Wahrscheinlichkeit der einzelnen Schilder
-            #bounding_boxes enthält die jeweiligen den XY-Wert der Box sowie Breite und Höhe der Box
-            
-            returnObject = VzeObject(self.VzeIP.print_boxes_on_image(image, bounding_boxes_final, sign_names, probabilities))
-            for i in range(len(bounding_boxes_final)):
-                returnObject.addSign(TrafficSign(prediction[i],(bounding_boxes_final[i][2],bounding_boxes_final[i][3]),(bounding_boxes_final[i][0],bounding_boxes_final[i][1]),probabilities[i]))
-                # print("SchildID: {0} - Wahrscheinlichkeit: {1} - X: {2} - Y: {3} - Breite x Höhe: {4} x {5}".format(prediction[i], probabilities[i], bounding_boxes_final[i][0],bounding_boxes_final[i][1],bounding_boxes_final[i][2],bounding_boxes_final[i][3]))
+                # for i in range(len(captured_signs_array)):
+                #     show_image("arr", captured_signs_array[i])
+                #     cv2.waitKey(250)
         
+                # feeding the images through the cnn (parallel processed)
+                probabilities_all = self.model.predict(captured_signs_array)
+                prediction = np.argmax(probabilities_all, axis = 1)
+                sign_names = self.labels.iloc[prediction, 2]
+                sign_names = np.array(sign_names)
+                probabilities = probabilities_all[np.arange(probabilities_all.shape[0])[:, None],prediction.reshape(prediction.shape[0],1)[:]]*100
+
+                # checkpoint
+                #print("class: {0} - predict: {1} - probability: {2}".format(prediction, sign_names , probabilities))        
+                #prediction ist ein Array der detektierten Schilder-IDs
+                #probablity enthält die Wahrscheinlichkeit der einzelnen Schilder
+                #bounding_boxes enthält die jeweiligen den XY-Wert der Box sowie Breite und Höhe der Box
+                
+                returnObject = VzeObject(self.VzeIP.print_boxes_on_image(image, bounding_boxes_final, sign_names, probabilities))
+                for i in range(len(bounding_boxes_final)):
+                    returnObject.addSign(TrafficSign(prediction[i],(bounding_boxes_final[i][2],bounding_boxes_final[i][3]),(bounding_boxes_final[i][0],bounding_boxes_final[i][1]),probabilities[i]))
+                    # print("SchildID: {0} - Wahrscheinlichkeit: {1} - X: {2} - Y: {3} - Breite x Höhe: {4} x {5}".format(prediction[i], probabilities[i], bounding_boxes_final[i][0],bounding_boxes_final[i][1],bounding_boxes_final[i][2],bounding_boxes_final[i][3]))
+            
         return returnObject
     
     ### Hilfsmethoden
@@ -428,7 +439,8 @@ class VideoThread(QThread):
             h, w, ch = rgbImage.shape
             bytesPerLine = ch * w
             convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
-            p = convertToQtFormat.scaled(800, 480, Qt.KeepAspectRatio)
+            #p = convertToQtFormat.scaled(800, 480, Qt.KeepAspectRatio)
+            p = convertToQtFormat.scaled(constants.ANALYZEIMAGE_WIDTH, constants.ANALYZEIMAGE_HEIGTH, Qt.KeepAspectRatio)
             self.gui.setVideoImage(p)
 
             if cv2.waitKey(10) & 0xFF ==ord("q"):
@@ -461,7 +473,8 @@ class VzeObject:
         h, w, ch = rgbImage.shape
         bytesPerLine = ch * w
         convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
-        self.frame = convertToQtFormat.scaled(850, 480, Qt.KeepAspectRatio)
+        #self.frame = convertToQtFormat.scaled(850, 480, Qt.KeepAspectRatio)
+        self.frame = convertToQtFormat.scaled(constants.ANALYZEIMAGE_WIDTH, constants.ANALYZEIMAGE_HEIGTH, Qt.KeepAspectRatio)
 
 class TrafficSign:
     def __init__(self, signID, box_W_H, coordinateXY, prob):

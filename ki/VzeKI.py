@@ -203,6 +203,7 @@ class VzeKI:
         # Definition Konstanten zur Initialisierung
         LABEL_PATH = "./ki/input/labels/signnames.csv"
         CNN_MODEL_PATH = "./ki/input/cnn/fit_gen"
+        #CNN_MODEL_PATH = "./ki/input/cnn/test_model"
         YOLO_CONFIG_PATH = "./ki/input/yolo/yolov3_ts.cfg"
         YOLO_WEIGHTS_PATH = "./ki/input/yolo/yolov3_ts.weights"
         YOLO_MEAN_PICKLE = "./ki/input/yolo/mean_image_rgb.pickle"
@@ -428,7 +429,8 @@ class VideoThread(QThread):
             h, w, ch = rgbImage.shape
             bytesPerLine = ch * w
             convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
-            p = convertToQtFormat.scaled(800, 480, Qt.KeepAspectRatio)
+            #p = convertToQtFormat.scaled(800, 480, Qt.KeepAspectRatio)
+            p = convertToQtFormat.scaled(constants.ANALYZEIMAGE_WIDTH, constants.ANALYZEIMAGE_HEIGTH, Qt.KeepAspectRatio)
             self.gui.setVideoImage(p)
 
             if cv2.waitKey(10) & 0xFF ==ord("q"):
@@ -461,7 +463,8 @@ class VzeObject:
         h, w, ch = rgbImage.shape
         bytesPerLine = ch * w
         convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
-        self.frame = convertToQtFormat.scaled(850, 480, Qt.KeepAspectRatio)
+        #self.frame = convertToQtFormat.scaled(850, 480, Qt.KeepAspectRatio)
+        self.frame = convertToQtFormat.scaled(constants.ANALYZEIMAGE_WIDTH, constants.ANALYZEIMAGE_HEIGTH, Qt.KeepAspectRatio)
 
 class TrafficSign:
     def __init__(self, signID, box_W_H, coordinateXY, prob):

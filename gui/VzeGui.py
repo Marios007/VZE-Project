@@ -341,7 +341,7 @@ class VzeGui(QtWidgets.QMainWindow):
 
     def startVideo(self):
         # create the video capture thread and handover filepath and the VzeGui class as object
-        # self.thread = VideoThread(self.logic.getFilePath(), self)
+        #self.thread = VideoThread(self.logic.getFilePath(), self)
         # call the real KI method later
         self.thread = VideoThreadKI(self.logic.getFilePath(), self)
         # start the thread

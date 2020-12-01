@@ -33,7 +33,7 @@ class VzeGui(QtWidgets.QMainWindow):
 
         self.logic = logicInterface
         # ringbuffer to store 3 last detected shields
-        self.initRingBuffer()
+        self.ringBuffer = RingBuffer(3)
         # Setting Window Title and Icon
         self.setWindowTitle("VerkehrsZeichenErkennung VZE")
         icon = QtGui.QIcon()
@@ -281,6 +281,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.resultscreen.delete_grid()
         self.deactivateResultBtn()
         self.initRingBuffer()
+        self.analyzescreen.deleteSignLabel()
         self.change_screen(constants.START_SCREEN)
 
     def processKIData(self, inputObject):
@@ -1416,6 +1417,13 @@ class Ui_analyzeScreen(QtWidgets.QWidget):
             self.btn_showResult.setEnabled(False)
             self.btn_cancelAnalyze.setEnabled(True)
 
+    def deleteSignLabel(self):
+    
+        self.label_IconBottom.setPixmap(QtGui.QPixmap("None"))
+        self.label_IconMid.setPixmap(QtGui.QPixmap("None"))
+        self.label_IconTop.setPixmap(QtGui.QPixmap("None"))
+        
+       
 
       
 

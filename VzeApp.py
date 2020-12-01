@@ -130,7 +130,7 @@ class VzeController(GuiInterface):
         return percentage_result
 
     def setResultArray(self, signID):
-        self.array_dataInput[2][signID] += 1
+        self.array_dataInput[2][signID] = int(self.array_dataInput[2][signID]) + 1
         return
 
 

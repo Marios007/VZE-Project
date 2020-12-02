@@ -7,6 +7,7 @@ from ki.VzeKI import VideoThreadKI
 import csv
 from collections import deque
 from gui.RingBuffer import RingBuffer
+import numpy as np
 
 
 class MyMessageBox(QtWidgets.QMessageBox):
@@ -36,6 +37,12 @@ class VzeGui(QtWidgets.QMainWindow):
         self.ringBuffer = RingBuffer(3)
         # dict for counting shields
         self.dict = {}
+
+        """
+        self.countArrLeft = np.empty((0,0), float)
+        self.countArrRight = np.empty((0,0), float)
+        """
+
         # Setting Window Title and Icon
         self.setWindowTitle("VerkehrsZeichenErkennung VZE")
         icon = QtGui.QIcon()
@@ -325,7 +332,24 @@ class VzeGui(QtWidgets.QMainWindow):
                     self.dict.update({signObj.signID : 1})
             print(self.dict)
             print("frameID:frame:{0} - signID:{1} - prob:{2} - box_W_H:{3} - ccordXY:{4}".format(self.id, signObj.signID, signObj.prob, signObj.box_W_H, signObj.coordinateXY ))
-            print(self.logic.isPicture)
+
+            """
+            if signObj.prob >= 96.:
+                x, y = signObj.coordinateXY
+
+                if y >= 0.5*960 and y<= 960:
+                    if self.countArrRight.shape == (0,0):
+                        self.countArrRight = np.append(self.countArrRight, np.array([[signObj.signID, signObj.prob, y]]), axis=0)
+                        print("shape", self.countArrRight.shape)
+                    else:
+                        pass
+                    print("CA", self.countArrRight)
+            """
+
+
+
+
+
         return
         
     def countSignsInPic(self, signArray, numDetectSigns): 

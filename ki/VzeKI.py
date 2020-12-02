@@ -41,8 +41,8 @@ class VzeImageProcessing():
         return cv2.imshow(title, image)
 
     def resize_image(self, image, scale):
-        width = int(image.shape[1] * scale / 100)
-        height = int(image.shape[0] * scale / 100)
+        width = int(image.shape[1] * scale / 100) #ändern auf 960
+        height = int(image.shape[0] * scale / 100) #ändern auf 540
         dim = (width, height)
         # resize image
         resized = cv2.resize(image, dim, interpolation = cv2.INTER_AREA) 
@@ -247,8 +247,8 @@ class VzeKI:
         self.layers_names_output = [self.yolo_network.getLayerNames()[i[0] - 1] for i in self.yolo_network.getUnconnectedOutLayers()]
 
         # set CUDA as the preferable backend and target
-        #self.yolo_network.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
-        #self.yolo_network.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
+        self.yolo_network.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
+        self.yolo_network.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
 
 
 
@@ -342,6 +342,7 @@ class VzeKI:
                 sign_names = self.labels.iloc[prediction, 2]
                 sign_names = np.array(sign_names)
                 probabilities = probabilities_all[np.arange(probabilities_all.shape[0])[:, None],prediction.reshape(prediction.shape[0],1)[:]]*100
+                print("shape",probabilities.shape)
 
                 # checkpoint
                 #print("class: {0} - predict: {1} - probability: {2}".format(prediction, sign_names , probabilities))        
@@ -351,8 +352,8 @@ class VzeKI:
                 
                 returnObject = VzeObject(self.VzeIP.print_boxes_on_image(image, bounding_boxes_final, sign_names, probabilities))
                 for i in range(len(bounding_boxes_final)):
-                    returnObject.addSign(TrafficSign(prediction[i],(bounding_boxes_final[i][2],bounding_boxes_final[i][3]),(bounding_boxes_final[i][0],bounding_boxes_final[i][1]),probabilities[i]))
-                    # print("SchildID: {0} - Wahrscheinlichkeit: {1} - X: {2} - Y: {3} - Breite x Höhe: {4} x {5}".format(prediction[i], probabilities[i], bounding_boxes_final[i][0],bounding_boxes_final[i][1],bounding_boxes_final[i][2],bounding_boxes_final[i][3]))
+                    returnObject.addSign(TrafficSign(prediction[i],(bounding_boxes_final[i][2],bounding_boxes_final[i][3]),(bounding_boxes_final[i][1],bounding_boxes_final[i][0]),probabilities[i][0]))
+                    print("SchildID: {0} - Wahrscheinlichkeit: {1} - X: {2} - Y: {3} - Breite x Höhe: {4} x {5}".format(prediction[i], probabilities[i][0], bounding_boxes_final[i][1],bounding_boxes_final[i][0],bounding_boxes_final[i][2],bounding_boxes_final[i][3]))
             
         return returnObject
     

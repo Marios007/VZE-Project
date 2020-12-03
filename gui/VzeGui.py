@@ -260,29 +260,30 @@ class VzeGui(QtWidgets.QMainWindow):
             array_count = 0
             for line in csv_reader:
                 self.sign_id = line[constants.DEMODATA_CSV_SIGN_ID]
-                self.sign_count = line[constants.DEMODATA_CSV_SIGN_COUNT]
+                self.sign_count = int(line[constants.DEMODATA_CSV_SIGN_COUNT])
 
-                self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_ID][array_count] = self.sign_id
-                self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_INPUT][array_count] = self.sign_count
-                self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_DETECTED][array_count] = self.sign_count
+                self.logic.setDataArray(array_count, constants.DATA_ARRAY_SIGN_ID, self.sign_id)
+                self.logic.setDataArray(array_count, constants.DATA_ARRAY_SIGN_INPUT, self.sign_count)
+                self.logic.setDataArray(array_count, constants.DATA_ARRAY_SIGN_DETECTED, 0)
+
                 array_count = array_count+1
 
         csvfile.close()
 
         print("Demo-Data loaded")
         # Testausgabe des gesamten Arrays
-        # for j in range(len(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_ID])):
-        #     print(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_ID][j], end=' ')
-        #     print(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_INPUT][j], end=' ')
-        #     print(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_DETECTED][j], end=' ')
-        #     print()
+        for j in range(len(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_ID])):
+            print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_ID), end=' ')
+            print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_INPUT), end=' ')
+            print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_DETECTED), end=' ')
+            print()
 
     def cleanup(self):
         """
         method for clearing all variables
         """
         print("CleanUp-Method")
-        self.logic.array_dataInput = [[0 for x in range(constants.TOTAL_NUMBER_SIGNS)] for y in range(constants.DATA_ARRAY_COLUMN_COUNT)]
+        self.logic.resetDataArray()
         self.logic.setCompareResult(False)
         self.logic.setFilePath("")
         self.analyzescreen.deleteSignLabel()
@@ -1048,29 +1049,26 @@ class Ui_DIScreen(QtWidgets.QWidget):
         while item_count < entry_count:
             labelItem = self.gridLayout_DIScreen.itemAt(item_count).widget()
             labelItemValue = str(labelItem.objectName())
-            #print("Label: " + str(labelItem))
-            #print("Label Value: " + labelItemValue)
-            self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_ID][array_count] = labelItemValue
+            self.logic.setDataArray(array_count, constants.DATA_ARRAY_SIGN_ID, labelItemValue)
+            
             item_count = item_count+1
             
             spinboxItem = self.gridLayout_DIScreen.itemAt(item_count).widget()
-            spinboxItemValue = str(spinboxItem.value())
-            #print("SpinBox: " + str(spinboxItem))
-            #print("SpinBox Value: " + spinboxItemValue)
-            self.gui.logic.array_dataInput[constants.DATA_ARRAY_SIGN_INPUT][array_count] = spinboxItemValue
+            spinboxItemValue = spinboxItem.value()
+            self.logic.setDataArray(array_count, constants.DATA_ARRAY_SIGN_INPUT, spinboxItemValue)
 
             #Temporär die Ergebniszeile alles auf spinboxItemValue setzen
-            self.gui.logic.array_dataInput[constants.DATA_ARRAY_SIGN_DETECTED][array_count] = spinboxItemValue
+            #self.logic.setDataArray(array_count, constants.DATA_ARRAY_SIGN_DETECTED, spinboxItemValue)
 
             item_count = item_count+1
             array_count = array_count+1
 
         #Testausgabe des gesamten Arrays
-        #for j in range(len(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_ID])):
-        #    print(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_ID][j], end=' ')
-        #    print(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_INPUT][j], end=' ')
-        #    print(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_DETECTED][j], end=' ')
-        #    print()
+        for j in range(len(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_ID])):
+            print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_ID), end=' ')
+            print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_INPUT), end=' ')
+            print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_DETECTED), end=' ')
+            print()
 
         self.check_gridContent()
 
@@ -1084,7 +1082,7 @@ class Ui_DIScreen(QtWidgets.QWidget):
             # labelItemValue = str(labelItem.objectName())
             # print("Label: " + str(labelItem))
             # print("Label Value: " + labelItemValue)
-            # self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_ID][array_count] = labelItemValue
+            # self.logic.setDataArray(array_count, constants.DATA_ARRAY_SIGN_ID, labelItemValue)
             item_count = item_count+1
             
             spinboxItem = self.gridLayout_DIScreen.itemAt(item_count).widget()
@@ -1092,11 +1090,8 @@ class Ui_DIScreen(QtWidgets.QWidget):
             # spinboxItemValue = str(spinboxItem.value())
             # print("SpinBox Value Before: " + spinboxItemValue)
             spinboxItem.setValue(0)
-            spinboxItemValue = str(spinboxItem.value())
-            # print("SpinBox Value After: " + spinboxItemValue)
-            
-            # Wenn Array auch zurückgesetzt werden soll, diese Zeile hier rein
-            self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_INPUT][array_count] = spinboxItemValue
+            spinboxItemValue = spinboxItem.value()
+            self.logic.setDataArray(array_count, constants.DATA_ARRAY_SIGN_INPUT, spinboxItemValue)
             item_count = item_count+1
             array_count = array_count+1
 
@@ -1105,7 +1100,7 @@ class Ui_DIScreen(QtWidgets.QWidget):
         emptyCheck = True
         
         for array_count in range(len(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_ID])):
-            sign_count = int(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_INPUT][array_count])
+            sign_count = self.logic.getDataArray(array_count, constants.DATA_ARRAY_SIGN_INPUT)
             if sign_count > 0:
                 emptyCheck = False
            
@@ -1662,11 +1657,11 @@ class Ui_ResultScreen(QtWidgets.QWidget):
         
         for array_count in range(len(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_ID])):
 
-            self.sign_id = ":/signs/" + str(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_ID][array_count])
-            self.sign_input = str(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_INPUT][array_count])
-            self.sign_detected = str(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_DETECTED][array_count])
+            self.sign_id = ":/signs/" + self.logic.getDataArray(array_count, constants.DATA_ARRAY_SIGN_ID)
+            self.sign_input = self.logic.getDataArray(array_count, constants.DATA_ARRAY_SIGN_INPUT)
+            self.sign_detected = self.logic.getDataArray(array_count, constants.DATA_ARRAY_SIGN_DETECTED)
 
-            if (self.sign_input != "0") or ( (self.logic.getCompareResult() == True) and (self.sign_detected != "0") ) :
+            if (self.sign_input > 0) or ( (self.logic.getCompareResult() == True) and (self.sign_detected > 0) ) :
 
                 self.name_sign = QtWidgets.QLabel(self.scrollAreaResult)
                 self.name_sign.setMinimumSize(QtCore.QSize(constants.SIGN_WIDTH, constants.SIGN_HEIGTH))
@@ -1688,7 +1683,7 @@ class Ui_ResultScreen(QtWidgets.QWidget):
                     self.lbl_eingabe.setMaximumSize(QtCore.QSize(constants.SIGN_COUNT_WIDTH, constants.SIGN_COUNT_HEIGTH))
                     self.lbl_eingabe.setObjectName("lbl_eingabe")
                     self.lbl_eingabe.setStyleSheet(styles.styleResultLabel)
-                    self.lbl_eingabe.setText(self.sign_input)
+                    self.lbl_eingabe.setText(str(self.sign_input))
                     self.gridLayout_Result.addWidget(self.lbl_eingabe, line,column,1,1, QtCore.Qt.AlignHCenter)
                 column = column+1
 
@@ -1702,7 +1697,7 @@ class Ui_ResultScreen(QtWidgets.QWidget):
                 self.lbl_erkannt.setMaximumSize(QtCore.QSize(constants.SIGN_COUNT_WIDTH, constants.SIGN_COUNT_HEIGTH))
                 self.lbl_erkannt.setObjectName("lbl_erkannt")
                 self.lbl_erkannt.setStyleSheet(styles.styleResultLabel)
-                self.lbl_erkannt.setText(self.sign_detected)
+                self.lbl_erkannt.setText(str(self.sign_detected))
                 self.gridLayout_Result.addWidget(self.lbl_erkannt, line,column,1,1, QtCore.Qt.AlignHCenter)
 
                 column = column+1

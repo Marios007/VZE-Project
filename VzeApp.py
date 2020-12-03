@@ -116,34 +116,36 @@ class VzeController(GuiInterface):
     def startAnalysis(self):
         # Method to start the analysis
         print("Method startAnalysis in VzeApp")
+        
+        sign_count = 0
+        percentage_count = 0
+        percentage_result = 0
 
-        percentage_result=0
         sign_id = ""
-        sign_detected = 0
         sign_input = 0
-        sign_count = constants.TOTAL_NUMBER_SIGNS
-        percentage_counter = 0
+        sign_detected = 0
 
         for array_count in range(len(self.array_dataInput[0])):
-            percentage = 0
             sign_id = self.getDataArray(array_count, constants.DATA_ARRAY_SIGN_ID)
             sign_input = int(self.getDataArray(array_count, constants.DATA_ARRAY_SIGN_INPUT))
             sign_detected = int(self.getDataArray(array_count, constants.DATA_ARRAY_SIGN_DETECTED))
 
-            # percentage must only be calculated when customer expects the sign
-            if(sign_input > 0):
-                # Hier die Berechnung ausführen:
-                # | (erkannte Schilder - eingegebene Schilder) / eingegebene Schilder | * 100
+            if( (sign_input == 0) and (sign_detected == 0) ):
+                percentage_count = percentage_count + 0
+
+            elif(sign_detected > sign_input):
+                percentage_count = percentage_count + 0
+                sign_count = sign_count + sign_detected
+
+            else:
                 sum = (sign_detected - sign_input)
                 diff = abs(sum / sign_input)
                 percentage = diff * 100
-                percentage_counter = percentage_counter + percentage
-                # print("SignId: " + str(sign_id) + "; Input: " + str(sign_input) + "; Detected: " + str(sign_detected) + "; Percentage: " + str(percentage))
-            # print("Percentage Counter: " + str(percentage_counter))
+                percentage_count = percentage_count + percentage
+                sign_count = sign_count + sign_input
 
-        percentage_result = int(round(percentage_counter / sign_count, 0))
+        percentage_result = int(round(percentage_count / sign_count, 0))
         percentage_result = 100 - percentage_result
-        # print("Percentage Result: " + str(percentage_result))
         return percentage_result
 
 

@@ -1,4 +1,3 @@
-from pickle import NONE
 import numpy as np
 import pandas as pd
 import cv2
@@ -6,7 +5,6 @@ import pickle
 import filetype
 from keras.models import load_model
 from constants import *
-#For KI Thread
 from PyQt5.QtCore import Qt, QThread
 from PyQt5.QtGui import QImage
 from pandas.core import frame
@@ -380,6 +378,9 @@ class VzeKI:
 
 
 class VideoThreadKI(QThread):
+    """
+    Thread for the AI processing and for putting the video (frames into the GUI)
+    """
     def __init__(self, path, gui, parent=None):
         QThread.__init__(self, parent)
         self.path = path
@@ -413,6 +414,13 @@ class VideoThreadKI(QThread):
 
 
 class VzeObject:  
+    """
+    Class information for each frame
+    frame = is the frame
+    frameId = is a coutner starts with 1
+    numDetectSigns = amount of detected signs in one frame
+    detectedSigns = array of TrafficSign object
+    """
     def __init__(self, processedFrame):
          self.frame = processedFrame
          self.frameId = 0
@@ -432,6 +440,13 @@ class VzeObject:
         self.frame = convertToQtFormat.scaled(ANALYZEIMAGE_WIDTH, ANALYZEIMAGE_HEIGTH, Qt.KeepAspectRatio)
 
 class TrafficSign:
+    """
+    Class with information about a traffic sign
+    prob = probapility
+    SignId = is ID from csv
+    box_W_H = Bounding Box size a Tuple
+    coordinateXY = is coordinate of upper left corner of bounding box
+    """
     def __init__(self, signID, box_W_H, coordinateXY, prob):
         self.prob = prob
         self.signID = signID

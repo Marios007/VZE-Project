@@ -8,16 +8,6 @@ from gui.RingBuffer import RingBuffer
 import numpy as np
 
 
-class MyMessageBox(QtWidgets.QMessageBox):
-    def __init__(self):
-        QtWidgets.QMessageBox.__init__(self)
-        #self.setSizeGripEnabled(False)
-
-    def event(self, e):
-        result = QtWidgets.QMessageBox.event(self, e)
-        self.setFixedSize(POPUP_MESSAGE_WIDHT, POPUP_MESSAGE_HEIGHT)
-        return result
-
 class VzeGui(QtWidgets.QMainWindow):
 
     stack_lastScreen = []
@@ -136,7 +126,6 @@ class VzeGui(QtWidgets.QMainWindow):
         """
         print("loading demo data grid for demovideo " + str(demoID))
 
-        # set demodatafile according to the passed demoID
         demodatafile = ""
         if demoID == DEMO_ID_1:
             demodatafile = self.demo_datafile1
@@ -308,16 +297,19 @@ class VzeGui(QtWidgets.QMainWindow):
         else:
             self.countSignsInPic(self.detectedSigns, self.numDetectSigns)
 
-    def countSigns(self, signArray, numDetectSigns): 
+    def countSigns(self, signArray, numDetectSigns):
+        """
+        method to count signs in videos
+        """
         for i in range(numDetectSigns):
             signObj = signArray[i]
             
             if signObj.prob >= 96.:
                 x, _ = signObj.coordinateXY
-                if x >= self.COUNT_BORDER_RIGHT*self.WIDTH_MAX and x<= self.WIDTH_MAX:
+                if x >= COUNT_BORDER_RIGHT*WIDTH_MAX and x<= WIDTH_MAX:
                     self.countArrRight = self.fillArrayCount(self.countArrRight, signObj, x)
                     #print("RIGHT", self.countArrRight)
-                if x < self.COUNT_BORDER_LEFT*self.WIDTH_MAX and x>= self.WIDTH_MIN:
+                if x < COUNT_BORDER_LEFT*WIDTH_MAX and x>= WIDTH_MIN:
                     self.countArrLeft = self.fillArrayCount(self.countArrLeft, signObj, x)
                     #print("LEFT", self.countArrLeft)
         return
@@ -326,12 +318,12 @@ class VzeGui(QtWidgets.QMainWindow):
         # [:,0] == signIDs and [:,3] == count of each numpy array row
         if np.any(countArray[:,0] == signObj.signID):
             id_index = np.where(countArray[:,0] == signObj.signID)
-            if countArray[id_index,2] <= x-self.NEW_SIGN_BOUNDARIES or countArray[id_index,2] >= x+self.NEW_SIGN_BOUNDARIES:
+            if countArray[id_index,2] <= x-NEW_SIGN_BOUNDARIES or countArray[id_index,2] >= x+NEW_SIGN_BOUNDARIES:
                 countArray[id_index,3] = 0
                 print()
                 print("NEW SIGN", countArray[id_index,2], x, "ID", countArray[id_index,0])
                 print()
-            if countArray[id_index,3] == self.COUNT_THRESHOLD:
+            if countArray[id_index,3] == COUNT_THRESHOLD:
                     self.logic.setResultArray(signObj.signID)
                     self.setSideLabels(signObj.signID)
             countArray[id_index,3] += 1
@@ -343,7 +335,10 @@ class VzeGui(QtWidgets.QMainWindow):
 
 
     def countSignsInPic(self, signArray, numDetectSigns): 
-         for i in range(numDetectSigns):
+        """
+        method to count signs only in pictures
+        """
+        for i in range(numDetectSigns):
             signObj = signArray[i]
 
             if signObj.prob >= 93.:
@@ -352,6 +347,10 @@ class VzeGui(QtWidgets.QMainWindow):
 
 
     def setSideLabels(self, detetedSign):
+        """
+        Setting the side lables with the detected signs
+        Showing the latest detected sign on top an move others to bottom
+        """
         detetedSignID = ":/signs/" + str(detetedSign)
         self.ringBuffer.append(detetedSignID)
         list = self.ringBuffer.get()
@@ -2068,3 +2067,14 @@ class Ui_InfoScreen(QtWidgets.QWidget):
         self.lyth_bottom_Info.addWidget(self.btn_closeInfo)
         self.lyth_bottom_Info.addItem(self.spacerItem87)
         self.verticalLayout_12.addLayout(self.lyth_bottom_Info)
+
+
+class MyMessageBox(QtWidgets.QMessageBox):
+    def __init__(self):
+        QtWidgets.QMessageBox.__init__(self)
+        #self.setSizeGripEnabled(False)
+
+    def event(self, e):
+        result = QtWidgets.QMessageBox.event(self, e)
+        self.setFixedSize(POPUP_MESSAGE_WIDHT, POPUP_MESSAGE_HEIGHT)
+        return result

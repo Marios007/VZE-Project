@@ -40,11 +40,11 @@ class VzeController(GuiInterface):
     _compareResult = False
     array_dataInput = [[0 for x in range(TOTAL_NUMBER_SIGNS)] for y in range(DATA_ARRAY_COLUMN_COUNT)]
     preprocessor = None
-    isPicture = None
+    isPicture = False
 
     def __init__(self):
         self.preprocessor = VzeImageProcessing(self)
-        self.isPicture = None
+        self.isPicture = False
 
     def loadFile(self):
         """

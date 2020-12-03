@@ -290,7 +290,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.id = inputObject.frameId
         self.numDetectSigns = inputObject.numDetectSigns
         self.detectedSigns = inputObject.detectedSigns
-        print("frameID:{0} - numDetectedSigns:{1}".format(self.id, self.numDetectSigns))
+        # print("frameID:{0} - numDetectedSigns:{1}".format(self.id, self.numDetectSigns))
         
         if not self.logic.isPicture:
             self.countSigns(self.detectedSigns, self.numDetectSigns)
@@ -303,7 +303,7 @@ class VzeGui(QtWidgets.QMainWindow):
         """
         for i in range(numDetectSigns):
             signObj = signArray[i]
-            
+
             if signObj.prob >= 96.:
                 x, _ = signObj.coordinateXY
                 if x >= COUNT_BORDER_RIGHT*WIDTH_MAX and x<= WIDTH_MAX:
@@ -340,7 +340,6 @@ class VzeGui(QtWidgets.QMainWindow):
         """
         for i in range(numDetectSigns):
             signObj = signArray[i]
-
             if signObj.prob >= 93.:
                 self.setSideLabels(signObj.signID)
                 self.logic.setResultArray(signObj.signID)
@@ -1125,7 +1124,6 @@ class Ui_DIScreen(QtWidgets.QWidget):
         self.gui.change_screen(ANALYZE_PV_SCREEN)
 
             
-        
 
 # Analyze Preview Screen
 class Ui_analyzePvScreen(QtWidgets.QWidget):

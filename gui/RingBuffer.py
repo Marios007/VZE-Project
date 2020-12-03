@@ -1,3 +1,9 @@
+"""
+Source:
+https://www.oreilly.com/library/view/python-cookbook/0596001673/ch05s19.html
+"""
+
+
 class RingBuffer:
     """ class that implements a not-yet-full buffer """
     def __init__(self,size_max):
@@ -25,20 +31,4 @@ class RingBuffer:
     def get(self):
         """ Return a list of elements from the oldest to the newest. """
         return self.data
-
-
-# sample usage
-if __name__=='__main__':
-    x=RingBuffer(5)
-    x.append(1); x.append(2); x.append(3); x.append(4)
-    print(x.__class__, x.get())
-    list = x.get()
-    print("list: " + str(list))
-    print(list[0])
-    print(len(list))
-    x.append(5)
-    print(x.__class__, x.get())
-    x.append(6)
-    print(x.data, x.get())
-    x.append(7); x.append(8); x.append(9); x.append(10)
-    print(x.data, x.get())
+        

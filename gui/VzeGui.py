@@ -28,6 +28,11 @@ class VzeGui(QtWidgets.QMainWindow):
     demo_datafile1 = "./gui/demo_data_1.csv"
     demo_datafile2 = "./gui/demo_data_2.csv"
 
+    WIDTH_MIN = 0
+    WIDTH_MAX = 960
+    COUNT_BORDER_LEFT = 0.47
+    COUNT_BORDER_RIGHT = 0.53
+
     def __init__(self, logicInterface):
         QtWidgets.QMainWindow.__init__(self)
         print("loading UI")
@@ -38,10 +43,8 @@ class VzeGui(QtWidgets.QMainWindow):
         # dict for counting shields
         self.dict = {}
 
-        """
-        self.countArrLeft = np.empty((0,0), float)
-        self.countArrRight = np.empty((0,0), float)
-        """
+        self.countArrLeft = np.empty((0,4), float)
+        self.countArrRight = np.empty((0,4), float)
 
         # Setting Window Title and Icon
         self.setWindowTitle("VerkehrsZeichenErkennung VZE")
@@ -318,6 +321,7 @@ class VzeGui(QtWidgets.QMainWindow):
         for i in range(numDetectSigns):
             signObj = signArray[i]
             
+            """
             if signObj.prob >= 96.:
                 print("SignProb:" + str(signObj.prob))
                 if signObj.signID in self.dict:
@@ -333,26 +337,32 @@ class VzeGui(QtWidgets.QMainWindow):
                     self.dict.update({signObj.signID : 1})
             print(self.dict)
             print("frameID:frame:{0} - signID:{1} - prob:{2} - box_W_H:{3} - ccordXY:{4}".format(self.id, signObj.signID, signObj.prob, signObj.box_W_H, signObj.coordinateXY ))
-
             """
+            
             if signObj.prob >= 96.:
-                x, y = signObj.coordinateXY
-
-                if y >= 0.5*960 and y<= 960:
-                    if self.countArrRight.shape == (0,0):
-                        self.countArrRight = np.append(self.countArrRight, np.array([[signObj.signID, signObj.prob, y]]), axis=0)
-                        print("shape", self.countArrRight.shape)
-                    else:
-                        pass
-                    print("CA", self.countArrRight)
-            """
-
-
-
-
+                _, y = signObj.coordinateXY
+                if y >= self.COUNT_BORDER_RIGHT*self.WIDTH_MAX and y<= self.WIDTH_MAX:
+                    self.countArrRight = self.fillArrayCount(self.countArrRight, signObj, y)
+                if y < self.COUNT_BORDER_LEFT*self.WIDTH_MAX and y>= self.WIDTH_MIN:
+                    self.countArrLeft = self.fillArrayCount(self.countArrLeft, signObj, y)
 
         return
+
+    def fillArrayCount(self, countArray, signObj, y):
+        # [:,0] == signIDs and [:,3] == count of each numpy array row
+        if np.any(countArray[:,0] == signObj.signID):
+            id_index = np.where(countArray[:,0] == signObj.signID)
+            if countArray[id_index,3] == 10:
+                    self.logic.setResultArray(signObj.signID)
+                    self.setSideLabels(signObj.signID)
+            countArray[id_index,3] += 1
+        else: 
+            # signID, signProbability, sign ymin, count
+            countArray = np.vstack((countArray, np.array([signObj.signID, signObj.prob, y, 1])))
         
+        return countArray
+
+
     def countSignsInPic(self, signArray, numDetectSigns): 
          for i in range(numDetectSigns):
             signObj = signArray[i]

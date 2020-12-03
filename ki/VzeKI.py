@@ -13,7 +13,7 @@ from pandas.core import frame
 # for debugging inside thread
 #import pydevd
 
-import tensorflow as tf
+from tensorflow.config import experimental
 from tensorflow.python.client import device_lib
 
 class VzeImageProcessing():
@@ -212,9 +212,9 @@ class VzeKI:
         self.previousTime = 0
         self.frames_count = 1
 
-        physical_devices = tf.config.experimental.list_physical_devices('GPU')
+        physical_devices = experimental.list_physical_devices('GPU')
         if len(physical_devices) > 0:
-            tf.config.experimental.set_memory_growth(physical_devices[0], True)
+            experimental.set_memory_growth(physical_devices[0], True)
 
 
         # Labels laden

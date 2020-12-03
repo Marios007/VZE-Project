@@ -12,7 +12,7 @@
 10;No passing for vehicles over 3.5 metric tons;0
 11;Right-of-way at the next intersection;0
 12;Priority road;4
-13;Yield;2
+13;Yield;1
 14;Stop;0
 15;No vehicles;0
 16;Vehicles over 3.5 metric tons prohibited;0
@@ -26,9 +26,9 @@
 24;Road narrows on the right;0
 25;Road work;0
 26;Traffic signals;0
-27;Pedestrians;1
+27;Pedestrians;0
 28;Children crossing;0
-29;Bicycles crossing;2
+29;Bicycles crossing;0
 30;Beware of ice/snow;0
 31;Wild animals crossing;0
 32;End of all speed and passing limits;2
@@ -37,7 +37,7 @@
 35;Ahead only;0
 36;Go straight or right;0
 37;Go straight or left;0
-38;Keep right;4
+38;Keep right;2
 39;Keep left;0
 40;Roundabout mandatory;0
 41;End of no passing;0

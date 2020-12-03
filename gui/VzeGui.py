@@ -299,6 +299,9 @@ class VzeGui(QtWidgets.QMainWindow):
         self.initRingBuffer()
         self.dict = {}
         self.change_screen(constants.START_SCREEN)
+        self.countArrLeft = np.empty((0,4), float)
+        self.countArrRight = np.empty((0,4), float)
+        
 
     def processKIData(self, inputObject):
         """

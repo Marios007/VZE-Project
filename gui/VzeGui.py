@@ -32,6 +32,8 @@ class VzeGui(QtWidgets.QMainWindow):
     WIDTH_MAX = 960
     COUNT_BORDER_LEFT = 0.47
     COUNT_BORDER_RIGHT = 0.53
+    COUNT_THRESHOLD = 10
+    NEW_SIGN_BOUNDARIES = 150
 
     def __init__(self, logicInterface):
         QtWidgets.QMainWindow.__init__(self)
@@ -343,8 +345,10 @@ class VzeGui(QtWidgets.QMainWindow):
                 _, y = signObj.coordinateXY
                 if y >= self.COUNT_BORDER_RIGHT*self.WIDTH_MAX and y<= self.WIDTH_MAX:
                     self.countArrRight = self.fillArrayCount(self.countArrRight, signObj, y)
+                    #print("RIGHT", self.countArrRight)
                 if y < self.COUNT_BORDER_LEFT*self.WIDTH_MAX and y>= self.WIDTH_MIN:
                     self.countArrLeft = self.fillArrayCount(self.countArrLeft, signObj, y)
+                    #print("LEFT", self.countArrLeft)
 
         return
 
@@ -352,14 +356,19 @@ class VzeGui(QtWidgets.QMainWindow):
         # [:,0] == signIDs and [:,3] == count of each numpy array row
         if np.any(countArray[:,0] == signObj.signID):
             id_index = np.where(countArray[:,0] == signObj.signID)
-            if countArray[id_index,3] == 10:
+            if countArray[id_index,2] <= y-self.NEW_SIGN_BOUNDARIES or countArray[id_index,2] >= y+self.NEW_SIGN_BOUNDARIES:
+                countArray[id_index,3] = 0
+                print()
+                print("NEW SIGN", countArray[id_index,2], y, "ID", countArray[id_index,0])
+                print()
+            if countArray[id_index,3] == self.COUNT_THRESHOLD:
                     self.logic.setResultArray(signObj.signID)
                     self.setSideLabels(signObj.signID)
             countArray[id_index,3] += 1
+            countArray[id_index,2] = y
         else: 
             # signID, signProbability, sign ymin, count
             countArray = np.vstack((countArray, np.array([signObj.signID, signObj.prob, y, 1])))
-        
         return countArray
 
 

@@ -16,9 +16,6 @@ from pandas.core import frame
 import tensorflow as tf
 from tensorflow.python.client import device_lib
 
-
-import tensorflow as tf
-
 class VzeImageProcessing():
        
     def __init__(self, vzeController):
@@ -342,7 +339,6 @@ class VzeKI:
                 sign_names = self.labels.iloc[prediction, 2]
                 sign_names = np.array(sign_names)
                 probabilities = probabilities_all[np.arange(probabilities_all.shape[0])[:, None],prediction.reshape(prediction.shape[0],1)[:]]*100
-                print("shape",probabilities.shape)
 
                 # checkpoint
                 #print("class: {0} - predict: {1} - probability: {2}".format(prediction, sign_names , probabilities))        

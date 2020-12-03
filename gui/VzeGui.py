@@ -272,11 +272,11 @@ class VzeGui(QtWidgets.QMainWindow):
 
         print("Demo-Data loaded")
         # Testausgabe des gesamten Arrays
-        for j in range(len(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_ID])):
-            print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_ID), end=' ')
-            print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_INPUT), end=' ')
-            print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_DETECTED), end=' ')
-            print()
+        # for j in range(len(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_ID])):
+        #     print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_ID), end=' ')
+        #     print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_INPUT), end=' ')
+        #     print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_DETECTED), end=' ')
+        #     print()
 
     def cleanup(self):
         """
@@ -933,8 +933,7 @@ class Ui_DIScreen(QtWidgets.QWidget):
         self.btn_skip.setCheckable(False)
         self.btn_skip.setFlat(False)
         self.btn_skip.setObjectName("btn_skip")
-        self.btn_skip.clicked.connect(lambda: self.logic.setCompareResult(False))
-        self.btn_skip.clicked.connect(lambda: self.gui.change_screen(constants.ANALYZE_PV_SCREEN))
+        self.btn_skip.clicked.connect(lambda: self.skip_dataInput())
 
 
         self.btn_DInext = QtWidgets.QPushButton(self)
@@ -1064,11 +1063,11 @@ class Ui_DIScreen(QtWidgets.QWidget):
             array_count = array_count+1
 
         #Testausgabe des gesamten Arrays
-        for j in range(len(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_ID])):
-            print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_ID), end=' ')
-            print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_INPUT), end=' ')
-            print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_DETECTED), end=' ')
-            print()
+        # for j in range(len(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_ID])):
+        #     print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_ID), end=' ')
+        #     print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_INPUT), end=' ')
+        #     print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_DETECTED), end=' ')
+        #     print()
 
         self.check_gridContent()
 
@@ -1111,6 +1110,35 @@ class Ui_DIScreen(QtWidgets.QWidget):
         else:
             self.logic.setCompareResult(True)
             self.gui.change_screen(constants.ANALYZE_PV_SCREEN)
+
+    def skip_dataInput(self):
+        self.logic.setCompareResult(False)
+
+        entry_count = self.gridLayout_DIScreen.count() -1
+        item_count = 0
+        array_count = 0
+    
+        while item_count < entry_count:
+            labelItem = self.gridLayout_DIScreen.itemAt(item_count).widget()
+            labelItemValue = str(labelItem.objectName())
+            self.logic.setDataArray(array_count, constants.DATA_ARRAY_SIGN_ID, labelItemValue)
+            
+            item_count = item_count+1
+            
+            self.logic.setDataArray(array_count, constants.DATA_ARRAY_SIGN_INPUT, 0)
+
+            item_count = item_count+1
+            array_count = array_count+1
+
+        #Testausgabe des gesamten Arrays
+        # for j in range(len(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_ID])):
+        #     print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_ID), end=' ')
+        #     print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_INPUT), end=' ')
+        #     print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_DETECTED), end=' ')
+        #     print()
+
+        self.gui.change_screen(constants.ANALYZE_PV_SCREEN)
+
             
         
 
@@ -1657,11 +1685,13 @@ class Ui_ResultScreen(QtWidgets.QWidget):
         
         for array_count in range(len(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_ID])):
 
-            self.sign_id = ":/signs/" + self.logic.getDataArray(array_count, constants.DATA_ARRAY_SIGN_ID)
+            self.sign_id = ":/signs/" + str(self.logic.getDataArray(array_count, constants.DATA_ARRAY_SIGN_ID))
             self.sign_input = self.logic.getDataArray(array_count, constants.DATA_ARRAY_SIGN_INPUT)
             self.sign_detected = self.logic.getDataArray(array_count, constants.DATA_ARRAY_SIGN_DETECTED)
 
-            if (self.sign_input > 0) or ( (self.logic.getCompareResult() == True) and (self.sign_detected > 0) ) :
+            print("SignID: " + str(self.logic.getDataArray(array_count, constants.DATA_ARRAY_SIGN_ID)) + "; Input: " + str(self.sign_input) + "; Detected: " + str(self.sign_detected))
+
+            if (self.sign_detected > 0) or ( (self.logic.getCompareResult() == True) and (self.sign_input > 0) ) :
 
                 self.name_sign = QtWidgets.QLabel(self.scrollAreaResult)
                 self.name_sign.setMinimumSize(QtCore.QSize(constants.SIGN_WIDTH, constants.SIGN_HEIGTH))

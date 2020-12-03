@@ -368,7 +368,6 @@ class VzeKI:
 
     def processFrame(self, frame, currentTime):
 
-        
         frame = self.VzeIP.resize_image(frame, 50)           
         height, width = self.VzeIP.get_dimensions(frame)
         returnedObject = self.detect_signs(frame, height, width)
@@ -405,44 +404,6 @@ class VideoThreadKI(QThread):
         self.gui.activateResultBtn()        
         print("done")
         
-
-    def stopVideo(self):
-        """Sets run flag to False and waits for thread to finish"""
-        self._run_flag = False
-        self.wait()
-        self.cap.release()
-
-class VideoThread(QThread):
-    img = None
-    def __init__(self, path, gui, parent=None):
-        QThread.__init__(self, parent)
-        self.path = path
-        self._run_flag = True
-        self.gui = gui
-
-    def run(self):
-        #pydevd.settrace(suspend=False)
-        print("play video " + str(self.path))
-        self.cap = cv2.VideoCapture(self.path)
-        while self._run_flag:
-            read, frame = self.cap.read()
-            if not read:
-                break
-                
-            rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            h, w, ch = rgbImage.shape
-            bytesPerLine = ch * w
-            convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
-            #p = convertToQtFormat.scaled(800, 480, Qt.KeepAspectRatio)
-            p = convertToQtFormat.scaled(ANALYZEIMAGE_WIDTH, ANALYZEIMAGE_HEIGTH, Qt.KeepAspectRatio)
-            self.gui.setVideoImage(p)
-
-            if cv2.waitKey(10) & 0xFF ==ord("q"):
-                break
-        print("Video finished")
-        # activate result button, once video is finished
-        self.gui.activateResultBtn()
-        self.cap.release()
 
     def stopVideo(self):
         """Sets run flag to False and waits for thread to finish"""

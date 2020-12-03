@@ -2,10 +2,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import gui.styles as styles
 import gui.image_ressources as image_ressources
 from constants import *
-from ki.VzeKI import VideoThread
 from ki.VzeKI import VideoThreadKI
 import csv
-from collections import deque
 from gui.RingBuffer import RingBuffer
 import numpy as np
 
@@ -28,13 +26,6 @@ class VzeGui(QtWidgets.QMainWindow):
     demo_datafile1 = "./gui/demo_data_1.csv"
     demo_datafile2 = "./gui/demo_data_2.csv"
 
-    WIDTH_MIN = 0
-    WIDTH_MAX = 960
-    COUNT_BORDER_LEFT = 0.47
-    COUNT_BORDER_RIGHT = 0.53
-    COUNT_THRESHOLD = 10
-    NEW_SIGN_BOUNDARIES = 150
-
     def __init__(self, logicInterface):
         QtWidgets.QMainWindow.__init__(self)
         print("loading UI")
@@ -42,9 +33,8 @@ class VzeGui(QtWidgets.QMainWindow):
         self.logic = logicInterface
         # ringbuffer to store 3 last detected shields
         self.ringBuffer = RingBuffer(3)
-        # dict for counting shields
-        self.dict = {}
-
+       
+        # nparray for counting signs
         self.countArrLeft = np.empty((0,4), float)
         self.countArrRight = np.empty((0,4), float)
 
@@ -238,9 +228,6 @@ class VzeGui(QtWidgets.QMainWindow):
         """
         method to cancel the Analysis of the current file and get back to the startscreen
         """
-        # SL: Hier dann der Cancel der Analyse. Eventuell eine globale Variable mit True belegen, wenn die Analyse laufen soll
-        # und dann beim Klicken des Abbrechen-Button auf False setzen.
-        # In der Methode zum Video abspielen müsste dann nur in jedem Schleifendurchlauf diese abgefragt werden.
         self.cleanup()
         self.thread.stopVideo()
         self.change_screen(START_SCREEN)
@@ -297,7 +284,6 @@ class VzeGui(QtWidgets.QMainWindow):
         self.resultscreen.delete_grid()
         self.deactivateResultBtn()
         self.initRingBuffer()
-        self.dict = {}
         self.change_screen(START_SCREEN)
         self.countArrLeft = np.empty((0,4), float)
         self.countArrRight = np.empty((0,4), float)
@@ -326,24 +312,6 @@ class VzeGui(QtWidgets.QMainWindow):
         for i in range(numDetectSigns):
             signObj = signArray[i]
             
-            """
-            if signObj.prob >= 96.:
-                print("SignProb:" + str(signObj.prob))
-                if signObj.signID in self.dict:
-                    if self.dict[signObj.signID]==10:
-                        self.logic.setResultArray(signObj.signID)
-                        self.setSideLabels(signObj.signID)
-                        self.dict[signObj.signID] = self.dict[signObj.signID]+1
-                    else:
-                        print("+1 in dict for id " +  str(signObj.signID))
-                        self.dict[signObj.signID] = self.dict[signObj.signID]+1
-                else:
-                    print("add to dict" +  str(signObj.signID))
-                    self.dict.update({signObj.signID : 1})
-            print(self.dict)
-            print("frameID:frame:{0} - signID:{1} - prob:{2} - box_W_H:{3} - ccordXY:{4}".format(self.id, signObj.signID, signObj.prob, signObj.box_W_H, signObj.coordinateXY ))
-            """
-            
             if signObj.prob >= 96.:
                 x, _ = signObj.coordinateXY
                 if x >= self.COUNT_BORDER_RIGHT*self.WIDTH_MAX and x<= self.WIDTH_MAX:
@@ -352,7 +320,6 @@ class VzeGui(QtWidgets.QMainWindow):
                 if x < self.COUNT_BORDER_LEFT*self.WIDTH_MAX and x>= self.WIDTH_MIN:
                     self.countArrLeft = self.fillArrayCount(self.countArrLeft, signObj, x)
                     #print("LEFT", self.countArrLeft)
-
         return
 
     def fillArrayCount(self, countArray, signObj, x):
@@ -402,9 +369,6 @@ class VzeGui(QtWidgets.QMainWindow):
         self.analyzescreen.videoLayout.setPixmap(QtGui.QPixmap.fromImage(img))
 
     def startVideo(self):
-        # create the video capture thread and handover filepath and the VzeGui class as object
-        #self.thread = VideoThread(self.logic.getFilePath(), self)
-        # call the real KI method later
         self.thread = VideoThreadKI(self.logic.getFilePath(), self)
         # start the thread
         self.thread.start()

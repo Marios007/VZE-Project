@@ -1,7 +1,8 @@
 from PyQt5.QtWidgets import QFileDialog, QApplication
 from gui.VzeGui import VzeGui
 from ki.VzeKI import VzeImageProcessing
-import constants as constants
+#import constants as constants
+from constants import *
 import abc
 import os
 
@@ -37,7 +38,7 @@ class VzeController(GuiInterface):
 
     _fileName = None
     _compareResult = False
-    array_dataInput = [[0 for x in range(constants.TOTAL_NUMBER_SIGNS)] for y in range(constants.DATA_ARRAY_COLUMN_COUNT)]
+    array_dataInput = [[0 for x in range(TOTAL_NUMBER_SIGNS)] for y in range(DATA_ARRAY_COLUMN_COUNT)]
     preprocessor = None
     isPicture = None
 
@@ -102,11 +103,11 @@ class VzeController(GuiInterface):
         return self.array_dataInput[colID][signID]
 
     def resetDataArray(self):
-        self.array_dataInput = [[0 for x in range(constants.TOTAL_NUMBER_SIGNS)] for y in range(constants.DATA_ARRAY_COLUMN_COUNT)]
+        self.array_dataInput = [[0 for x in range(TOTAL_NUMBER_SIGNS)] for y in range(DATA_ARRAY_COLUMN_COUNT)]
 
     def setResultArray(self, signID):
-        val = self.getDataArray(signID, constants.DATA_ARRAY_SIGN_DETECTED)
-        self.setDataArray(signID, constants.DATA_ARRAY_SIGN_DETECTED, val+1)
+        val = self.getDataArray(signID, DATA_ARRAY_SIGN_DETECTED)
+        self.setDataArray(signID, DATA_ARRAY_SIGN_DETECTED, val+1)
         return
 
     def checkFilePath(self, filepath):
@@ -126,9 +127,9 @@ class VzeController(GuiInterface):
         sign_detected = 0
 
         for array_count in range(len(self.array_dataInput[0])):
-            sign_id = self.getDataArray(array_count, constants.DATA_ARRAY_SIGN_ID)
-            sign_input = int(self.getDataArray(array_count, constants.DATA_ARRAY_SIGN_INPUT))
-            sign_detected = int(self.getDataArray(array_count, constants.DATA_ARRAY_SIGN_DETECTED))
+            sign_id = self.getDataArray(array_count, DATA_ARRAY_SIGN_ID)
+            sign_input = int(self.getDataArray(array_count, DATA_ARRAY_SIGN_INPUT))
+            sign_detected = int(self.getDataArray(array_count, DATA_ARRAY_SIGN_DETECTED))
 
             if( (sign_input == 0) and (sign_detected == 0) ):
                 percentage_count = percentage_count + 0

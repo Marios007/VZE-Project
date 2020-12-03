@@ -1,7 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import gui.styles as styles
 import gui.image_ressources as image_ressources
-import constants as constants
+from constants import *
 from ki.VzeKI import VideoThread
 from ki.VzeKI import VideoThreadKI
 import csv
@@ -17,7 +17,7 @@ class MyMessageBox(QtWidgets.QMessageBox):
 
     def event(self, e):
         result = QtWidgets.QMessageBox.event(self, e)
-        self.setFixedSize(constants.POPUP_MESSAGE_WIDHT, constants.POPUP_MESSAGE_HEIGHT)
+        self.setFixedSize(POPUP_MESSAGE_WIDHT, POPUP_MESSAGE_HEIGHT)
         return result
 
 class VzeGui(QtWidgets.QMainWindow):
@@ -56,7 +56,7 @@ class VzeGui(QtWidgets.QMainWindow):
 
         # Size of window is always 0,65 times of availabe window
         self.size = QtWidgets.QDesktopWidget().availableGeometry()
-        self.setMinimumSize(self.size.width() * constants.WINDOW_SIZE_RATIO, self.size.height() * constants.WINDOW_SIZE_RATIO)
+        self.setMinimumSize(self.size.width() * WINDOW_SIZE_RATIO, self.size.height() * WINDOW_SIZE_RATIO)
 
         # Main widget
         window = QtWidgets.QWidget()
@@ -75,7 +75,7 @@ class VzeGui(QtWidgets.QMainWindow):
 
         self.build_screens()
         # define startscreen
-        self.stackedWidget.setCurrentIndex(constants.START_SCREEN)
+        self.stackedWidget.setCurrentIndex(START_SCREEN)
         QtCore.QMetaObject.connectSlotsByName(window)
 
         
@@ -117,10 +117,10 @@ class VzeGui(QtWidgets.QMainWindow):
         """
         change to next screen and save last screen to stack. When jump to screen 0 then initialize the stack
         """
-        if nextScreen == constants.START_SCREEN:
+        if nextScreen == START_SCREEN:
             self.stackedWidget.setCurrentIndex(nextScreen)
             self.stack_lastScreen = []
-        elif nextScreen != constants.START_SCREEN:
+        elif nextScreen != START_SCREEN:
             self.set_lastScreen()
             self.stackedWidget.setCurrentIndex(nextScreen)
         return
@@ -148,16 +148,16 @@ class VzeGui(QtWidgets.QMainWindow):
 
         # set demodatafile according to the passed demoID
         demodatafile = ""
-        if demoID == constants.DEMO_ID_1:
+        if demoID == DEMO_ID_1:
             demodatafile = self.demo_datafile1
-        elif demoID == constants.DEMO_ID_2:
+        elif demoID == DEMO_ID_2:
             demodatafile = self.demo_datafile2
         else:
             print("Unknown error")
 
         self.demodatascreen.delete_grid()
         self.demodatascreen.create_grid(demodatafile)
-        self.change_screen(constants.DEMO_DATA_SCREEN)
+        self.change_screen(DEMO_DATA_SCREEN)
 
     def createPixmap(self, numpy):
         """
@@ -165,7 +165,7 @@ class VzeGui(QtWidgets.QMainWindow):
         """
         image = QtGui.QImage(numpy, numpy.shape[1], numpy.shape[0], numpy.shape[1] * 3, QtGui.QImage.Format_RGB888).rgbSwapped()
         pixmap = QtGui.QPixmap(image)
-        pixmap_scaled = pixmap.scaled(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH)
+        pixmap_scaled = pixmap.scaled(PREVIEWIMAGE_WIDTH, PREVIEWIMAGE_HEIGTH)
         return pixmap_scaled
 
     def showPreviewImage(self, numpy):
@@ -186,7 +186,7 @@ class VzeGui(QtWidgets.QMainWindow):
         status, message, image = self.logic.loadFile()
         if status == 0:
             self.showPreviewImage(image)
-            self.change_screen(constants.PREVIEW_SCREEN)
+            self.change_screen(PREVIEW_SCREEN)
         elif status == -1:
             print(message)
             title = "Fehler beim Laden der Datei"
@@ -205,19 +205,19 @@ class VzeGui(QtWidgets.QMainWindow):
             self.logic.setFilePath(filepath)
             self.showPreviewImage(image)
             demodatafile = ""
-            if demoID == constants.DEMO_ID_1:
+            if demoID == DEMO_ID_1:
                 demodatafile=self.demo_datafile1
-            elif demoID == constants.DEMO_ID_2:
+            elif demoID == DEMO_ID_2:
                 demodatafile=self.demo_datafile2
             self.loadDemoData(demodatafile)
             self.logic.setCompareResult(True)
-            self.change_screen(constants.ANALYZE_PV_SCREEN)
+            self.change_screen(ANALYZE_PV_SCREEN)
         else:
             errorMessage = "Das Demovideo existiert nicht!\nBitte kontaktieren Sie den Support."
             errorTitle = "Fehler Demovideo"
             print("The given demoVideo does not exist: " + filepath)
             self.showPopup(errorTitle, errorMessage)
-            self.change_screen(constants.START_SCREEN)
+            self.change_screen(START_SCREEN)
 
     def showPopup(self, title, message):
         """
@@ -243,7 +243,7 @@ class VzeGui(QtWidgets.QMainWindow):
         # In der Methode zum Video abspielen müsste dann nur in jedem Schleifendurchlauf diese abgefragt werden.
         self.cleanup()
         self.thread.stopVideo()
-        self.change_screen(constants.START_SCREEN)
+        self.change_screen(START_SCREEN)
 
     def show_Result(self):
         """
@@ -251,7 +251,7 @@ class VzeGui(QtWidgets.QMainWindow):
         """
         self.resultscreen.set_ResultLabel()
         self.resultscreen.create_gridContent()
-        self.change_screen(constants.RESULT_SCREEN)
+        self.change_screen(RESULT_SCREEN)
 
     def loadDemoData(self, filepath):
         """
@@ -264,12 +264,12 @@ class VzeGui(QtWidgets.QMainWindow):
 
             array_count = 0
             for line in csv_reader:
-                self.sign_id = line[constants.DEMODATA_CSV_SIGN_ID]
-                self.sign_count = int(line[constants.DEMODATA_CSV_SIGN_COUNT])
+                self.sign_id = line[DEMODATA_CSV_SIGN_ID]
+                self.sign_count = int(line[DEMODATA_CSV_SIGN_COUNT])
 
-                self.logic.setDataArray(array_count, constants.DATA_ARRAY_SIGN_ID, self.sign_id)
-                self.logic.setDataArray(array_count, constants.DATA_ARRAY_SIGN_INPUT, self.sign_count)
-                self.logic.setDataArray(array_count, constants.DATA_ARRAY_SIGN_DETECTED, 0)
+                self.logic.setDataArray(array_count, DATA_ARRAY_SIGN_ID, self.sign_id)
+                self.logic.setDataArray(array_count, DATA_ARRAY_SIGN_INPUT, self.sign_count)
+                self.logic.setDataArray(array_count, DATA_ARRAY_SIGN_DETECTED, 0)
 
                 array_count = array_count+1
 
@@ -277,10 +277,10 @@ class VzeGui(QtWidgets.QMainWindow):
 
         print("Demo-Data loaded")
         # Testausgabe des gesamten Arrays
-        # for j in range(len(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_ID])):
-        #     print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_ID), end=' ')
-        #     print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_INPUT), end=' ')
-        #     print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_DETECTED), end=' ')
+        # for j in range(len(self.logic.array_dataInput[DATA_ARRAY_SIGN_ID])):
+        #     print(self.logic.getDataArray(j, DATA_ARRAY_SIGN_ID), end=' ')
+        #     print(self.logic.getDataArray(j, DATA_ARRAY_SIGN_INPUT), end=' ')
+        #     print(self.logic.getDataArray(j, DATA_ARRAY_SIGN_DETECTED), end=' ')
         #     print()
 
     def cleanup(self):
@@ -298,7 +298,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.deactivateResultBtn()
         self.initRingBuffer()
         self.dict = {}
-        self.change_screen(constants.START_SCREEN)
+        self.change_screen(START_SCREEN)
         self.countArrLeft = np.empty((0,4), float)
         self.countArrRight = np.empty((0,4), float)
         
@@ -463,29 +463,29 @@ class Ui_startscreen(QtWidgets.QWidget):
     def create_button(self):
 
         self.btn_info_startscreen = QtWidgets.QPushButton(self)
-        self.btn_info_startscreen.setMinimumSize(QtCore.QSize(constants.INFO_BUTTON_WIDTH, constants.INFO_BUTTON_HEIGTH))
-        self.btn_info_startscreen.setMaximumSize(QtCore.QSize(constants.INFO_BUTTON_WIDTH, constants.INFO_BUTTON_HEIGTH))
+        self.btn_info_startscreen.setMinimumSize(QtCore.QSize(INFO_BUTTON_WIDTH, INFO_BUTTON_HEIGTH))
+        self.btn_info_startscreen.setMaximumSize(QtCore.QSize(INFO_BUTTON_WIDTH, INFO_BUTTON_HEIGTH))
         self.btn_info_startscreen.setStyleSheet(styles.styleSmallButton)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/icons/info_logo"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_info_startscreen.setIcon(icon)
-        self.btn_info_startscreen.setIconSize(QtCore.QSize(constants.INFO_ICON_WIDTH, constants.INFO_ICON_HEIGTH))
+        self.btn_info_startscreen.setIconSize(QtCore.QSize(INFO_ICON_WIDTH, INFO_ICON_HEIGTH))
         self.btn_info_startscreen.setObjectName("btn_info_startscreen")
         self.btn_info_startscreen.clicked.connect(lambda: self.gui.infoscreen.show())
 
         self.btn_loadFile = QtWidgets.QPushButton(self)
-        self.btn_loadFile.setMinimumSize(QtCore.QSize(constants.BLUEBUTTONBIG_WIDTH, constants.BLUEBUTTONBIG_HEIGTH))
+        self.btn_loadFile.setMinimumSize(QtCore.QSize(BLUEBUTTONBIG_WIDTH, BLUEBUTTONBIG_HEIGTH))
         self.btn_loadFile.setStyleSheet(styles.styleBluebuttonbig1)
         self.btn_loadFile.setText(("Datei auswählen"))
         self.btn_loadFile.setToolTip('Laden eines Videos oder Bildes')
         self.btn_loadFile.clicked.connect(self.gui.loadFile)
 
         self.btn_demoToDemo = QtWidgets.QPushButton(self)
-        self.btn_demoToDemo.setMinimumSize(QtCore.QSize(constants.BLUEBUTTONBIG_WIDTH, constants.BLUEBUTTONBIG_HEIGTH))
+        self.btn_demoToDemo.setMinimumSize(QtCore.QSize(BLUEBUTTONBIG_WIDTH, BLUEBUTTONBIG_HEIGTH))
         self.btn_demoToDemo.setStyleSheet(styles.styleBluebuttonbig2)
         self.btn_demoToDemo.setText(("Demo auswählen"))
         self.btn_demoToDemo.setToolTip('Demo Videos wählen')
-        self.btn_demoToDemo.clicked.connect(lambda: self.gui.change_screen(constants.DEMO_SCREEN))
+        self.btn_demoToDemo.clicked.connect(lambda: self.gui.change_screen(DEMO_SCREEN))
 
     def create_label(self):
 
@@ -552,7 +552,7 @@ class Ui_demoscreen(QtWidgets.QWidget):
 
         self.lyth_headline_demoscreen = QtWidgets.QHBoxLayout()
         self.lyth_headline_demoscreen.setContentsMargins(20, 0, 20, 0)
-        self.lyth_headline_demoscreen.setSpacing(constants.HEADLINE_SPACING)
+        self.lyth_headline_demoscreen.setSpacing(HEADLINE_SPACING)
         self.lyth_headline_demoscreen.setObjectName("lyth_headline_demoscreen")
 
         self.lytv_bigCenter_demoScreen = QtWidgets.QVBoxLayout()
@@ -575,53 +575,53 @@ class Ui_demoscreen(QtWidgets.QWidget):
 
     def create_button(self):
         self.btn_info_demoscreen = QtWidgets.QPushButton(self)
-        self.btn_info_demoscreen.setMinimumSize(QtCore.QSize(constants.INFO_BUTTON_WIDTH, constants.INFO_BUTTON_HEIGTH))
-        self.btn_info_demoscreen.setMaximumSize(QtCore.QSize(constants.INFO_BUTTON_WIDTH, constants.INFO_BUTTON_HEIGTH))
+        self.btn_info_demoscreen.setMinimumSize(QtCore.QSize(INFO_BUTTON_WIDTH, INFO_BUTTON_HEIGTH))
+        self.btn_info_demoscreen.setMaximumSize(QtCore.QSize(INFO_BUTTON_WIDTH, INFO_BUTTON_HEIGTH))
         self.btn_info_demoscreen.setStyleSheet(styles.styleSmallButton)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/icons/info_logo"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_info_demoscreen.setIcon(icon)
-        self.btn_info_demoscreen.setIconSize(QtCore.QSize(constants.INFO_ICON_WIDTH, constants.INFO_ICON_HEIGTH))
+        self.btn_info_demoscreen.setIconSize(QtCore.QSize(INFO_ICON_WIDTH, INFO_ICON_HEIGTH))
         self.btn_info_demoscreen.clicked.connect(lambda: self.gui.infoscreen.show())
 
         self.btn_demoSonne = QtWidgets.QPushButton(self)
-        self.btn_demoSonne.setMinimumSize(QtCore.QSize(constants.BLUEBUTTONBIG_WIDTH, constants.BLUEBUTTONBIG_HEIGTH))
+        self.btn_demoSonne.setMinimumSize(QtCore.QSize(BLUEBUTTONBIG_WIDTH, BLUEBUTTONBIG_HEIGTH))
         self.btn_demoSonne.setStyleSheet(styles.styleBluebuttonbig3)
         self.btn_demoSonne.setText(("Video mit Sonne"))
-        self.btn_demoSonne.clicked.connect(lambda: self.gui.loadDemoVideo(self.gui.demo_video1, constants.DEMO_ID_1))
+        self.btn_demoSonne.clicked.connect(lambda: self.gui.loadDemoVideo(self.gui.demo_video1, DEMO_ID_1))
 
         self.btn_demoRegen = QtWidgets.QPushButton(self)
-        self.btn_demoRegen.setMinimumSize(QtCore.QSize(constants.BLUEBUTTONBIG_WIDTH, constants.BLUEBUTTONBIG_HEIGTH))
+        self.btn_demoRegen.setMinimumSize(QtCore.QSize(BLUEBUTTONBIG_WIDTH, BLUEBUTTONBIG_HEIGTH))
         self.btn_demoRegen.setStyleSheet(styles.styleBluebuttonbig4)
         self.btn_demoRegen.setText(("Video mit Regen"))
-        self.btn_demoRegen.clicked.connect(lambda: self.gui.loadDemoVideo(self.gui.demo_video2, constants.DEMO_ID_2))
+        self.btn_demoRegen.clicked.connect(lambda: self.gui.loadDemoVideo(self.gui.demo_video2, DEMO_ID_2))
 
         self.btn_dataSonne = QtWidgets.QPushButton(self)
-        self.btn_dataSonne.setMinimumSize(QtCore.QSize(constants.SMALLBUTTON_WIDTH, constants.SMALLBUTTON_HEIGTH))
-        self.btn_dataSonne.setMaximumSize(QtCore.QSize(constants.SMALLBUTTON_WIDTH, constants.SMALLBUTTON_HEIGTH))
+        self.btn_dataSonne.setMinimumSize(QtCore.QSize(SMALLBUTTON_WIDTH, SMALLBUTTON_HEIGTH))
+        self.btn_dataSonne.setMaximumSize(QtCore.QSize(SMALLBUTTON_WIDTH, SMALLBUTTON_HEIGTH))
         self.btn_dataSonne.setStyleSheet(styles.styleSmallButton)
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap(":/icons/data_icon"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_dataSonne.setIcon(icon1)
-        self.btn_dataSonne.setIconSize(QtCore.QSize(constants.SMALLBUTTON_WIDTH, constants.SMALLBUTTON_HEIGTH))
+        self.btn_dataSonne.setIconSize(QtCore.QSize(SMALLBUTTON_WIDTH, SMALLBUTTON_HEIGTH))
         self.btn_dataSonne.clicked.connect(lambda: self.gui.create_DemoDataGrid(1))
 
         self.btn_dataRegen = QtWidgets.QPushButton(self)
-        self.btn_dataRegen.setMinimumSize(QtCore.QSize(constants.SMALLBUTTON_WIDTH, constants.SMALLBUTTON_HEIGTH))
-        self.btn_dataRegen.setMaximumSize(QtCore.QSize(constants.SMALLBUTTON_WIDTH, constants.SMALLBUTTON_HEIGTH))
+        self.btn_dataRegen.setMinimumSize(QtCore.QSize(SMALLBUTTON_WIDTH, SMALLBUTTON_HEIGTH))
+        self.btn_dataRegen.setMaximumSize(QtCore.QSize(SMALLBUTTON_WIDTH, SMALLBUTTON_HEIGTH))
         self.btn_dataRegen.setStyleSheet(styles.styleSmallButton)
         self.btn_dataRegen.setIcon(icon1)
-        self.btn_dataRegen.setIconSize(QtCore.QSize(constants.SMALLBUTTON_WIDTH, constants.SMALLBUTTON_HEIGTH))
+        self.btn_dataRegen.setIconSize(QtCore.QSize(SMALLBUTTON_WIDTH, SMALLBUTTON_HEIGTH))
         self.btn_dataRegen.clicked.connect(lambda: self.gui.create_DemoDataGrid(2))
 
         self.btn_back_demoscreen = QtWidgets.QPushButton(self)
-        self.btn_back_demoscreen.setMinimumSize(QtCore.QSize(constants.BACK_BUTTON_WIDTH, constants.BACK_BUTTON_HEIGTH))
-        self.btn_back_demoscreen.setMaximumSize(QtCore.QSize(constants.BACK_BUTTON_WIDTH, constants.BACK_BUTTON_HEIGTH))
+        self.btn_back_demoscreen.setMinimumSize(QtCore.QSize(BACK_BUTTON_WIDTH, BACK_BUTTON_HEIGTH))
+        self.btn_back_demoscreen.setMaximumSize(QtCore.QSize(BACK_BUTTON_WIDTH, BACK_BUTTON_HEIGTH))
         self.btn_back_demoscreen.setStyleSheet(styles.styleSmallButton)
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap(":/icons/back_icon"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_back_demoscreen.setIcon(icon2)
-        self.btn_back_demoscreen.setIconSize(QtCore.QSize(constants.BACK_ICON_WIDTH, constants.BACK_ICON_HEIGTH))
+        self.btn_back_demoscreen.setIconSize(QtCore.QSize(BACK_ICON_WIDTH, BACK_ICON_HEIGTH))
         self.btn_back_demoscreen.clicked.connect(lambda: self.gui.change_screen_back())
 
     def create_label(self):
@@ -708,7 +708,7 @@ class Ui_previewscreen(QtWidgets.QWidget):
 
         self.lyth_headline_previewScreen = QtWidgets.QHBoxLayout()
         self.lyth_headline_previewScreen.setContentsMargins(20, 0, 20, 0)
-        self.lyth_headline_previewScreen.setSpacing(constants.HEADLINE_SPACING)
+        self.lyth_headline_previewScreen.setSpacing(HEADLINE_SPACING)
         self.lyth_headline_previewScreen.setObjectName("lyth_headline_previewScreen")
 
         self.lytv_bigCenter_previewScreen = QtWidgets.QVBoxLayout()
@@ -731,24 +731,24 @@ class Ui_previewscreen(QtWidgets.QWidget):
 
     def create_button(self):
         self.btn_info_previewScreen = QtWidgets.QPushButton(self)
-        self.btn_info_previewScreen.setMinimumSize(QtCore.QSize(constants.INFO_BUTTON_WIDTH, constants.INFO_BUTTON_HEIGTH))
-        self.btn_info_previewScreen.setMaximumSize(QtCore.QSize(constants.INFO_BUTTON_WIDTH, constants.INFO_BUTTON_HEIGTH))
+        self.btn_info_previewScreen.setMinimumSize(QtCore.QSize(INFO_BUTTON_WIDTH, INFO_BUTTON_HEIGTH))
+        self.btn_info_previewScreen.setMaximumSize(QtCore.QSize(INFO_BUTTON_WIDTH, INFO_BUTTON_HEIGTH))
         self.btn_info_previewScreen.setBaseSize(QtCore.QSize(0, 0))
         self.btn_info_previewScreen.setStyleSheet(styles.styleSmallButton)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/icons/info_logo"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_info_previewScreen.setIcon(icon)
-        self.btn_info_previewScreen.setIconSize(QtCore.QSize(constants.INFO_ICON_WIDTH, constants.INFO_ICON_HEIGTH))
+        self.btn_info_previewScreen.setIconSize(QtCore.QSize(INFO_ICON_WIDTH, INFO_ICON_HEIGTH))
         self.btn_info_previewScreen.clicked.connect(lambda: self.gui.infoscreen.show())
 
         self.btn_back_previewScreen = QtWidgets.QPushButton(self)
-        self.btn_back_previewScreen.setMinimumSize(QtCore.QSize(constants.BACK_BUTTON_WIDTH, constants.BACK_BUTTON_HEIGTH))
-        self.btn_back_previewScreen.setMaximumSize(QtCore.QSize(constants.BACK_BUTTON_WIDTH, constants.BACK_BUTTON_HEIGTH))
+        self.btn_back_previewScreen.setMinimumSize(QtCore.QSize(BACK_BUTTON_WIDTH, BACK_BUTTON_HEIGTH))
+        self.btn_back_previewScreen.setMaximumSize(QtCore.QSize(BACK_BUTTON_WIDTH, BACK_BUTTON_HEIGTH))
         self.btn_back_previewScreen.setStyleSheet(styles.styleSmallButton)
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap(":/icons/back_icon"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_back_previewScreen.setIcon(icon2)
-        self.btn_back_previewScreen.setIconSize(QtCore.QSize(constants.BACK_ICON_WIDTH, constants.BACK_ICON_HEIGTH))
+        self.btn_back_previewScreen.setIconSize(QtCore.QSize(BACK_ICON_WIDTH, BACK_ICON_HEIGTH))
         self.btn_back_previewScreen.setObjectName("btn_back_previewScreen")
         self.btn_back_previewScreen.clicked.connect(lambda: self.gui.change_screen_back())
 
@@ -758,13 +758,13 @@ class Ui_previewscreen(QtWidgets.QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btn_next_preview.sizePolicy().hasHeightForWidth())
         self.btn_next_preview.setSizePolicy(sizePolicy)
-        self.btn_next_preview.setMinimumSize(QtCore.QSize(constants.BLUEBUTTONSMALL_WIDTH, constants.BLUEBUTTONSMALL_HEIGTH))
-        self.btn_next_preview.setMaximumSize(QtCore.QSize(constants.BLUEBUTTONSMALL_WIDTH, constants.BLUEBUTTONSMALL_HEIGTH))
+        self.btn_next_preview.setMinimumSize(QtCore.QSize(BLUEBUTTONSMALL_WIDTH, BLUEBUTTONSMALL_HEIGTH))
+        self.btn_next_preview.setMaximumSize(QtCore.QSize(BLUEBUTTONSMALL_WIDTH, BLUEBUTTONSMALL_HEIGTH))
         self.btn_next_preview.setStyleSheet(styles.styleBluebuttonsmall)
         self.btn_next_preview.setCheckable(False)
         self.btn_next_preview.setFlat(False)
         self.btn_next_preview.setText("Weiter")
-        self.btn_next_preview.clicked.connect(lambda: self.gui.change_screen(constants.DI_SCREEN))
+        self.btn_next_preview.clicked.connect(lambda: self.gui.change_screen(DI_SCREEN))
 
     def create_label(self):
         self.lbl_headline_preview = QtWidgets.QLabel(self)
@@ -799,11 +799,11 @@ class Ui_previewscreen(QtWidgets.QWidget):
     def create_otherObjects(self):
         self.imageLayout = QtWidgets.QLabel(self)
         self.imageLayout.setText("")
-        self.imageLayout.setMinimumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
-        self.imageLayout.setMaximumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
+        self.imageLayout.setMinimumSize(QtCore.QSize(PREVIEWIMAGE_WIDTH, PREVIEWIMAGE_HEIGTH))
+        self.imageLayout.setMaximumSize(QtCore.QSize(PREVIEWIMAGE_WIDTH, PREVIEWIMAGE_HEIGTH))
         # self.graphicsPreview = QtWidgets.QGraphicsView(self)
-        # self.graphicsPreview.setMinimumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
-        # self.graphicsPreview.setMaximumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
+        # self.graphicsPreview.setMinimumSize(QtCore.QSize(PREVIEWIMAGE_WIDTH, PREVIEWIMAGE_HEIGTH))
+        # self.graphicsPreview.setMaximumSize(QtCore.QSize(PREVIEWIMAGE_WIDTH, PREVIEWIMAGE_HEIGTH))
         # self.graphicsPreview.setObjectName("graphicsPreview")
 
     def add_items(self):
@@ -854,7 +854,7 @@ class Ui_DIScreen(QtWidgets.QWidget):
         self.verticalLayout_11.setObjectName("verticalLayout_11")
         self.lyth_headline_DIScreen = QtWidgets.QHBoxLayout()
         self.lyth_headline_DIScreen.setContentsMargins(20, 0, 20, 0)
-        self.lyth_headline_DIScreen.setSpacing(constants.HEADLINE_SPACING)
+        self.lyth_headline_DIScreen.setSpacing(HEADLINE_SPACING)
         self.lyth_headline_DIScreen.setObjectName("lyth_headline_DIScreen")
 
         self.lyth_smallText_DIScreen = QtWidgets.QHBoxLayout()
@@ -871,21 +871,21 @@ class Ui_DIScreen(QtWidgets.QWidget):
         sizePolicy.setVerticalStretch(1)
         sizePolicy.setHeightForWidth(self.scrollArea_DIScreen.sizePolicy().hasHeightForWidth())
         self.scrollArea_DIScreen.setSizePolicy(sizePolicy)
-        self.scrollArea_DIScreen.setMinimumSize(QtCore.QSize(constants.SCROLLAREA_OUTER_MIN_WIDTH, constants.SCROLLAREA_MIN_HEIGTH))
-        self.scrollArea_DIScreen.setMaximumSize(QtCore.QSize(constants.SCROLLAREA_OUTER_MAX_WIDTH, constants.SCROLLAREA_MAX_HEIGTH))
+        self.scrollArea_DIScreen.setMinimumSize(QtCore.QSize(SCROLLAREA_OUTER_MIN_WIDTH, SCROLLAREA_MIN_HEIGTH))
+        self.scrollArea_DIScreen.setMaximumSize(QtCore.QSize(SCROLLAREA_OUTER_MAX_WIDTH, SCROLLAREA_MAX_HEIGTH))
         self.scrollArea_DIScreen.setSizeIncrement(QtCore.QSize(0, 0))
         self.scrollArea_DIScreen.setWidgetResizable(True)
         self.scrollArea_DIScreen.setObjectName("scrollArea_DIScreen")
 
         self.scrollAreaWidget_DIScreen = QtWidgets.QWidget()
-        self.scrollAreaWidget_DIScreen.setGeometry(QtCore.QRect(0, 0, constants.SCROLLAREA_INNER_WIDTH, 816))
+        self.scrollAreaWidget_DIScreen.setGeometry(QtCore.QRect(0, 0, SCROLLAREA_INNER_WIDTH, 816))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.scrollAreaWidget_DIScreen.sizePolicy().hasHeightForWidth())
         self.scrollAreaWidget_DIScreen.setSizePolicy(sizePolicy)
-        self.scrollAreaWidget_DIScreen.setMinimumSize(QtCore.QSize(constants.SCROLLAREA_INNER_WIDTH, constants.SCROLLAREA_MIN_HEIGTH))
-        self.scrollAreaWidget_DIScreen.setMaximumSize(QtCore.QSize(constants.SCROLLAREA_INNER_WIDTH, constants.SCROLLAREA_MAX_HEIGTH))
+        self.scrollAreaWidget_DIScreen.setMinimumSize(QtCore.QSize(SCROLLAREA_INNER_WIDTH, SCROLLAREA_MIN_HEIGTH))
+        self.scrollAreaWidget_DIScreen.setMaximumSize(QtCore.QSize(SCROLLAREA_INNER_WIDTH, SCROLLAREA_MAX_HEIGTH))
         self.scrollAreaWidget_DIScreen.setObjectName("scrollAreaWidget_DIScreen")
 
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.scrollAreaWidget_DIScreen)
@@ -904,25 +904,25 @@ class Ui_DIScreen(QtWidgets.QWidget):
 
     def create_button(self):
         self.btn_info_DIScreen = QtWidgets.QPushButton(self)
-        self.btn_info_DIScreen.setMinimumSize(QtCore.QSize(constants.INFO_BUTTON_WIDTH, constants.INFO_BUTTON_HEIGTH))
-        self.btn_info_DIScreen.setMaximumSize(QtCore.QSize(constants.INFO_BUTTON_WIDTH, constants.INFO_BUTTON_HEIGTH))
+        self.btn_info_DIScreen.setMinimumSize(QtCore.QSize(INFO_BUTTON_WIDTH, INFO_BUTTON_HEIGTH))
+        self.btn_info_DIScreen.setMaximumSize(QtCore.QSize(INFO_BUTTON_WIDTH, INFO_BUTTON_HEIGTH))
         self.btn_info_DIScreen.setBaseSize(QtCore.QSize(0, 0))
         self.btn_info_DIScreen.setStyleSheet(styles.styleSmallButton)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/icons/info_logo"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_info_DIScreen.setIcon(icon)
-        self.btn_info_DIScreen.setIconSize(QtCore.QSize(constants.INFO_ICON_WIDTH, constants.INFO_ICON_HEIGTH))
+        self.btn_info_DIScreen.setIconSize(QtCore.QSize(INFO_ICON_WIDTH, INFO_ICON_HEIGTH))
         self.btn_info_DIScreen.setObjectName("btn_info_DIScreen")
         self.btn_info_DIScreen.clicked.connect(lambda: self.gui.infoscreen.show())
 
         self.btn_back_DI = QtWidgets.QPushButton(self)
-        self.btn_back_DI.setMinimumSize(QtCore.QSize(constants.BACK_BUTTON_WIDTH, constants.BACK_BUTTON_HEIGTH))
-        self.btn_back_DI.setMaximumSize(QtCore.QSize(constants.BACK_BUTTON_WIDTH, constants.BACK_BUTTON_HEIGTH))
+        self.btn_back_DI.setMinimumSize(QtCore.QSize(BACK_BUTTON_WIDTH, BACK_BUTTON_HEIGTH))
+        self.btn_back_DI.setMaximumSize(QtCore.QSize(BACK_BUTTON_WIDTH, BACK_BUTTON_HEIGTH))
         self.btn_back_DI.setStyleSheet(styles.styleSmallButton)
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap(":/icons/back_icon"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_back_DI.setIcon(icon2)
-        self.btn_back_DI.setIconSize(QtCore.QSize(constants.BACK_ICON_WIDTH, constants.BACK_ICON_HEIGTH))
+        self.btn_back_DI.setIconSize(QtCore.QSize(BACK_ICON_WIDTH, BACK_ICON_HEIGTH))
         self.btn_back_DI.setCheckable(True)
         self.btn_back_DI.setObjectName("btn_back_DI")
         self.btn_back_DI.clicked.connect(lambda: self.gui.change_screen_back())
@@ -933,8 +933,8 @@ class Ui_DIScreen(QtWidgets.QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btn_reset.sizePolicy().hasHeightForWidth())
         self.btn_reset.setSizePolicy(sizePolicy)
-        self.btn_reset.setMinimumSize(QtCore.QSize(constants.BLUEBUTTONSMALL_WIDTH, constants.BLUEBUTTONSMALL_HEIGTH))
-        self.btn_reset.setMaximumSize(QtCore.QSize(constants.BLUEBUTTONSMALL_WIDTH, constants.BLUEBUTTONSMALL_HEIGTH))
+        self.btn_reset.setMinimumSize(QtCore.QSize(BLUEBUTTONSMALL_WIDTH, BLUEBUTTONSMALL_HEIGTH))
+        self.btn_reset.setMaximumSize(QtCore.QSize(BLUEBUTTONSMALL_WIDTH, BLUEBUTTONSMALL_HEIGTH))
         self.btn_reset.setStyleSheet(styles.styleBluebuttonsmall)
         self.btn_reset.setText("Zurücksetzen")
         self.btn_reset.setCheckable(False)
@@ -948,8 +948,8 @@ class Ui_DIScreen(QtWidgets.QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btn_skip.sizePolicy().hasHeightForWidth())
         self.btn_skip.setSizePolicy(sizePolicy)
-        self.btn_skip.setMinimumSize(QtCore.QSize(constants.BLUEBUTTONSMALL_WIDTH, constants.BLUEBUTTONSMALL_HEIGTH))
-        self.btn_skip.setMaximumSize(QtCore.QSize(constants.BLUEBUTTONSMALL_WIDTH, constants.BLUEBUTTONSMALL_HEIGTH))
+        self.btn_skip.setMinimumSize(QtCore.QSize(BLUEBUTTONSMALL_WIDTH, BLUEBUTTONSMALL_HEIGTH))
+        self.btn_skip.setMaximumSize(QtCore.QSize(BLUEBUTTONSMALL_WIDTH, BLUEBUTTONSMALL_HEIGTH))
         self.btn_skip.setStyleSheet(styles.styleBluebuttonsmall)
         self.btn_skip.setText("Überspringen")
         self.btn_skip.setCheckable(False)
@@ -964,8 +964,8 @@ class Ui_DIScreen(QtWidgets.QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btn_DInext.sizePolicy().hasHeightForWidth())
         self.btn_DInext.setSizePolicy(sizePolicy)
-        self.btn_DInext.setMinimumSize(QtCore.QSize(constants.BLUEBUTTONSMALL_WIDTH, constants.BLUEBUTTONSMALL_HEIGTH))
-        self.btn_DInext.setMaximumSize(QtCore.QSize(constants.BLUEBUTTONSMALL_WIDTH, constants.BLUEBUTTONSMALL_HEIGTH))
+        self.btn_DInext.setMinimumSize(QtCore.QSize(BLUEBUTTONSMALL_WIDTH, BLUEBUTTONSMALL_HEIGTH))
+        self.btn_DInext.setMaximumSize(QtCore.QSize(BLUEBUTTONSMALL_WIDTH, BLUEBUTTONSMALL_HEIGTH))
         self.btn_DInext.setStyleSheet(styles.styleBluebuttonsmall)
         self.btn_DInext.setText("Weiter")
         self.btn_DInext.setCheckable(False)
@@ -990,16 +990,16 @@ class Ui_DIScreen(QtWidgets.QWidget):
         column_count = 0
         sign_count = 0
         
-        while row_count <= constants.DISCREEN_ROWS:    
-            while column_count <= constants.DISCREEN_COLUMNS:
-                if sign_count<constants.TOTAL_NUMBER_SIGNS:
+        while row_count <= DISCREEN_ROWS:    
+            while column_count <= DISCREEN_COLUMNS:
+                if sign_count<TOTAL_NUMBER_SIGNS:
                     #print("sign: row_count:"+ str(row_count) + " column_count:"+ str(column_count) + " sign_count:"+ str(sign_count))
                     #create signs
                     self.name_sign = "lbl_sign_"+ str(sign_count)
                     self.sign_id = ":/signs/" + str(sign_count)
                     self.name_sign = QtWidgets.QLabel(self.scrollAreaWidget_DIScreen)
-                    self.name_sign.setMinimumSize(QtCore.QSize(constants.SIGN_WIDTH, constants.SIGN_HEIGTH))
-                    self.name_sign.setMaximumSize(QtCore.QSize(constants.SIGN_WIDTH, constants.SIGN_HEIGTH))
+                    self.name_sign.setMinimumSize(QtCore.QSize(SIGN_WIDTH, SIGN_HEIGTH))
+                    self.name_sign.setMaximumSize(QtCore.QSize(SIGN_WIDTH, SIGN_HEIGTH))
                     self.name_sign.setObjectName(str(sign_count))
                     self.name_sign.setPixmap(QtGui.QPixmap(self.sign_id))
                     self.name_sign.setScaledContents(True)
@@ -1013,8 +1013,8 @@ class Ui_DIScreen(QtWidgets.QWidget):
                     # print("sb: row_count:"+ str(row_count) + " column_count:"+ str(column_count) + " sign_count:"+ str(sign_count))
                     self.name_sb = "spinBox_"+ str(sign_count)
                     self.name_sb = QtWidgets.QSpinBox(self.scrollAreaWidget_DIScreen)
-                    self.name_sb.setMinimumSize(QtCore.QSize(constants.SPINBOX_WIDTH, constants.SPINBOX_HEIGTH))
-                    self.name_sb.setMaximumSize(QtCore.QSize(constants.SPINBOX_WIDTH, constants.SPINBOX_HEIGTH))
+                    self.name_sb.setMinimumSize(QtCore.QSize(SPINBOX_WIDTH, SPINBOX_HEIGTH))
+                    self.name_sb.setMaximumSize(QtCore.QSize(SPINBOX_WIDTH, SPINBOX_HEIGTH))
                     self.name_sb.setStyleSheet(styles.styleSpinBox)
                     self.name_sb.setValue(0)
                     self.gridLayout_DIScreen.addWidget(self.name_sb, row_count, column_count, 1, 1)
@@ -1070,25 +1070,25 @@ class Ui_DIScreen(QtWidgets.QWidget):
         while item_count < entry_count:
             labelItem = self.gridLayout_DIScreen.itemAt(item_count).widget()
             labelItemValue = str(labelItem.objectName())
-            self.logic.setDataArray(array_count, constants.DATA_ARRAY_SIGN_ID, labelItemValue)
+            self.logic.setDataArray(array_count, DATA_ARRAY_SIGN_ID, labelItemValue)
             
             item_count = item_count+1
             
             spinboxItem = self.gridLayout_DIScreen.itemAt(item_count).widget()
             spinboxItemValue = spinboxItem.value()
-            self.logic.setDataArray(array_count, constants.DATA_ARRAY_SIGN_INPUT, spinboxItemValue)
+            self.logic.setDataArray(array_count, DATA_ARRAY_SIGN_INPUT, spinboxItemValue)
 
             #Temporär die Ergebniszeile alles auf spinboxItemValue setzen
-            #self.logic.setDataArray(array_count, constants.DATA_ARRAY_SIGN_DETECTED, spinboxItemValue)
+            #self.logic.setDataArray(array_count, DATA_ARRAY_SIGN_DETECTED, spinboxItemValue)
 
             item_count = item_count+1
             array_count = array_count+1
 
         #Testausgabe des gesamten Arrays
-        # for j in range(len(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_ID])):
-        #     print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_ID), end=' ')
-        #     print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_INPUT), end=' ')
-        #     print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_DETECTED), end=' ')
+        # for j in range(len(self.logic.array_dataInput[DATA_ARRAY_SIGN_ID])):
+        #     print(self.logic.getDataArray(j, DATA_ARRAY_SIGN_ID), end=' ')
+        #     print(self.logic.getDataArray(j, DATA_ARRAY_SIGN_INPUT), end=' ')
+        #     print(self.logic.getDataArray(j, DATA_ARRAY_SIGN_DETECTED), end=' ')
         #     print()
 
         self.check_gridContent()
@@ -1103,7 +1103,7 @@ class Ui_DIScreen(QtWidgets.QWidget):
             # labelItemValue = str(labelItem.objectName())
             # print("Label: " + str(labelItem))
             # print("Label Value: " + labelItemValue)
-            # self.logic.setDataArray(array_count, constants.DATA_ARRAY_SIGN_ID, labelItemValue)
+            # self.logic.setDataArray(array_count, DATA_ARRAY_SIGN_ID, labelItemValue)
             item_count = item_count+1
             
             spinboxItem = self.gridLayout_DIScreen.itemAt(item_count).widget()
@@ -1112,7 +1112,7 @@ class Ui_DIScreen(QtWidgets.QWidget):
             # print("SpinBox Value Before: " + spinboxItemValue)
             spinboxItem.setValue(0)
             spinboxItemValue = spinboxItem.value()
-            self.logic.setDataArray(array_count, constants.DATA_ARRAY_SIGN_INPUT, spinboxItemValue)
+            self.logic.setDataArray(array_count, DATA_ARRAY_SIGN_INPUT, spinboxItemValue)
             item_count = item_count+1
             array_count = array_count+1
 
@@ -1120,8 +1120,8 @@ class Ui_DIScreen(QtWidgets.QWidget):
         
         emptyCheck = True
         
-        for array_count in range(len(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_ID])):
-            sign_count = self.logic.getDataArray(array_count, constants.DATA_ARRAY_SIGN_INPUT)
+        for array_count in range(len(self.logic.array_dataInput[DATA_ARRAY_SIGN_ID])):
+            sign_count = self.logic.getDataArray(array_count, DATA_ARRAY_SIGN_INPUT)
             if sign_count > 0:
                 emptyCheck = False
            
@@ -1131,7 +1131,7 @@ class Ui_DIScreen(QtWidgets.QWidget):
             self.gui.showPopup(title,message)
         else:
             self.logic.setCompareResult(True)
-            self.gui.change_screen(constants.ANALYZE_PV_SCREEN)
+            self.gui.change_screen(ANALYZE_PV_SCREEN)
 
     def skip_dataInput(self):
         self.logic.setCompareResult(False)
@@ -1143,23 +1143,23 @@ class Ui_DIScreen(QtWidgets.QWidget):
         while item_count < entry_count:
             labelItem = self.gridLayout_DIScreen.itemAt(item_count).widget()
             labelItemValue = str(labelItem.objectName())
-            self.logic.setDataArray(array_count, constants.DATA_ARRAY_SIGN_ID, labelItemValue)
+            self.logic.setDataArray(array_count, DATA_ARRAY_SIGN_ID, labelItemValue)
             
             item_count = item_count+1
             
-            self.logic.setDataArray(array_count, constants.DATA_ARRAY_SIGN_INPUT, 0)
+            self.logic.setDataArray(array_count, DATA_ARRAY_SIGN_INPUT, 0)
 
             item_count = item_count+1
             array_count = array_count+1
 
         #Testausgabe des gesamten Arrays
-        # for j in range(len(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_ID])):
-        #     print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_ID), end=' ')
-        #     print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_INPUT), end=' ')
-        #     print(self.logic.getDataArray(j, constants.DATA_ARRAY_SIGN_DETECTED), end=' ')
+        # for j in range(len(self.logic.array_dataInput[DATA_ARRAY_SIGN_ID])):
+        #     print(self.logic.getDataArray(j, DATA_ARRAY_SIGN_ID), end=' ')
+        #     print(self.logic.getDataArray(j, DATA_ARRAY_SIGN_INPUT), end=' ')
+        #     print(self.logic.getDataArray(j, DATA_ARRAY_SIGN_DETECTED), end=' ')
         #     print()
 
-        self.gui.change_screen(constants.ANALYZE_PV_SCREEN)
+        self.gui.change_screen(ANALYZE_PV_SCREEN)
 
             
         
@@ -1186,7 +1186,7 @@ class Ui_analyzePvScreen(QtWidgets.QWidget):
         self.verticalLayout_5.setObjectName("verticalLayout_5")
         self.lyth_headline_AnalyzePreview = QtWidgets.QHBoxLayout()
         self.lyth_headline_AnalyzePreview.setContentsMargins(20, 0, 20, 0)
-        self.lyth_headline_AnalyzePreview.setSpacing(constants.HEADLINE_SPACING)
+        self.lyth_headline_AnalyzePreview.setSpacing(HEADLINE_SPACING)
         self.lyth_headline_AnalyzePreview.setObjectName("lyth_headline_AnalyzePreview")
 
         self.verticalLayout_5.addLayout(self.lyth_headline_AnalyzePreview)
@@ -1210,38 +1210,38 @@ class Ui_analyzePvScreen(QtWidgets.QWidget):
 
     def create_button(self):
         self.btn_info_AnalyzePreview = QtWidgets.QPushButton(self)
-        self.btn_info_AnalyzePreview.setMinimumSize(QtCore.QSize(constants.INFO_BUTTON_WIDTH, constants.INFO_BUTTON_HEIGTH))
-        self.btn_info_AnalyzePreview.setMaximumSize(QtCore.QSize(constants.INFO_BUTTON_WIDTH, constants.INFO_BUTTON_HEIGTH))
+        self.btn_info_AnalyzePreview.setMinimumSize(QtCore.QSize(INFO_BUTTON_WIDTH, INFO_BUTTON_HEIGTH))
+        self.btn_info_AnalyzePreview.setMaximumSize(QtCore.QSize(INFO_BUTTON_WIDTH, INFO_BUTTON_HEIGTH))
         self.btn_info_AnalyzePreview.setBaseSize(QtCore.QSize(0, 0))
         self.btn_info_AnalyzePreview.setStyleSheet(styles.styleSmallButton)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/icons/info_logo"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_info_AnalyzePreview.setIcon(icon)
-        self.btn_info_AnalyzePreview.setIconSize(QtCore.QSize(constants.INFO_ICON_WIDTH, constants.INFO_ICON_HEIGTH))
+        self.btn_info_AnalyzePreview.setIconSize(QtCore.QSize(INFO_ICON_WIDTH, INFO_ICON_HEIGTH))
         self.btn_info_AnalyzePreview.setObjectName("btn_info_AnalyzePreview")
         self.btn_info_AnalyzePreview.clicked.connect(lambda: self.gui.infoscreen.show())
 
         self.btn_back_AnalyzePreview = QtWidgets.QPushButton(self)
-        self.btn_back_AnalyzePreview.setMinimumSize(QtCore.QSize(constants.BACK_BUTTON_WIDTH, constants.BACK_BUTTON_HEIGTH))
-        self.btn_back_AnalyzePreview.setMaximumSize(QtCore.QSize(constants.BACK_BUTTON_WIDTH, constants.BACK_BUTTON_HEIGTH))
+        self.btn_back_AnalyzePreview.setMinimumSize(QtCore.QSize(BACK_BUTTON_WIDTH, BACK_BUTTON_HEIGTH))
+        self.btn_back_AnalyzePreview.setMaximumSize(QtCore.QSize(BACK_BUTTON_WIDTH, BACK_BUTTON_HEIGTH))
         self.btn_back_AnalyzePreview.setStyleSheet(styles.styleSmallButton)
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap(":/icons/back_icon"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_back_AnalyzePreview.setIcon(icon2)
-        self.btn_back_AnalyzePreview.setIconSize(QtCore.QSize(constants.BACK_ICON_WIDTH, constants.BACK_ICON_HEIGTH))
+        self.btn_back_AnalyzePreview.setIconSize(QtCore.QSize(BACK_ICON_WIDTH, BACK_ICON_HEIGTH))
         self.btn_back_AnalyzePreview.setCheckable(True)
         self.btn_back_AnalyzePreview.setObjectName("btn_back_AnalyzePreview")
         self.btn_back_AnalyzePreview.clicked.connect(lambda: self.gui.change_screen_back())
 
         self.btn_startAnalyze = QtWidgets.QPushButton(self)
-        self.btn_startAnalyze.setMinimumSize(QtCore.QSize(constants.BLUEBUTTONSMALL_WIDTH, constants.BLUEBUTTONSMALL_HEIGTH))
-        self.btn_startAnalyze.setMaximumSize(QtCore.QSize(constants.BLUEBUTTONSMALL_WIDTH, constants.BLUEBUTTONSMALL_HEIGTH))
+        self.btn_startAnalyze.setMinimumSize(QtCore.QSize(BLUEBUTTONSMALL_WIDTH, BLUEBUTTONSMALL_HEIGTH))
+        self.btn_startAnalyze.setMaximumSize(QtCore.QSize(BLUEBUTTONSMALL_WIDTH, BLUEBUTTONSMALL_HEIGTH))
         self.btn_startAnalyze.setStyleSheet(styles.styleBluebuttonsmall)
         self.btn_startAnalyze.setText("Analyse starten")
         self.btn_startAnalyze.setCheckable(False)
         self.btn_startAnalyze.setFlat(False)
         self.btn_startAnalyze.setObjectName("btn_startAnalyze")
-        self.btn_startAnalyze.clicked.connect(lambda: self.gui.change_screen(constants.ANALYZE_SCREEN))
+        self.btn_startAnalyze.clicked.connect(lambda: self.gui.change_screen(ANALYZE_SCREEN))
         self.btn_startAnalyze.clicked.connect(self.gui.startVideo)
 
 
@@ -1259,11 +1259,11 @@ class Ui_analyzePvScreen(QtWidgets.QWidget):
     def create_preview(self):
         self.imageLayout = QtWidgets.QLabel(self)
         self.imageLayout.setText("")
-        self.imageLayout.setMinimumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
-        self.imageLayout.setMaximumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
+        self.imageLayout.setMinimumSize(QtCore.QSize(PREVIEWIMAGE_WIDTH, PREVIEWIMAGE_HEIGTH))
+        self.imageLayout.setMaximumSize(QtCore.QSize(PREVIEWIMAGE_WIDTH, PREVIEWIMAGE_HEIGTH))
         # self.graphicsAnalyzePreview = QtWidgets.QGraphicsView(self)
-        # self.graphicsAnalyzePreview.setMinimumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
-        # self.graphicsAnalyzePreview.setMaximumSize(QtCore.QSize(constants.PREVIEWIMAGE_WIDTH, constants.PREVIEWIMAGE_HEIGTH))
+        # self.graphicsAnalyzePreview.setMinimumSize(QtCore.QSize(PREVIEWIMAGE_WIDTH, PREVIEWIMAGE_HEIGTH))
+        # self.graphicsAnalyzePreview.setMaximumSize(QtCore.QSize(PREVIEWIMAGE_WIDTH, PREVIEWIMAGE_HEIGTH))
         # self.graphicsAnalyzePreview.setObjectName("graphicsAnalyzePreview")
         
 
@@ -1326,7 +1326,7 @@ class Ui_analyzeScreen(QtWidgets.QWidget):
         self.verticalLayout_6.setObjectName("verticalLayout_6")
         self.lyth_headline_Analyze = QtWidgets.QHBoxLayout()
         self.lyth_headline_Analyze.setContentsMargins(20, 0, 20, 0)
-        self.lyth_headline_Analyze.setSpacing(constants.HEADLINE_SPACING)
+        self.lyth_headline_Analyze.setSpacing(HEADLINE_SPACING)
         self.lyth_headline_Analyze.setObjectName("lyth_headline_Analyze")
 
         self.lytv_bigCenter_Analyze = QtWidgets.QVBoxLayout()
@@ -1356,20 +1356,20 @@ class Ui_analyzeScreen(QtWidgets.QWidget):
 
     def create_button(self):
         self.btn_info_Analyze = QtWidgets.QPushButton(self)
-        self.btn_info_Analyze.setMinimumSize(QtCore.QSize(constants.INFO_BUTTON_WIDTH, constants.INFO_BUTTON_HEIGTH))
-        self.btn_info_Analyze.setMaximumSize(QtCore.QSize(constants.INFO_BUTTON_WIDTH, constants.INFO_BUTTON_HEIGTH))
+        self.btn_info_Analyze.setMinimumSize(QtCore.QSize(INFO_BUTTON_WIDTH, INFO_BUTTON_HEIGTH))
+        self.btn_info_Analyze.setMaximumSize(QtCore.QSize(INFO_BUTTON_WIDTH, INFO_BUTTON_HEIGTH))
         self.btn_info_Analyze.setBaseSize(QtCore.QSize(0, 0))
         self.btn_info_Analyze.setStyleSheet(styles.styleSmallButton)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/icons/info_logo"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_info_Analyze.setIcon(icon)
-        self.btn_info_Analyze.setIconSize(QtCore.QSize(constants.INFO_ICON_WIDTH, constants.INFO_ICON_HEIGTH))
+        self.btn_info_Analyze.setIconSize(QtCore.QSize(INFO_ICON_WIDTH, INFO_ICON_HEIGTH))
         self.btn_info_Analyze.setObjectName("btn_info_Analyze")
         self.btn_info_Analyze.clicked.connect(lambda: self.gui.infoscreen.show())
 
         self.btn_cancelAnalyze = QtWidgets.QPushButton(self)
-        self.btn_cancelAnalyze.setMinimumSize(QtCore.QSize(constants.BLUEBUTTONSMALL_WIDTH, constants.BLUEBUTTONSMALL_HEIGTH))
-        self.btn_cancelAnalyze.setMaximumSize(QtCore.QSize(constants.BLUEBUTTONSMALL_WIDTH, constants.BLUEBUTTONSMALL_HEIGTH))
+        self.btn_cancelAnalyze.setMinimumSize(QtCore.QSize(BLUEBUTTONSMALL_WIDTH, BLUEBUTTONSMALL_HEIGTH))
+        self.btn_cancelAnalyze.setMaximumSize(QtCore.QSize(BLUEBUTTONSMALL_WIDTH, BLUEBUTTONSMALL_HEIGTH))
         self.btn_cancelAnalyze.setStyleSheet(styles.styleBluebuttonsmall)
         self.btn_cancelAnalyze.setText("Abbrechen")
         self.btn_cancelAnalyze.setObjectName("btn_cancelAnalyze")
@@ -1381,8 +1381,8 @@ class Ui_analyzeScreen(QtWidgets.QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btn_showResult.sizePolicy().hasHeightForWidth())
         self.btn_showResult.setSizePolicy(sizePolicy)
-        self.btn_showResult.setMinimumSize(QtCore.QSize(constants.BLUEBUTTONSMALL_WIDTH, constants.BLUEBUTTONSMALL_HEIGTH))
-        self.btn_showResult.setMaximumSize(QtCore.QSize(constants.BLUEBUTTONSMALL_WIDTH, constants.BLUEBUTTONSMALL_HEIGTH))
+        self.btn_showResult.setMinimumSize(QtCore.QSize(BLUEBUTTONSMALL_WIDTH, BLUEBUTTONSMALL_HEIGTH))
+        self.btn_showResult.setMaximumSize(QtCore.QSize(BLUEBUTTONSMALL_WIDTH, BLUEBUTTONSMALL_HEIGTH))
         self.btn_showResult.setStyleSheet(styles.styleBluebuttonsmall)
         self.btn_showResult.setText("Zur Auswertung")
         self.btn_showResult.setEnabled(False)
@@ -1408,20 +1408,20 @@ class Ui_analyzeScreen(QtWidgets.QWidget):
         self.label_Analyze.setObjectName("label_Analyze")
 
         self.label_IconTop = QtWidgets.QLabel(self)
-        self.label_IconTop.setMinimumSize(QtCore.QSize(constants.ANALYZE_SCREEN_ICON_WIDTH, constants.ANALYZE_SCREEN_ICON_HEIGTH))
-        self.label_IconTop.setMaximumSize(QtCore.QSize(constants.ANALYZE_SCREEN_ICON_WIDTH, constants.ANALYZE_SCREEN_ICON_HEIGTH))
+        self.label_IconTop.setMinimumSize(QtCore.QSize(ANALYZE_SCREEN_ICON_WIDTH, ANALYZE_SCREEN_ICON_HEIGTH))
+        self.label_IconTop.setMaximumSize(QtCore.QSize(ANALYZE_SCREEN_ICON_WIDTH, ANALYZE_SCREEN_ICON_HEIGTH))
         self.label_IconTop.setObjectName("label_IconTop")
         self.label_IconTop.setScaledContents(True)
 
         self.label_IconMid = QtWidgets.QLabel(self)
-        self.label_IconMid.setMinimumSize(QtCore.QSize(constants.ANALYZE_SCREEN_ICON_WIDTH, constants.ANALYZE_SCREEN_ICON_HEIGTH))
-        self.label_IconMid.setMaximumSize(QtCore.QSize(constants.ANALYZE_SCREEN_ICON_WIDTH, constants.ANALYZE_SCREEN_ICON_HEIGTH))
+        self.label_IconMid.setMinimumSize(QtCore.QSize(ANALYZE_SCREEN_ICON_WIDTH, ANALYZE_SCREEN_ICON_HEIGTH))
+        self.label_IconMid.setMaximumSize(QtCore.QSize(ANALYZE_SCREEN_ICON_WIDTH, ANALYZE_SCREEN_ICON_HEIGTH))
         self.label_IconMid.setObjectName("label_IconMid")
         self.label_IconMid.setScaledContents(True)
 
         self.label_IconBottom = QtWidgets.QLabel(self)
-        self.label_IconBottom.setMinimumSize(QtCore.QSize(constants.ANALYZE_SCREEN_ICON_WIDTH, constants.ANALYZE_SCREEN_ICON_HEIGTH))
-        self.label_IconBottom.setMaximumSize(QtCore.QSize(constants.ANALYZE_SCREEN_ICON_WIDTH, constants.ANALYZE_SCREEN_ICON_HEIGTH))
+        self.label_IconBottom.setMinimumSize(QtCore.QSize(ANALYZE_SCREEN_ICON_WIDTH, ANALYZE_SCREEN_ICON_HEIGTH))
+        self.label_IconBottom.setMaximumSize(QtCore.QSize(ANALYZE_SCREEN_ICON_WIDTH, ANALYZE_SCREEN_ICON_HEIGTH))
         self.label_IconBottom.setObjectName("label_IconBottom")
         self.label_IconBottom.setScaledContents(True)
 
@@ -1430,8 +1430,8 @@ class Ui_analyzeScreen(QtWidgets.QWidget):
 
         self.videoLayout = QtWidgets.QLabel(self)
         self.videoLayout.setText("")
-        self.videoLayout.setMinimumSize(QtCore.QSize(constants.ANALYZEIMAGE_WIDTH, constants.ANALYZEIMAGE_HEIGTH))
-        self.videoLayout.setMaximumSize(QtCore.QSize(constants.ANALYZEIMAGE_WIDTH, constants.ANALYZEIMAGE_HEIGTH))
+        self.videoLayout.setMinimumSize(QtCore.QSize(ANALYZEIMAGE_WIDTH, ANALYZEIMAGE_HEIGTH))
+        self.videoLayout.setMaximumSize(QtCore.QSize(ANALYZEIMAGE_WIDTH, ANALYZEIMAGE_HEIGTH))
         
 
     def create_spacer(self):
@@ -1523,7 +1523,7 @@ class Ui_ResultScreen(QtWidgets.QWidget):
         self.verticalLayout_9.setObjectName("verticalLayout_9")
         self.lyth_headline_Result = QtWidgets.QHBoxLayout()
         self.lyth_headline_Result.setContentsMargins(20, 0, 20, 0)
-        self.lyth_headline_Result.setSpacing(constants.HEADLINE_SPACING)
+        self.lyth_headline_Result.setSpacing(HEADLINE_SPACING)
         self.lyth_headline_Result.setObjectName("lyth_headline_Result")
 
         self.lyth_smallText_Result = QtWidgets.QHBoxLayout()
@@ -1540,21 +1540,21 @@ class Ui_ResultScreen(QtWidgets.QWidget):
         sizePolicy.setVerticalStretch(1)
         sizePolicy.setHeightForWidth(self.scrollArea_Result.sizePolicy().hasHeightForWidth())
         self.scrollArea_Result.setSizePolicy(sizePolicy)
-        self.scrollArea_Result.setMinimumSize(QtCore.QSize(constants.SCROLLAREA_OUTER_MIN_WIDTH, constants.SCROLLAREA_MIN_HEIGTH))
-        self.scrollArea_Result.setMaximumSize(QtCore.QSize(constants.SCROLLAREA_OUTER_MAX_WIDTH, constants.SCROLLAREA_MAX_HEIGTH))
+        self.scrollArea_Result.setMinimumSize(QtCore.QSize(SCROLLAREA_OUTER_MIN_WIDTH, SCROLLAREA_MIN_HEIGTH))
+        self.scrollArea_Result.setMaximumSize(QtCore.QSize(SCROLLAREA_OUTER_MAX_WIDTH, SCROLLAREA_MAX_HEIGTH))
         self.scrollArea_Result.setSizeIncrement(QtCore.QSize(0, 0))
         self.scrollArea_Result.setWidgetResizable(True)
         self.scrollArea_Result.setObjectName("scrollArea_Result")
 
         self.scrollAreaResult = QtWidgets.QWidget()
-        self.scrollAreaResult.setGeometry(QtCore.QRect(0, 0, constants.SCROLLAREA_INNER_WIDTH, 360))
+        self.scrollAreaResult.setGeometry(QtCore.QRect(0, 0, SCROLLAREA_INNER_WIDTH, 360))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.scrollAreaResult.sizePolicy().hasHeightForWidth())
         self.scrollAreaResult.setSizePolicy(sizePolicy)
-        self.scrollAreaResult.setMinimumSize(QtCore.QSize(constants.SCROLLAREA_INNER_WIDTH, constants.SCROLLAREA_MIN_HEIGTH))
-        self.scrollAreaResult.setMaximumSize(QtCore.QSize(constants.SCROLLAREA_INNER_WIDTH, constants.SCROLLAREA_MAX_HEIGTH))
+        self.scrollAreaResult.setMinimumSize(QtCore.QSize(SCROLLAREA_INNER_WIDTH, SCROLLAREA_MIN_HEIGTH))
+        self.scrollAreaResult.setMaximumSize(QtCore.QSize(SCROLLAREA_INNER_WIDTH, SCROLLAREA_MAX_HEIGTH))
         self.scrollAreaResult.setObjectName("scrollAreaResult")
 
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.scrollAreaResult)
@@ -1573,14 +1573,14 @@ class Ui_ResultScreen(QtWidgets.QWidget):
     def create_button(self):
 
         self.btn_info_Result = QtWidgets.QPushButton(self)
-        self.btn_info_Result.setMinimumSize(QtCore.QSize(constants.INFO_BUTTON_WIDTH, constants.INFO_BUTTON_HEIGTH))
-        self.btn_info_Result.setMaximumSize(QtCore.QSize(constants.INFO_BUTTON_WIDTH, constants.INFO_BUTTON_HEIGTH))
+        self.btn_info_Result.setMinimumSize(QtCore.QSize(INFO_BUTTON_WIDTH, INFO_BUTTON_HEIGTH))
+        self.btn_info_Result.setMaximumSize(QtCore.QSize(INFO_BUTTON_WIDTH, INFO_BUTTON_HEIGTH))
         self.btn_info_Result.setBaseSize(QtCore.QSize(0, 0))
         self.btn_info_Result.setStyleSheet(styles.styleSmallButton)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/icons/info_logo"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_info_Result.setIcon(icon)
-        self.btn_info_Result.setIconSize(QtCore.QSize(constants.INFO_ICON_WIDTH, constants.INFO_ICON_HEIGTH))
+        self.btn_info_Result.setIconSize(QtCore.QSize(INFO_ICON_WIDTH, INFO_ICON_HEIGTH))
         self.btn_info_Result.setObjectName("btn_info_Result")
         self.btn_info_Result.clicked.connect(lambda: self.gui.infoscreen.show())
 
@@ -1590,8 +1590,8 @@ class Ui_ResultScreen(QtWidgets.QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btn_endResult.sizePolicy().hasHeightForWidth())
         self.btn_endResult.setSizePolicy(sizePolicy)
-        self.btn_endResult.setMinimumSize(QtCore.QSize(constants.BLUEBUTTONSMALL_WIDTH, constants.BLUEBUTTONSMALL_HEIGTH))
-        self.btn_endResult.setMaximumSize(QtCore.QSize(constants.BLUEBUTTONSMALL_WIDTH, constants.BLUEBUTTONSMALL_HEIGTH))
+        self.btn_endResult.setMinimumSize(QtCore.QSize(BLUEBUTTONSMALL_WIDTH, BLUEBUTTONSMALL_HEIGTH))
+        self.btn_endResult.setMaximumSize(QtCore.QSize(BLUEBUTTONSMALL_WIDTH, BLUEBUTTONSMALL_HEIGTH))
         self.btn_endResult.setStyleSheet(styles.styleBluebuttonsmall)
         self.btn_endResult.setText("Beenden")
         self.btn_endResult.clicked.connect(self.gui.cleanup)
@@ -1608,8 +1608,8 @@ class Ui_ResultScreen(QtWidgets.QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lbl_result.sizePolicy().hasHeightForWidth())
         self.lbl_result.setSizePolicy(sizePolicy)
-        self.lbl_result.setMinimumSize(QtCore.QSize(constants.RESULT_SCREEN_PERCENTAGE_WIDTH, constants.RESULT_SCREEN_PERCENTAGE_HEIGTH))
-        self.lbl_result.setMaximumSize(QtCore.QSize(constants.RESULT_SCREEN_PERCENTAGE_WIDTH, constants.RESULT_SCREEN_PERCENTAGE_HEIGTH))
+        self.lbl_result.setMinimumSize(QtCore.QSize(RESULT_SCREEN_PERCENTAGE_WIDTH, RESULT_SCREEN_PERCENTAGE_HEIGTH))
+        self.lbl_result.setMaximumSize(QtCore.QSize(RESULT_SCREEN_PERCENTAGE_WIDTH, RESULT_SCREEN_PERCENTAGE_HEIGTH))
         #self.lbl_result.setStyleSheet()
         self.lbl_result.setText("")
         self.lbl_result.setAlignment(QtCore.Qt.AlignCenter)
@@ -1623,13 +1623,13 @@ class Ui_ResultScreen(QtWidgets.QWidget):
                 self.lbl_result.setText("")
                 self.lbl_result.setStyleSheet(None)
             else:
-                if(percentage >= constants.PERCENTAGE_GREEN_TO_YELLOW):
+                if(percentage >= PERCENTAGE_GREEN_TO_YELLOW):
                     print("Showing green percentage label")
                     self.lbl_result.setStyleSheet(styles.stylePercentageGreen)
-                elif((percentage < constants.PERCENTAGE_GREEN_TO_YELLOW) and (percentage > constants.PERCENTAGE_YELLOW_TO_RED)):
+                elif((percentage < PERCENTAGE_GREEN_TO_YELLOW) and (percentage > PERCENTAGE_YELLOW_TO_RED)):
                     print("Showing yellow percentage label")
                     self.lbl_result.setStyleSheet(styles.stylePercentageYellow)
-                elif(percentage < constants.PERCENTAGE_YELLOW_TO_RED):
+                elif(percentage < PERCENTAGE_YELLOW_TO_RED):
                     print("Showing red percentage label")
                     self.lbl_result.setStyleSheet(styles.stylePercentageRed)
                 
@@ -1651,15 +1651,15 @@ class Ui_ResultScreen(QtWidgets.QWidget):
 
         #Insert header to gridLayout
         row_count = 0
-        while(row_count < constants.RESULT_SCREEN_ROWS):
+        while(row_count < RESULT_SCREEN_ROWS):
             self.lbl_header_schild = QtWidgets.QLabel(self.scrollAreaResult)
             sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
             sizePolicy.setHorizontalStretch(0)
             sizePolicy.setVerticalStretch(0)
             sizePolicy.setHeightForWidth(self.lbl_header_schild.sizePolicy().hasHeightForWidth())
             self.lbl_header_schild.setSizePolicy(sizePolicy)
-            self.lbl_header_schild.setMinimumSize(QtCore.QSize(constants.RESULT_SCREEN_HEADER_WIDTH, constants.RESULT_SCREEN_HEADER_HEIGTH))
-            self.lbl_header_schild.setMaximumSize(QtCore.QSize(constants.RESULT_SCREEN_HEADER_WIDTH, constants.RESULT_SCREEN_HEADER_HEIGTH))
+            self.lbl_header_schild.setMinimumSize(QtCore.QSize(RESULT_SCREEN_HEADER_WIDTH, RESULT_SCREEN_HEADER_HEIGTH))
+            self.lbl_header_schild.setMaximumSize(QtCore.QSize(RESULT_SCREEN_HEADER_WIDTH, RESULT_SCREEN_HEADER_HEIGTH))
             self.lbl_header_schild.setStyleSheet(styles.styleGridHeadline)
             self.lbl_header_schild.setText("Schild")
             #self.lbl_header_schild.setAlignment(QtCore.Qt.AlignCenter)
@@ -1675,8 +1675,8 @@ class Ui_ResultScreen(QtWidgets.QWidget):
                 sizePolicy.setVerticalStretch(0)
                 sizePolicy.setHeightForWidth(self.lbl_header_eingabe.sizePolicy().hasHeightForWidth())
                 self.lbl_header_eingabe.setSizePolicy(sizePolicy)
-                self.lbl_header_eingabe.setMinimumSize(QtCore.QSize(constants.RESULT_SCREEN_HEADER_WIDTH, constants.RESULT_SCREEN_HEADER_HEIGTH))
-                self.lbl_header_eingabe.setMaximumSize(QtCore.QSize(constants.RESULT_SCREEN_HEADER_WIDTH, constants.RESULT_SCREEN_HEADER_HEIGTH))
+                self.lbl_header_eingabe.setMinimumSize(QtCore.QSize(RESULT_SCREEN_HEADER_WIDTH, RESULT_SCREEN_HEADER_HEIGTH))
+                self.lbl_header_eingabe.setMaximumSize(QtCore.QSize(RESULT_SCREEN_HEADER_WIDTH, RESULT_SCREEN_HEADER_HEIGTH))
                 self.lbl_header_eingabe.setStyleSheet(styles.styleGridHeadline)
                 self.lbl_header_eingabe.setText("Eingabe")
                 #self.lbl_header_eingabe.setAlignment(QtCore.Qt.AlignCenter)
@@ -1691,8 +1691,8 @@ class Ui_ResultScreen(QtWidgets.QWidget):
             sizePolicy.setVerticalStretch(0)
             sizePolicy.setHeightForWidth(self.lbl_header_erkannt.sizePolicy().hasHeightForWidth())
             self.lbl_header_erkannt.setSizePolicy(sizePolicy)
-            self.lbl_header_erkannt.setMinimumSize(QtCore.QSize(constants.RESULT_SCREEN_HEADER_WIDTH, constants.RESULT_SCREEN_HEADER_HEIGTH))
-            self.lbl_header_erkannt.setMaximumSize(QtCore.QSize(constants.RESULT_SCREEN_HEADER_WIDTH, constants.RESULT_SCREEN_HEADER_HEIGTH))
+            self.lbl_header_erkannt.setMinimumSize(QtCore.QSize(RESULT_SCREEN_HEADER_WIDTH, RESULT_SCREEN_HEADER_HEIGTH))
+            self.lbl_header_erkannt.setMaximumSize(QtCore.QSize(RESULT_SCREEN_HEADER_WIDTH, RESULT_SCREEN_HEADER_HEIGTH))
             self.lbl_header_erkannt.setStyleSheet(styles.styleGridHeadline)
             self.lbl_header_erkannt.setText("Erkannt")
             #self.lbl_header_erkannt.setAlignment(QtCore.Qt.AlignCenter)
@@ -1705,19 +1705,19 @@ class Ui_ResultScreen(QtWidgets.QWidget):
         line=1
         column=0
         
-        for array_count in range(len(self.logic.array_dataInput[constants.DATA_ARRAY_SIGN_ID])):
+        for array_count in range(len(self.logic.array_dataInput[DATA_ARRAY_SIGN_ID])):
 
-            self.sign_id = ":/signs/" + str(self.logic.getDataArray(array_count, constants.DATA_ARRAY_SIGN_ID))
-            self.sign_input = self.logic.getDataArray(array_count, constants.DATA_ARRAY_SIGN_INPUT)
-            self.sign_detected = self.logic.getDataArray(array_count, constants.DATA_ARRAY_SIGN_DETECTED)
+            self.sign_id = ":/signs/" + str(self.logic.getDataArray(array_count, DATA_ARRAY_SIGN_ID))
+            self.sign_input = self.logic.getDataArray(array_count, DATA_ARRAY_SIGN_INPUT)
+            self.sign_detected = self.logic.getDataArray(array_count, DATA_ARRAY_SIGN_DETECTED)
 
-            print("SignID: " + str(self.logic.getDataArray(array_count, constants.DATA_ARRAY_SIGN_ID)) + "; Input: " + str(self.sign_input) + "; Detected: " + str(self.sign_detected))
+            print("SignID: " + str(self.logic.getDataArray(array_count, DATA_ARRAY_SIGN_ID)) + "; Input: " + str(self.sign_input) + "; Detected: " + str(self.sign_detected))
 
             if (self.sign_detected > 0) or ( (self.logic.getCompareResult() == True) and (self.sign_input > 0) ) :
 
                 self.name_sign = QtWidgets.QLabel(self.scrollAreaResult)
-                self.name_sign.setMinimumSize(QtCore.QSize(constants.SIGN_WIDTH, constants.SIGN_HEIGTH))
-                self.name_sign.setMaximumSize(QtCore.QSize(constants.SIGN_WIDTH, constants.SIGN_HEIGTH))
+                self.name_sign.setMinimumSize(QtCore.QSize(SIGN_WIDTH, SIGN_HEIGTH))
+                self.name_sign.setMaximumSize(QtCore.QSize(SIGN_WIDTH, SIGN_HEIGTH))
                 self.name_sign.setPixmap(QtGui.QPixmap(self.sign_id))
                 self.name_sign.setScaledContents(True)
                 self.gridLayout_Result.addWidget(self.name_sign, line,column,1,1)
@@ -1731,8 +1731,8 @@ class Ui_ResultScreen(QtWidgets.QWidget):
                     sizePolicy.setVerticalStretch(0)
                     sizePolicy.setHeightForWidth(self.lbl_eingabe.sizePolicy().hasHeightForWidth())
                     self.lbl_eingabe.setSizePolicy(sizePolicy)
-                    self.lbl_eingabe.setMinimumSize(QtCore.QSize(constants.SIGN_COUNT_WIDTH, constants.SIGN_COUNT_HEIGTH))
-                    self.lbl_eingabe.setMaximumSize(QtCore.QSize(constants.SIGN_COUNT_WIDTH, constants.SIGN_COUNT_HEIGTH))
+                    self.lbl_eingabe.setMinimumSize(QtCore.QSize(SIGN_COUNT_WIDTH, SIGN_COUNT_HEIGTH))
+                    self.lbl_eingabe.setMaximumSize(QtCore.QSize(SIGN_COUNT_WIDTH, SIGN_COUNT_HEIGTH))
                     self.lbl_eingabe.setObjectName("lbl_eingabe")
                     self.lbl_eingabe.setStyleSheet(styles.styleResultLabel)
                     self.lbl_eingabe.setText(str(self.sign_input))
@@ -1745,8 +1745,8 @@ class Ui_ResultScreen(QtWidgets.QWidget):
                 sizePolicy.setVerticalStretch(0)
                 sizePolicy.setHeightForWidth(self.lbl_erkannt.sizePolicy().hasHeightForWidth())
                 self.lbl_erkannt.setSizePolicy(sizePolicy)
-                self.lbl_erkannt.setMinimumSize(QtCore.QSize(constants.SIGN_COUNT_WIDTH, constants.SIGN_COUNT_HEIGTH))
-                self.lbl_erkannt.setMaximumSize(QtCore.QSize(constants.SIGN_COUNT_WIDTH, constants.SIGN_COUNT_HEIGTH))
+                self.lbl_erkannt.setMinimumSize(QtCore.QSize(SIGN_COUNT_WIDTH, SIGN_COUNT_HEIGTH))
+                self.lbl_erkannt.setMaximumSize(QtCore.QSize(SIGN_COUNT_WIDTH, SIGN_COUNT_HEIGTH))
                 self.lbl_erkannt.setObjectName("lbl_erkannt")
                 self.lbl_erkannt.setStyleSheet(styles.styleResultLabel)
                 self.lbl_erkannt.setText(str(self.sign_detected))
@@ -1754,7 +1754,7 @@ class Ui_ResultScreen(QtWidgets.QWidget):
 
                 column = column+1
 
-            if column >= constants.RESULT_SCREEN_ROWS:
+            if column >= RESULT_SCREEN_ROWS:
                 column = 0
                 line = line+1
              
@@ -1832,7 +1832,7 @@ class Ui_DemoDataScreen(QtWidgets.QWidget):
         self.verticalLayout_8.setObjectName("verticalLayout_8")
         self.lyth_headline_DemoData = QtWidgets.QHBoxLayout()
         self.lyth_headline_DemoData.setContentsMargins(20, 0, 20, 0)
-        self.lyth_headline_DemoData.setSpacing(constants.HEADLINE_SPACING)
+        self.lyth_headline_DemoData.setSpacing(HEADLINE_SPACING)
         self.lyth_headline_DemoData.setObjectName("lyth_headline_DemoData")
 
         self.lyth_smallText_DemoData = QtWidgets.QHBoxLayout()
@@ -1849,20 +1849,20 @@ class Ui_DemoDataScreen(QtWidgets.QWidget):
         sizePolicy.setVerticalStretch(1)
         sizePolicy.setHeightForWidth(self.scrollArea_DemoData.sizePolicy().hasHeightForWidth())
         self.scrollArea_DemoData.setSizePolicy(sizePolicy)
-        self.scrollArea_DemoData.setMinimumSize(QtCore.QSize(constants.SCROLLAREA_OUTER_MIN_WIDTH, constants.SCROLLAREA_MIN_HEIGTH))
-        self.scrollArea_DemoData.setMaximumSize(QtCore.QSize(constants.SCROLLAREA_OUTER_MAX_WIDTH, constants.SCROLLAREA_MAX_HEIGTH))
+        self.scrollArea_DemoData.setMinimumSize(QtCore.QSize(SCROLLAREA_OUTER_MIN_WIDTH, SCROLLAREA_MIN_HEIGTH))
+        self.scrollArea_DemoData.setMaximumSize(QtCore.QSize(SCROLLAREA_OUTER_MAX_WIDTH, SCROLLAREA_MAX_HEIGTH))
         self.scrollArea_DemoData.setSizeIncrement(QtCore.QSize(0, 0))
         self.scrollArea_DemoData.setWidgetResizable(True)
         self.scrollArea_DemoData.setObjectName("scrollArea_DemoData")
         self.scrollAreaWidget_DemoData = QtWidgets.QWidget()
-        self.scrollAreaWidget_DemoData.setGeometry(QtCore.QRect(0, 0, constants.SCROLLAREA_INNER_WIDTH, 597))
+        self.scrollAreaWidget_DemoData.setGeometry(QtCore.QRect(0, 0, SCROLLAREA_INNER_WIDTH, 597))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.scrollAreaWidget_DemoData.sizePolicy().hasHeightForWidth())
         self.scrollAreaWidget_DemoData.setSizePolicy(sizePolicy)
-        self.scrollAreaWidget_DemoData.setMinimumSize(QtCore.QSize(constants.SCROLLAREA_INNER_WIDTH, constants.SCROLLAREA_MIN_HEIGTH))
-        self.scrollAreaWidget_DemoData.setMaximumSize(QtCore.QSize(constants.SCROLLAREA_INNER_WIDTH, constants.SCROLLAREA_MAX_HEIGTH))
+        self.scrollAreaWidget_DemoData.setMinimumSize(QtCore.QSize(SCROLLAREA_INNER_WIDTH, SCROLLAREA_MIN_HEIGTH))
+        self.scrollAreaWidget_DemoData.setMaximumSize(QtCore.QSize(SCROLLAREA_INNER_WIDTH, SCROLLAREA_MAX_HEIGTH))
         self.scrollAreaWidget_DemoData.setObjectName("scrollAreaWidget_DemoData")
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.scrollAreaWidget_DemoData)
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
@@ -1875,20 +1875,20 @@ class Ui_DemoDataScreen(QtWidgets.QWidget):
 
         self.lyth_bottom_DemoData = QtWidgets.QHBoxLayout()
         self.lyth_bottom_DemoData.setContentsMargins(-1, -1, 0, -1)
-        self.lyth_bottom_DemoData.setSpacing(constants.HEADLINE_SPACING)
+        self.lyth_bottom_DemoData.setSpacing(HEADLINE_SPACING)
         self.lyth_bottom_DemoData.setObjectName("lyth_bottom_DemoData")
 
 
     def create_button(self):
         self.btn_info_DemoData = QtWidgets.QPushButton(self)
-        self.btn_info_DemoData.setMinimumSize(QtCore.QSize(constants.INFO_BUTTON_WIDTH, constants.INFO_BUTTON_HEIGTH))
-        self.btn_info_DemoData.setMaximumSize(QtCore.QSize(constants.INFO_BUTTON_WIDTH, constants.INFO_BUTTON_HEIGTH))
+        self.btn_info_DemoData.setMinimumSize(QtCore.QSize(INFO_BUTTON_WIDTH, INFO_BUTTON_HEIGTH))
+        self.btn_info_DemoData.setMaximumSize(QtCore.QSize(INFO_BUTTON_WIDTH, INFO_BUTTON_HEIGTH))
         self.btn_info_DemoData.setBaseSize(QtCore.QSize(0, 0))
         self.btn_info_DemoData.setStyleSheet(styles.styleSmallButton)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/icons/info_logo"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_info_DemoData.setIcon(icon)
-        self.btn_info_DemoData.setIconSize(QtCore.QSize(constants.INFO_ICON_WIDTH, constants.INFO_ICON_HEIGTH))
+        self.btn_info_DemoData.setIconSize(QtCore.QSize(INFO_ICON_WIDTH, INFO_ICON_HEIGTH))
         self.btn_info_DemoData.setObjectName("btn_info_DemoData")
         self.btn_info_DemoData.clicked.connect(lambda: self.gui.infoscreen.show())
 
@@ -1898,8 +1898,8 @@ class Ui_DemoDataScreen(QtWidgets.QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btn_ok_demoData.sizePolicy().hasHeightForWidth())
         self.btn_ok_demoData.setSizePolicy(sizePolicy)
-        self.btn_ok_demoData.setMinimumSize(QtCore.QSize(constants.BLUEBUTTONSMALL_WIDTH, constants.BLUEBUTTONSMALL_HEIGTH))
-        self.btn_ok_demoData.setMaximumSize(QtCore.QSize(constants.BLUEBUTTONSMALL_WIDTH, constants.BLUEBUTTONSMALL_HEIGTH))
+        self.btn_ok_demoData.setMinimumSize(QtCore.QSize(BLUEBUTTONSMALL_WIDTH, BLUEBUTTONSMALL_HEIGTH))
+        self.btn_ok_demoData.setMaximumSize(QtCore.QSize(BLUEBUTTONSMALL_WIDTH, BLUEBUTTONSMALL_HEIGTH))
         self.btn_ok_demoData.setStyleSheet(styles.styleBluebuttonsmall)
         self.btn_ok_demoData.setText("OK")
         self.btn_ok_demoData.setCheckable(False)
@@ -1941,14 +1941,14 @@ class Ui_DemoDataScreen(QtWidgets.QWidget):
             next(csv_reader)
 
             for line in csv_reader:
-                if int(line[constants.DEMODATA_CSV_SIGN_COUNT]) > 0:
+                if int(line[DEMODATA_CSV_SIGN_COUNT]) > 0:
 
-                    self.sign_id = ":/signs/" + line[constants.DEMODATA_CSV_SIGN_ID]
-                    self.sign_count = line[constants.DEMODATA_CSV_SIGN_COUNT]
+                    self.sign_id = ":/signs/" + line[DEMODATA_CSV_SIGN_ID]
+                    self.sign_count = line[DEMODATA_CSV_SIGN_COUNT]
 
                     self.name_sign = QtWidgets.QLabel(self.scrollAreaWidget_DemoData)
-                    self.name_sign.setMinimumSize(QtCore.QSize(constants.SIGN_WIDTH, constants.SIGN_HEIGTH))
-                    self.name_sign.setMaximumSize(QtCore.QSize(constants.SIGN_WIDTH, constants.SIGN_HEIGTH))
+                    self.name_sign.setMinimumSize(QtCore.QSize(SIGN_WIDTH, SIGN_HEIGTH))
+                    self.name_sign.setMaximumSize(QtCore.QSize(SIGN_WIDTH, SIGN_HEIGTH))
                     self.name_sign.setPixmap(QtGui.QPixmap(self.sign_id))
                     self.name_sign.setScaledContents(True)
                     self.gridLayout_DemoData.addWidget(self.name_sign, row_counter,col_counter,1,1)
@@ -1961,15 +1961,15 @@ class Ui_DemoDataScreen(QtWidgets.QWidget):
                     sizePolicy.setVerticalStretch(0)
                     sizePolicy.setHeightForWidth(self.lbl_amount.sizePolicy().hasHeightForWidth())
                     self.lbl_amount.setSizePolicy(sizePolicy)
-                    self.lbl_amount.setMinimumSize(QtCore.QSize(constants.SIGN_COUNT_WIDTH, constants.SIGN_COUNT_HEIGTH))
-                    self.lbl_amount.setMaximumSize(QtCore.QSize(constants.SIGN_COUNT_WIDTH, constants.SIGN_COUNT_HEIGTH))
+                    self.lbl_amount.setMinimumSize(QtCore.QSize(SIGN_COUNT_WIDTH, SIGN_COUNT_HEIGTH))
+                    self.lbl_amount.setMaximumSize(QtCore.QSize(SIGN_COUNT_WIDTH, SIGN_COUNT_HEIGTH))
                     self.lbl_amount.setObjectName("lbl_amount")
                     self.lbl_amount.setStyleSheet(styles.styleText1)
                     self.lbl_amount.setText(self.sign_count)
                     self.gridLayout_DemoData.addWidget(self.lbl_amount, row_counter, col_counter, 1, 1)
 
                     col_counter = col_counter+1
-                    if(col_counter > constants.DISCREEN_COLUMNS):
+                    if(col_counter > DISCREEN_COLUMNS):
                         col_counter = 0
                         row_counter = row_counter+1
 
@@ -2027,7 +2027,7 @@ class Ui_InfoScreen(QtWidgets.QWidget):
         self.gui = Gui
 
         self.setObjectName("InfoScreen")
-        self.setFixedSize( self.gui.size.width() * constants.INFOSCREEN_SIZE_RATIO, self.gui.size.height() * constants.INFOSCREEN_SIZE_RATIO)
+        self.setFixedSize( self.gui.size.width() * INFOSCREEN_SIZE_RATIO, self.gui.size.height() * INFOSCREEN_SIZE_RATIO)
         self.setStyleSheet(styles.styleBackground)
         self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint)
 
@@ -2042,7 +2042,7 @@ class Ui_InfoScreen(QtWidgets.QWidget):
         self.verticalLayout_12.setObjectName("verticalLayout_12")
         self.lyth_headline_Info = QtWidgets.QHBoxLayout()
         self.lyth_headline_Info.setContentsMargins(20, 0, 20, 0)
-        self.lyth_headline_Info.setSpacing(constants.HEADLINE_SPACING)
+        self.lyth_headline_Info.setSpacing(HEADLINE_SPACING)
         self.lyth_headline_Info.setObjectName("lyth_headline_Info")
         self.lbl_headline_Info = QtWidgets.QLabel(self)
 
@@ -2058,8 +2058,8 @@ class Ui_InfoScreen(QtWidgets.QWidget):
 
     def create_button(self):
         self.btn_closeInfo = QtWidgets.QPushButton(self)
-        self.btn_closeInfo.setMinimumSize(QtCore.QSize(constants.BLUEBUTTONSMALL_WIDTH, constants.BLUEBUTTONSMALL_HEIGTH))
-        self.btn_closeInfo.setMaximumSize(QtCore.QSize(constants.BLUEBUTTONSMALL_WIDTH, constants.BLUEBUTTONSMALL_HEIGTH))
+        self.btn_closeInfo.setMinimumSize(QtCore.QSize(BLUEBUTTONSMALL_WIDTH, BLUEBUTTONSMALL_HEIGTH))
+        self.btn_closeInfo.setMaximumSize(QtCore.QSize(BLUEBUTTONSMALL_WIDTH, BLUEBUTTONSMALL_HEIGTH))
         self.btn_closeInfo.setStyleSheet(styles.styleBluebuttonsmall)
         self.btn_closeInfo.setText("OK")
         self.btn_closeInfo.setCheckable(False)

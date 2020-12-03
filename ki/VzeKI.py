@@ -5,7 +5,7 @@ import cv2
 import pickle
 import filetype
 from keras.models import load_model
-import constants as constants
+from constants import *
 #For KI Thread
 from PyQt5.QtCore import Qt, QThread
 from PyQt5.QtGui import QImage
@@ -146,9 +146,9 @@ class VzeImageProcessing():
 
             print("ImageResolution: " + str(width) + "x" + str(heigth))
 
-            if (width < constants.IMAGE_MIN_WIDTH or heigth < constants.IMAGE_MIN_HEIGTH):
+            if (width < IMAGE_MIN_WIDTH or heigth < IMAGE_MIN_HEIGTH):
                 return -2
-            elif (width > constants.IMAGE_MAX_WIDTH or heigth > constants.IMAGE_MAX_HEIGTH):
+            elif (width > IMAGE_MAX_WIDTH or heigth > IMAGE_MAX_HEIGTH):
                 return -1    
 
 
@@ -160,9 +160,9 @@ class VzeImageProcessing():
 
             print("VideoResolution: " + str(width) + "x" + str(heigth))
 
-            if (width < constants.VIDEO_MIN_WIDTH or heigth < constants.VIDEO_MIN_HEIGTH):
+            if (width < VIDEO_MIN_WIDTH or heigth < VIDEO_MIN_HEIGTH):
                 return -2
-            elif (width > constants.VIDEO_MAX_WIDTH or heigth > constants.VIDEO_MAX_HEIGTH):
+            elif (width > VIDEO_MAX_WIDTH or heigth > VIDEO_MAX_HEIGTH):
                 return -1                
 
         return 1
@@ -184,7 +184,7 @@ class VzeImageProcessing():
 
         print("File has a length of " + str(duration) + " seconds")
 
-        if duration > constants.VIDEO_MAX_DURATION:
+        if duration > VIDEO_MAX_DURATION:
             return -1
         else:
             return 1
@@ -434,7 +434,7 @@ class VideoThread(QThread):
             bytesPerLine = ch * w
             convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
             #p = convertToQtFormat.scaled(800, 480, Qt.KeepAspectRatio)
-            p = convertToQtFormat.scaled(constants.ANALYZEIMAGE_WIDTH, constants.ANALYZEIMAGE_HEIGTH, Qt.KeepAspectRatio)
+            p = convertToQtFormat.scaled(ANALYZEIMAGE_WIDTH, ANALYZEIMAGE_HEIGTH, Qt.KeepAspectRatio)
             self.gui.setVideoImage(p)
 
             if cv2.waitKey(10) & 0xFF ==ord("q"):
@@ -468,7 +468,7 @@ class VzeObject:
         bytesPerLine = ch * w
         convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
         #self.frame = convertToQtFormat.scaled(850, 480, Qt.KeepAspectRatio)
-        self.frame = convertToQtFormat.scaled(constants.ANALYZEIMAGE_WIDTH, constants.ANALYZEIMAGE_HEIGTH, Qt.KeepAspectRatio)
+        self.frame = convertToQtFormat.scaled(ANALYZEIMAGE_WIDTH, ANALYZEIMAGE_HEIGTH, Qt.KeepAspectRatio)
 
 class TrafficSign:
     def __init__(self, signID, box_W_H, coordinateXY, prob):

@@ -353,13 +353,18 @@ class VzeGui(QtWidgets.QMainWindow):
         detetedSignID = ":/signs/" + str(detetedSign)
         self.ringBuffer.append(detetedSignID)
         list = self.ringBuffer.get()
-        list.reverse()
-        if len(list) > 0:
-            self.analyzescreen.label_IconTop.setPixmap(QtGui.QPixmap(list[0]))
-        if len(list) > 1:
-            self.analyzescreen.label_IconMid.setPixmap(QtGui.QPixmap(list[1]))
-        if len(list) > 2:
-            self.analyzescreen.label_IconBottom.setPixmap(QtGui.QPixmap(list[2]))
+        revList = list[::-1]
+        
+        print("List in Ringbuffer: " + str(revList))
+        if len(revList) > 0:
+            self.analyzescreen.label_IconTop.setPixmap(QtGui.QPixmap(revList[0]))
+            print("Set Icon Top with : " + str(revList[0]))
+        if len(revList) > 1:
+            self.analyzescreen.label_IconMid.setPixmap(QtGui.QPixmap(revList[1]))
+            print("Set Icon Mid with : " + str(revList[1]))
+        if len(revList) > 2:
+            self.analyzescreen.label_IconBottom.setPixmap(QtGui.QPixmap(revList[2]))
+            print("Set Icon Bottom with : " + str(revList[2]))
 
 
 

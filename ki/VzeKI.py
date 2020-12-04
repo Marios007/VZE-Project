@@ -36,11 +36,11 @@ class VzeImageProcessing():
         return cv2.imshow(title, image)
 
     def resize_image(self, image, scale):
-        width = int(image.shape[1] * scale / 100) #ändern auf 960
-        height = int(image.shape[0] * scale / 100) #ändern auf 540
+        width = int(image.shape[1] * scale / 100) # ändern auf 960
+        height = int(image.shape[0] * scale / 100) # ändern auf 540
         dim = (width, height)
         # resize image
-        resized = cv2.resize(image, dim, interpolation = cv2.INTER_AREA) 
+        resized = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
         return resized
 
     def convert_grayscale(self, image):
@@ -52,7 +52,7 @@ class VzeImageProcessing():
         return image
     
     def print_text_on_image(self, image, text, x_min, y_min, font_size, color, thickness):
-        cv2.putText(image, text, (x_min, y_min), cv2.FONT_HERSHEY_DUPLEX, font_size, [0,0,0], thickness+1)
+        cv2.putText(image, text, (x_min, y_min), cv2.FONT_HERSHEY_DUPLEX, font_size, [0, 0, 0], thickness+1)
         cv2.putText(image, text, (x_min, y_min), cv2.FONT_HERSHEY_DUPLEX, font_size, color, thickness)
         return image
 
@@ -60,36 +60,34 @@ class VzeImageProcessing():
         """
         maybe we should use variables instead of constants
         """
-        image = cv2.resize(image, (32,32), interpolation = cv2.INTER_AREA) 
+        image = cv2.resize(image, (32, 32), interpolation=cv2.INTER_AREA) 
         image = self.convert_grayscale(image)
         image = self.equalize_histogram(image)
         image = image/255
-        image = image.reshape(1,32,32,1)
+        image = image.reshape(1, 32, 32, 1)
         # checkpoint
-        #print("shape for cnn: ", image.shape)
+        # print("shape for cnn: ", image.shape)
         return image
-
 
     def print_boxes_on_image(self, image, bounding_boxes_final, sign_names, probabilities):
         box_color = [0, 0, 255]
         text_color = [0, 255, 0]
 
         for i in range(len(bounding_boxes_final)):
-            font_size = bounding_boxes_final[i,2]/90
-            cv2.rectangle(image, (bounding_boxes_final[i,0], bounding_boxes_final[i,1]),
-                                (bounding_boxes_final[i,0] + bounding_boxes_final[i,2],
-                                bounding_boxes_final[i,1] + bounding_boxes_final[i,3]),
-                                box_color, 2)
-            self.print_text_on_image(image, (str(sign_names[i]) + " " + str(np.format_float_positional(probabilities[i,0],precision=2))),
-                                bounding_boxes_final[i,0], bounding_boxes_final[i,1]-5, font_size, text_color, 1)
+            font_size = bounding_boxes_final[i, 2]/90
+            cv2.rectangle(image, (bounding_boxes_final[i, 0], bounding_boxes_final[i, 1]), (bounding_boxes_final[i, 0] + bounding_boxes_final[i, 2],
+                                bounding_boxes_final[i, 1] + bounding_boxes_final[i, 3]), box_color, 2)
+            self.print_text_on_image(image, (str(sign_names[i]) + " " + str(np.format_float_positional(probabilities[i, 0], precision=2))),
+                                bounding_boxes_final[i, 0], bounding_boxes_final[i, 1]-5, font_size, text_color, 1)
 
         return image
 
     def get_firstImage(self, videopath):
-        #Create previewImage of video
+        """
+        Create previewImage of video
+        """
         vidcap = cv2.VideoCapture(videopath)
-        success,image = vidcap.read()
-
+        success, image = vidcap.read()
         if success:
             vidcap.release()
             return image
@@ -112,21 +110,21 @@ class VzeImageProcessing():
 
         if kind is None:
             print('Cannot guess file type!')
-            return -1,None
+            return -1, None
 
         elif str(kind.mime).startswith("image"):
             print("File is an image")
             image = self.read_image(filepath)
-            return 1,image
+            return 1, image
 
         elif str(kind.mime).startswith("video"):
             print("File is a video")
             image = self.get_firstImage(filepath)
-            return 2,image
+            return 2, image
 
         else:
             print("Filetype unknown")
-            return -1,None
+            return -1, None
 
     def check_fileResolution(self, fileType, filepath):
         """
@@ -137,11 +135,10 @@ class VzeImageProcessing():
         """
 
         if fileType == 1:
-            #File is an image
+            # File is an image
             print("Image-Resolution-Check")
             img = self.read_image(filepath)
             heigth, width = self.get_dimensions(img)
-
             print("ImageResolution: " + str(width) + "x" + str(heigth))
 
             if (width < IMAGE_MIN_WIDTH or heigth < IMAGE_MIN_HEIGTH):
@@ -149,19 +146,18 @@ class VzeImageProcessing():
             elif (width > IMAGE_MAX_WIDTH or heigth > IMAGE_MAX_HEIGTH):
                 return -1    
 
-
         elif fileType == 2:
-            #File is a video
+            # File is a video
             print("Video-Resolution-Check")
-            
-            vidcap,heigth,width = self.read_video(filepath)
+
+            vidcap, heigth, width = self.read_video(filepath)
 
             print("VideoResolution: " + str(width) + "x" + str(heigth))
 
             if (width < VIDEO_MIN_WIDTH or heigth < VIDEO_MIN_HEIGTH):
                 return -2
             elif (width > VIDEO_MAX_WIDTH or heigth > VIDEO_MAX_HEIGTH):
-                return -1                
+                return -1             
 
         return 1
 
@@ -172,14 +168,12 @@ class VzeImageProcessing():
             returns 1 if video is ok
         """
 
-        vidcap=cv2.VideoCapture(filepath)
-        
+        vidcap = cv2.VideoCapture(filepath)
+
         fps = vidcap.get(cv2.CAP_PROP_FPS)      # OpenCV2 version 2 used "CV_CAP_PROP_FPS"
         frame_count = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))
         duration = frame_count/fps
-        
         vidcap.release()
-
         print("File has a length of " + str(duration) + " seconds")
 
         if duration > VIDEO_MAX_DURATION:
@@ -214,13 +208,11 @@ class VzeKI:
         if len(physical_devices) > 0:
             experimental.set_memory_growth(physical_devices[0], True)
 
-
         # Labels laden
         #try:
         self.labels = pd.read_csv(LABEL_PATH, sep=";", encoding="mac_latin2")
         #except expression as identifier:
         #    pass
-
 
         # CNN-Modell laden
         #try:
@@ -228,7 +220,6 @@ class VzeKI:
         #except expression as identifier:
          #   pass
 
-         
         # Pickle? Laden
         #try:
         self.mean = pickle.load(open(YOLO_MEAN_PICKLE, "rb"), encoding='latin1')
@@ -246,13 +237,11 @@ class VzeKI:
         self.yolo_network.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
 
 
-
     ### KI-Methoden
 
     def yolo_detection(self, image):
         self.yolo_network.setInput(cv2.dnn.blobFromImage(image, 1 / 255.0, self.DNN_DIM, swapRB=True, crop=False))
         return self.yolo_network.forward(self.layers_names_output)
-
 
     def detect_signs(self, image, height, width):
         #only for debugging
@@ -348,13 +337,13 @@ class VzeKI:
                 for i in range(len(bounding_boxes_final)):
                     returnObject.addSign(TrafficSign(prediction[i],(bounding_boxes_final[i][2],bounding_boxes_final[i][3]),(bounding_boxes_final[i][0],bounding_boxes_final[i][1]),probabilities[i][0]))
                     print("SchildID: {0} - Wahrscheinlichkeit: {1} - X: {2} - Y: {3} - Breite x Höhe: {4} x {5}".format(prediction[i], probabilities[i][0], bounding_boxes_final[i][0],bounding_boxes_final[i][1],bounding_boxes_final[i][2],bounding_boxes_final[i][3]))
-            
+
         return returnObject
-    
+
     ### Hilfsmethoden
 
     def calculate_time(self, currentTime):
-                
+
         timeDifference = (currentTime - self.previousTime)/cv2.getTickFrequency()
         if timeDifference != 0:
             fps = round(1/timeDifference, 1)
@@ -404,7 +393,7 @@ class VideoThreadKI(QThread):
         self.cap.release()
         self.gui.activateResultBtn()        
         print("done")
-        
+
 
     def stopVideo(self):
         """Sets run flag to False and waits for thread to finish"""
@@ -452,5 +441,3 @@ class TrafficSign:
         self.signID = signID
         self.box_W_H = box_W_H
         self.coordinateXY = coordinateXY
-
-

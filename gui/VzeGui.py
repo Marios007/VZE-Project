@@ -23,10 +23,10 @@ class VzeGui(QtWidgets.QMainWindow):
         self.logic = logicInterface
         # ringbuffer to store 3 last detected shields
         self.ringBuffer = RingBuffer(3)
-       
+
         # nparray for counting signs
-        self.countArrLeft = np.empty((0,4), float)
-        self.countArrRight = np.empty((0,4), float)
+        self.countArrLeft = np.empty((0, 4), float)
+        self.countArrRight = np.empty((0, 4), float)
 
         # Setting Window Title and Icon
         self.setWindowTitle("VerkehrsZeichenErkennung VZE")
@@ -58,10 +58,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.stackedWidget.setCurrentIndex(START_SCREEN)
         QtCore.QMetaObject.connectSlotsByName(window)
 
-        
-
     def build_screens(self):
-
         # Build UI with each screen
         print("Build screens")
         # 0
@@ -157,7 +154,6 @@ class VzeGui(QtWidgets.QMainWindow):
         self.analyzepvscreen.imageLayout.setPixmap(pixmap)
         self.analyzescreen.videoLayout.setPixmap(pixmap)
 
-
     def loadFile(self):
         """
         This method is used for uploading a file
@@ -185,9 +181,9 @@ class VzeGui(QtWidgets.QMainWindow):
             self.showPreviewImage(image)
             demodatafile = ""
             if demoID == DEMO_ID_1:
-                demodatafile=self.demo_datafile1
+                demodatafile = self.demo_datafile1
             elif demoID == DEMO_ID_2:
-                demodatafile=self.demo_datafile2
+                demodatafile = self.demo_datafile2
             self.loadDemoData(demodatafile)
             self.logic.setCompareResult(True)
             self.change_screen(ANALYZE_PV_SCREEN)
@@ -274,9 +270,8 @@ class VzeGui(QtWidgets.QMainWindow):
         self.deactivateResultBtn()
         self.initRingBuffer()
         self.change_screen(START_SCREEN)
-        self.countArrLeft = np.empty((0,4), float)
-        self.countArrRight = np.empty((0,4), float)
-        
+        self.countArrLeft = np.empty((0, 4), float)
+        self.countArrRight = np.empty((0, 4), float)
 
     def processKIData(self, inputObject):
         """
@@ -291,7 +286,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.numDetectSigns = inputObject.numDetectSigns
         self.detectedSigns = inputObject.detectedSigns
         # print("frameID:{0} - numDetectedSigns:{1}".format(self.id, self.numDetectSigns))
-        
+    
         if not self.logic.isPicture:
             self.countSigns(self.detectedSigns, self.numDetectSigns)
         else:
@@ -306,35 +301,35 @@ class VzeGui(QtWidgets.QMainWindow):
 
             if signObj.prob >= 96.:
                 x, _ = signObj.coordinateXY
-                if x >= COUNT_BORDER_RIGHT*WIDTH_MAX and x<= WIDTH_MAX:
+                if x >= COUNT_BORDER_RIGHT*WIDTH_MAX and x <= WIDTH_MAX:
                     self.countArrRight = self.fillArrayCount(self.countArrRight, signObj, x)
-                    #print("RIGHT", self.countArrRight)
-                if x < COUNT_BORDER_LEFT*WIDTH_MAX and x>= WIDTH_MIN:
+                    # print("RIGHT", self.countArrRight)
+                if x < COUNT_BORDER_LEFT*WIDTH_MAX and x >= WIDTH_MIN:
                     self.countArrLeft = self.fillArrayCount(self.countArrLeft, signObj, x)
-                    #print("LEFT", self.countArrLeft)
+                    # print("LEFT", self.countArrLeft)
         return
 
     def fillArrayCount(self, countArray, signObj, x):
         # [:,0] == signIDs and [:,3] == count of each numpy array row
-        if np.any(countArray[:,0] == signObj.signID):
-            id_index = np.where(countArray[:,0] == signObj.signID)
-            if countArray[id_index,2] <= x-NEW_SIGN_BOUNDARIES or countArray[id_index,2] >= x+NEW_SIGN_BOUNDARIES:
-                countArray[id_index,3] = 0
+        if np.any(countArray[:, 0] == signObj.signID):
+            id_index = np.where(countArray[:, 0] == signObj.signID)
+            if countArray[id_index, 2] <= x-NEW_SIGN_BOUNDARIES or countArray[id_index, 2] >= x+NEW_SIGN_BOUNDARIES:
+                countArray[id_index, 3] = 0
                 print()
-                print("NEW SIGN", countArray[id_index,2], x, "ID", countArray[id_index,0])
+                print("NEW SIGN", countArray[id_index, 2], x, "ID", countArray[id_index, 0])
                 print()
-            if countArray[id_index,3] == COUNT_THRESHOLD:
+            if countArray[id_index, 3] == COUNT_THRESHOLD:
                     self.logic.setResultArray(signObj.signID)
                     self.setSideLabels(signObj.signID)
-            countArray[id_index,3] += 1
-            countArray[id_index,2] = x
-        else: 
+            countArray[id_index, 3] += 1
+            countArray[id_index, 2] = x
+        else:
             # signID, signProbability, sign ymin, count
             countArray = np.vstack((countArray, np.array([signObj.signID, signObj.prob, x, 1])))
         return countArray
 
 
-    def countSignsInPic(self, signArray, numDetectSigns): 
+    def countSignsInPic(self, signArray, numDetectSigns):
         """
         method to count signs only in pictures
         """
@@ -646,6 +641,7 @@ class Ui_demoscreen(QtWidgets.QWidget):
         self.lyth_bottom_demoscreen.addItem(self.spacerItem23)
         self.lyth_bottom_demoscreen.addItem(self.spacerItem23)
         self.verticalLayout_3.addLayout(self.lyth_bottom_demoscreen)
+
 
 # Preview Screen
 class Ui_previewscreen(QtWidgets.QWidget):

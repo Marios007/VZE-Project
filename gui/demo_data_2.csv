@@ -11,12 +11,12 @@
 9;No passing;1
 10;No passing for vehicles over 3.5 metric tons;0
 11;Right-of-way at the next intersection;0
-12;Priority road;7
-13;Yield;6
+12;Priority road;5
+13;Yield;2
 14;Stop;0
 15;No vehicles;0
 16;Vehicles over 3.5 metric tons prohibited;0
-17;No entry;2
+17;No entry;0
 18;General caution;1
 19;Dangerous curve to the left;0
 20;Dangerous curve to the right;0
@@ -32,7 +32,7 @@
 30;Beware of ice/snow;0
 31;Wild animals crossing;0
 32;End of all speed and passing limits;0
-33;Turn right ahead;1
+33;Turn right ahead;0
 34;Turn left ahead;0
 35;Ahead only;2
 36;Go straight or right;0

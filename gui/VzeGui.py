@@ -286,7 +286,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.numDetectSigns = inputObject.numDetectSigns
         self.detectedSigns = inputObject.detectedSigns
         # print("frameID:{0} - numDetectedSigns:{1}".format(self.id, self.numDetectSigns))
-    
+
         if not self.logic.isPicture:
             self.countSigns(self.detectedSigns, self.numDetectSigns)
         else:
@@ -311,21 +311,20 @@ class VzeGui(QtWidgets.QMainWindow):
 
     def fillArrayCount(self, countArray, signObj, x):
         # [:,0] == signIDs and [:,3] == count of each numpy array row
-        if np.any(countArray[:,0] == signObj.signID):
-            id_index = np.where(countArray[:,0] == signObj.signID)
-            if countArray[id_index,2] <= x-NEW_SIGN_BOUNDARIES or countArray[id_index,2] >= x+NEW_SIGN_BOUNDARIES:
-                countArray[id_index,3] = 0
-                #print("NEW SIGN", countArray[id_index,2], x, "ID", countArray[id_index,0])
-            if countArray[id_index,3] == COUNT_THRESHOLD:
-                    self.logic.setResultArray(signObj.signID)
-                    self.setSideLabels(signObj.signID)
+        if np.any(countArray[:, 0] == signObj.signID):
+            id_index = np.where(countArray[:, 0] == signObj.signID)
+            if countArray[id_index, 2] <= x-NEW_SIGN_BOUNDARIES or countArray[id_index, 2] >= x+NEW_SIGN_BOUNDARIES:
+                countArray[id_index, 3] = 0
+                # print("NEW SIGN", countArray[id_index,2], x, "ID", countArray[id_index,0])
+            if countArray[id_index, 3] == COUNT_THRESHOLD:
+                self.logic.setResultArray(signObj.signID)
+                self.setSideLabels(signObj.signID)
             countArray[id_index, 3] += 1
             countArray[id_index, 2] = x
         else:
             # signID, signProbability, sign ymin, count
             countArray = np.vstack((countArray, np.array([signObj.signID, signObj.prob, x, 1])))
         return countArray
-
 
     def countSignsInPic(self, signArray, numDetectSigns):
         """
@@ -336,7 +335,6 @@ class VzeGui(QtWidgets.QMainWindow):
             if signObj.prob >= 93.:
                 self.setSideLabels(signObj.signID)
                 self.logic.setResultArray(signObj.signID)
-
 
     def setSideLabels(self, detetedSign):
         """
@@ -353,9 +351,6 @@ class VzeGui(QtWidgets.QMainWindow):
             self.analyzescreen.label_IconMid.setPixmap(QtGui.QPixmap(revList[1]))
         if len(revList) > 2:
             self.analyzescreen.label_IconBottom.setPixmap(QtGui.QPixmap(revList[2]))
-    
-
-
 
     def setVideoImage(self, img):
         self.analyzescreen.videoLayout.setPixmap(QtGui.QPixmap.fromImage(img))

@@ -1,5 +1,5 @@
 import numpy as np
-#import pandas as pd
+# import pandas as pd
 from pandas import DataFrame
 from pandas import read_csv
 
@@ -12,13 +12,14 @@ from PyQt5.QtCore import Qt, QThread
 from PyQt5.QtGui import QImage
 from pandas.core import frame
 # for debugging inside thread
-#import pydevd
+# import pydevd
 
 from tensorflow.config import experimental
 from tensorflow.python.client import device_lib
 
+
 class VzeImageProcessing():
-       
+
     def __init__(self, vzeController):
         self.vzeController = vzeController
 
@@ -35,7 +36,7 @@ class VzeImageProcessing():
     def get_dimensions(self, image):
         return image.shape[:2]
 
-    def show_image(self, title, image):          
+    def show_image(self, title, image):
         return cv2.imshow(title, image)
 
     def resize_image(self, image, scale):
@@ -54,7 +55,7 @@ class VzeImageProcessing():
     def equalize_histogram(self, image):
         image = cv2.equalizeHist(image)
         return image
-    
+
     def print_text_on_image(self, image, text, x_min, y_min, font_size, color, thickness):
         cv2.putText(image, text, (x_min, y_min), cv2.FONT_HERSHEY_DUPLEX, font_size, [0, 0, 0], thickness+1)
         cv2.putText(image, text, (x_min, y_min), cv2.FONT_HERSHEY_DUPLEX, font_size, color, thickness)
@@ -64,7 +65,7 @@ class VzeImageProcessing():
         """
         maybe we should use variables instead of constants
         """
-        image = cv2.resize(image, (32, 32), interpolation=cv2.INTER_AREA) 
+        image = cv2.resize(image, (32, 32), interpolation=cv2.INTER_AREA)
         image = self.convert_grayscale(image)
         image = self.equalize_histogram(image)
         image = image/255
@@ -99,7 +100,6 @@ class VzeImageProcessing():
             print("PreviewImage could not be created!")
             vidcap.release()
             return None
-
 
     def check_fileType(self, filepath):
         """
@@ -148,7 +148,7 @@ class VzeImageProcessing():
             if (width < IMAGE_MIN_WIDTH or heigth < IMAGE_MIN_HEIGTH):
                 return -2
             elif (width > IMAGE_MAX_WIDTH or heigth > IMAGE_MAX_HEIGTH):
-                return -1    
+                return -1
 
         elif fileType == 2:
             # File is a video
@@ -161,7 +161,7 @@ class VzeImageProcessing():
             if (width < VIDEO_MIN_WIDTH or heigth < VIDEO_MIN_HEIGTH):
                 return -2
             elif (width > VIDEO_MAX_WIDTH or heigth > VIDEO_MAX_HEIGTH):
-                return -1             
+                return -1
 
         return 1
 
@@ -185,6 +185,7 @@ class VzeImageProcessing():
         else:
             return 1
 
+
 class VzeKI:
     # Klassenkonstanten
     DNN_DIM = (416, 416)
@@ -202,7 +203,7 @@ class VzeKI:
         YOLO_WEIGHTS_PATH = "./ki/input/yolo/yolov3_ts.weights"
         YOLO_MEAN_PICKLE = "./ki/input/yolo/mean_image_rgb.pickle"
 
-        self.VzeIP = VzeImageProcessing(None)      
+        self.VzeIP = VzeImageProcessing(None)
         self.videoPath = videoPath
         self.currentTime = 0
         self.previousTime = 0
@@ -213,21 +214,21 @@ class VzeKI:
             experimental.set_memory_growth(physical_devices[0], True)
 
         # Labels laden
-        #try:
+        # try:
         self.labels = read_csv(LABEL_PATH, sep=";", encoding="mac_latin2")
-        #except expression as identifier:
+        # except expression as identifier:
         #    pass
 
         # CNN-Modell laden
-        #try:
+        # try:
         self.model = load_model(CNN_MODEL_PATH)
-        #except expression as identifier:
-         #   pass
+        # except expression as identifier:
+        #    pass
 
         # Pickle? Laden
-        #try:
+        # try:
         self.mean = pickle.load(open(YOLO_MEAN_PICKLE, "rb"), encoding='latin1')
-        #except expression as identifier:
+        # except expression as identifier:
         #   pass
 
         # YOLO-Network initialisieren
@@ -240,57 +241,55 @@ class VzeKI:
         self.yolo_network.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
         self.yolo_network.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
 
-
-    ### KI-Methoden
-
+    # KI methods
     def yolo_detection(self, image):
         self.yolo_network.setInput(cv2.dnn.blobFromImage(image, 1 / 255.0, self.DNN_DIM, swapRB=True, crop=False))
         return self.yolo_network.forward(self.layers_names_output)
 
     def detect_signs(self, image, height, width):
-        #only for debugging
+        # only for debugging
         number_traffic_signs = 0
         results = []
         sign_names = np.array([])
-        
-        #for one anchor box: [tx, ty, tw, th, obj score, class probs.]
+
+        # for one anchor box: [tx, ty, tw, th, obj score, class probs.]
         output_from_yolo_network = self.yolo_detection(image)
-        
-        #create arrays out of list
+
+        # create arrays out of list
         arr_output_layer1 = np.array(output_from_yolo_network[0], dtype=np.float32)
         arr_output_layer2 = np.array(output_from_yolo_network[1], dtype=np.float32)
         arr_output_layer3 = np.array(output_from_yolo_network[2], dtype=np.float32)
         # concetanate arrays
-        arr_output_layers = np.vstack((arr_output_layer1,arr_output_layer2,arr_output_layer3))
+        arr_output_layers = np.vstack((arr_output_layer1, arr_output_layer2, arr_output_layer3))
 
         # create index array with indexes if probability is higher than the min value
-        max_output_layers = np.argwhere(arr_output_layers[:,5:]>self.PROBABILITY_MINIMUM)
+        max_output_layers = np.argwhere(arr_output_layers[:, 5:] > self.PROBABILITY_MINIMUM)
 
         # create array with the relevant detected boxes and confidences
         if max_output_layers.size == 0:
             returnObject = VzeObject(image)
         else:
-            arr_output_layers_relevant = arr_output_layers[max_output_layers[:,0]]
-            confidences = np.amax(arr_output_layers_relevant[:,5:], axis=1)
+            arr_output_layers_relevant = arr_output_layers[max_output_layers[:, 0]]
+            confidences = np.amax(arr_output_layers_relevant[:, 5:], axis=1)
 
-            box_current = arr_output_layers_relevant[:,:4] * np.array([width, height, width, height])
+            box_current = arr_output_layers_relevant[:, :4] * np.array([width, height, width, height])
             # xmin, ymin, box_width, box_height
             min_point_offset = 0.998
             box_size_offset = 1.2
 
-            bounding_boxes = np.array([(box_current[:,0]-(box_current[:,2]/2))*min_point_offset,
-                                    (box_current[:,1]-(box_current[:,3]/2))*min_point_offset,
-                                    box_current[:,2]*box_size_offset,
-                                    box_current[:,3]*box_size_offset], dtype=int).T.clip(min=0) # to prevent negativ values after box calculation
+            bounding_boxes = np.array([(box_current[:, 0]-(box_current[:, 2]/2))*min_point_offset,
+                                    (box_current[:, 1]-(box_current[:, 3]/2))*min_point_offset,
+                                    box_current[:, 2]*box_size_offset,
+                                    box_current[:, 3]*box_size_offset], dtype=int).T.clip(min=0) # to prevent negativ values after box calculation
 
             # get all bounding boxes and corresponding confidences with box_height and box_width grater than box_threshold
-            min_size_bounding_boxes = np.argwhere(bounding_boxes[:,2:]>self.BOX_SIZE_THRESHOLD)
+            min_size_bounding_boxes = np.argwhere(bounding_boxes[:, 2:]>self.BOX_SIZE_THRESHOLD)
             if min_size_bounding_boxes.size == 0:
                 returnObject = VzeObject(image)
             else:
                 bounding_boxes = bounding_boxes[min_size_bounding_boxes[:,0]]
                 confidences = confidences[min_size_bounding_boxes[:,0]]
-                    
+    
                 # NMSBoxes dont accept an array
                 bounding_boxes_list = np.ndarray.tolist(bounding_boxes)
 
@@ -301,13 +300,13 @@ class VzeKI:
                 number_traffic_signs = len(results)
 
                 bounding_boxes_final = bounding_boxes[results.flatten()]
-                
+
                 captured_signs_array = np.array([[[]]])
 
                 #creating images of detected traffic signs
                 for i in range(len(bounding_boxes_final)):
-                    captured_sign = image[bounding_boxes_final[i,1]:bounding_boxes_final[i,1]+bounding_boxes_final[i,3],
-                                        bounding_boxes_final[i,0]:bounding_boxes_final[i,0]+bounding_boxes_final[i,2],:]
+                    captured_sign = image[bounding_boxes_final[i, 1]:bounding_boxes_final[i, 1]+bounding_boxes_final[i, 3],
+                                        bounding_boxes_final[i, 0]:bounding_boxes_final[i, 0]+bounding_boxes_final[i, 2],:]
                     # Checkpoint
                     #show_image("sign" + str(i), captured_sign)
                     captured_sign = self.VzeIP.preprocessing_images(captured_sign)
@@ -323,20 +322,20 @@ class VzeKI:
                 # for i in range(len(captured_signs_array)):
                 #     show_image("arr", captured_signs_array[i])
                 #     cv2.waitKey(250)
-        
+
                 # feeding the images through the cnn (parallel processed)
                 probabilities_all = self.model.predict(captured_signs_array)
                 prediction = np.argmax(probabilities_all, axis = 1)
                 sign_names = self.labels.iloc[prediction, 2]
                 sign_names = np.array(sign_names)
-                probabilities = probabilities_all[np.arange(probabilities_all.shape[0])[:, None],prediction.reshape(prediction.shape[0],1)[:]]*100
+                probabilities = probabilities_all[np.arange(probabilities_all.shape[0])[:, None], prediction.reshape(prediction.shape[0], 1)[:]]*100
 
                 # checkpoint
                 #print("class: {0} - predict: {1} - probability: {2}".format(prediction, sign_names , probabilities))        
                 #prediction ist ein Array der detektierten Schilder-IDs
                 #probablity enthält die Wahrscheinlichkeit der einzelnen Schilder
                 #bounding_boxes enthält die jeweiligen den XY-Wert der Box sowie Breite und Höhe der Box
-                
+
                 returnObject = VzeObject(self.VzeIP.print_boxes_on_image(image, bounding_boxes_final, sign_names, probabilities))
                 for i in range(len(bounding_boxes_final)):
                     returnObject.addSign(TrafficSign(prediction[i],(bounding_boxes_final[i][2],bounding_boxes_final[i][3]),(bounding_boxes_final[i][0],bounding_boxes_final[i][1]),probabilities[i][0]))
@@ -429,7 +428,6 @@ class VzeObject:
         h, w, ch = rgbImage.shape
         bytesPerLine = ch * w
         convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
-        #self.frame = convertToQtFormat.scaled(850, 480, Qt.KeepAspectRatio)
         self.frame = convertToQtFormat.scaled(ANALYZEIMAGE_WIDTH, ANALYZEIMAGE_HEIGTH, Qt.KeepAspectRatio)
 
 class TrafficSign:

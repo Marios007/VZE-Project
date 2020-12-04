@@ -311,14 +311,12 @@ class VzeGui(QtWidgets.QMainWindow):
 
     def fillArrayCount(self, countArray, signObj, x):
         # [:,0] == signIDs and [:,3] == count of each numpy array row
-        if np.any(countArray[:, 0] == signObj.signID):
-            id_index = np.where(countArray[:, 0] == signObj.signID)
-            if countArray[id_index, 2] <= x-NEW_SIGN_BOUNDARIES or countArray[id_index, 2] >= x+NEW_SIGN_BOUNDARIES:
-                countArray[id_index, 3] = 0
-                print()
-                print("NEW SIGN", countArray[id_index, 2], x, "ID", countArray[id_index, 0])
-                print()
-            if countArray[id_index, 3] == COUNT_THRESHOLD:
+        if np.any(countArray[:,0] == signObj.signID):
+            id_index = np.where(countArray[:,0] == signObj.signID)
+            if countArray[id_index,2] <= x-NEW_SIGN_BOUNDARIES or countArray[id_index,2] >= x+NEW_SIGN_BOUNDARIES:
+                countArray[id_index,3] = 0
+                #print("NEW SIGN", countArray[id_index,2], x, "ID", countArray[id_index,0])
+            if countArray[id_index,3] == COUNT_THRESHOLD:
                     self.logic.setResultArray(signObj.signID)
                     self.setSideLabels(signObj.signID)
             countArray[id_index, 3] += 1
@@ -348,13 +346,14 @@ class VzeGui(QtWidgets.QMainWindow):
         detetedSignID = ":/signs/" + str(detetedSign)
         self.ringBuffer.append(detetedSignID)
         list = self.ringBuffer.get()
-        list.reverse()
-        if len(list) > 0:
-            self.analyzescreen.label_IconTop.setPixmap(QtGui.QPixmap(list[0]))
-        if len(list) > 1:
-            self.analyzescreen.label_IconMid.setPixmap(QtGui.QPixmap(list[1]))
-        if len(list) > 2:
-            self.analyzescreen.label_IconBottom.setPixmap(QtGui.QPixmap(list[2]))
+        revList = list[::-1]
+        if len(revList) > 0:
+            self.analyzescreen.label_IconTop.setPixmap(QtGui.QPixmap(revList[0]))
+        if len(revList) > 1:
+            self.analyzescreen.label_IconMid.setPixmap(QtGui.QPixmap(revList[1]))
+        if len(revList) > 2:
+            self.analyzescreen.label_IconBottom.setPixmap(QtGui.QPixmap(revList[2]))
+    
 
 
 

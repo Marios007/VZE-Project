@@ -270,6 +270,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.deactivateResultBtn()
         self.initRingBuffer()
         self.change_screen(START_SCREEN)
+        self.isPicture = False
         self.countArrLeft = np.empty((0, 4), float)
         self.countArrRight = np.empty((0, 4), float)
 

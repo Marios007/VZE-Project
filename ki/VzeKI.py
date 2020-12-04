@@ -394,7 +394,7 @@ class VideoThreadKI(QThread):
             if cv2.waitKey(10) & 0xFF ==ord("q"):
                 break
         self.cap.release()
-        self.gui.activateResultBtn()        
+        self.gui.activateResultBtn()
         print("done")
 
 

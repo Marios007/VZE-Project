@@ -363,10 +363,12 @@ class VzeGui(QtWidgets.QMainWindow):
     def activateResultBtn(self):
         self.analyzescreen.btn_showResult.setEnabled(True)
         self.analyzescreen.changeButtonEnabled()
+        self.analyzescreen.changeLabelFinish(1)
 
     def deactivateResultBtn(self):
         self.analyzescreen.btn_showResult.setEnabled(False)
         self.analyzescreen.changeButtonEnabled()
+        self.analyzescreen.changeLabelFinish(2)
 
     def initRingBuffer(self):
         self.ringBuffer = RingBuffer(3)
@@ -1437,17 +1439,28 @@ class Ui_analyzeScreen(QtWidgets.QWidget):
         """
         This method is used for changing the enabled-status of the cancel- and the result button, when the analysis has finished
         """
-         
         if self.btn_cancelAnalyze.isEnabled():
-            print("CancelBtn deactivated, ResultBtn activated")
+            # print("CancelBtn deactivated, ResultBtn activated")
             self.btn_showResult.setEnabled(True)
             self.btn_cancelAnalyze.setEnabled(False)
         else:
-            print("ResultBtn deactivated, CancelBtn activated")
+            # print("ResultBtn deactivated, CancelBtn activated")
             self.btn_showResult.setEnabled(False)
             self.btn_cancelAnalyze.setEnabled(True)
 
+    def changeLabelFinish(self, val):
+        """
+        change label after analysis is finished and set back
+        """
+        if val==1:
+            self.label_Analyze.setText("Analyse beendet")
+        if val==2:
+            self.label_Analyze.setText("Analyse läuft…")
+
     def deleteSignLabel(self):
+        """
+        part of cleanup, delete signs schown on Label
+        """
         self.label_IconBottom.setPixmap(QtGui.QPixmap("None"))
         self.label_IconMid.setPixmap(QtGui.QPixmap("None"))
         self.label_IconTop.setPixmap(QtGui.QPixmap("None"))

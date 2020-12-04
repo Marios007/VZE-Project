@@ -320,9 +320,7 @@ class VzeGui(QtWidgets.QMainWindow):
             id_index = np.where(countArray[:,0] == signObj.signID)
             if countArray[id_index,2] <= x-NEW_SIGN_BOUNDARIES or countArray[id_index,2] >= x+NEW_SIGN_BOUNDARIES:
                 countArray[id_index,3] = 0
-                print()
-                print("NEW SIGN", countArray[id_index,2], x, "ID", countArray[id_index,0])
-                print()
+                #print("NEW SIGN", countArray[id_index,2], x, "ID", countArray[id_index,0])
             if countArray[id_index,3] == COUNT_THRESHOLD:
                     self.logic.setResultArray(signObj.signID)
                     self.setSideLabels(signObj.signID)

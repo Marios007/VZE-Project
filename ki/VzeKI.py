@@ -1,5 +1,8 @@
 import numpy as np
-import pandas as pd
+#import pandas as pd
+from pandas import DataFrame
+from pandas import read_csv
+
 import cv2
 import pickle
 import filetype
@@ -36,8 +39,9 @@ class VzeImageProcessing():
         return cv2.imshow(title, image)
 
     def resize_image(self, image, scale):
-        width = int(image.shape[1] * scale / 100) #ändern auf 960
-        height = int(image.shape[0] * scale / 100) #ändern auf 540
+        # half FHD resolution
+        width = int(960)
+        height = int(540)
         dim = (width, height)
         # resize image
         resized = cv2.resize(image, dim, interpolation = cv2.INTER_AREA) 
@@ -217,7 +221,7 @@ class VzeKI:
 
         # Labels laden
         #try:
-        self.labels = pd.read_csv(LABEL_PATH, sep=";", encoding="mac_latin2")
+        self.labels = read_csv(LABEL_PATH, sep=";", encoding="mac_latin2")
         #except expression as identifier:
         #    pass
 

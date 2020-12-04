@@ -13,9 +13,9 @@ from PyQt5.QtGui import QImage
 from pandas.core import frame
 # for debugging inside thread
 #import pydevd
+
 from tensorflow.config import experimental
 from tensorflow.python.client import device_lib
-
 
 class VzeImageProcessing():
        
@@ -215,7 +215,6 @@ class VzeKI:
         self.frames_count = 1
 
         physical_devices = experimental.list_physical_devices('GPU')
-        #print("Num GPUs:", len(physical_devices))
         if len(physical_devices) > 0:
             experimental.set_memory_growth(physical_devices[0], True)
 
@@ -247,12 +246,9 @@ class VzeKI:
         self.layers_names_output = [self.yolo_network.getLayerNames()[i[0] - 1] for i in self.yolo_network.getUnconnectedOutLayers()]
 
         # set CUDA as the preferable backend and target
-        if cv2.cuda.getCudaEnabledDeviceCount() > 0:
-            self.yolo_network.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
-            self.yolo_network.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
-            print("FOUND GPU - USING GPU")
-        else:
-            print("NO GPU - USING CPU")
+        self.yolo_network.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
+        self.yolo_network.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
+
 
 
     ### KI-Methoden

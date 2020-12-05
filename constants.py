@@ -117,3 +117,21 @@ ANALYZE_SCREEN = 5
 DEMO_DATA_SCREEN = 6
 RESULT_SCREEN = 7
 INFO_SCREEN = 8
+
+# Konstanten KI
+# Pfade
+LABEL_PATH = "./ki/input/labels/signnames.csv"
+CNN_MODEL_PATH = "./ki/input/cnn/fit_gen"
+YOLO_CONFIG_PATH = "./ki/input/yolo/yolov3_ts.cfg"
+YOLO_WEIGHTS_PATH = "./ki/input/yolo/yolov3_ts.weights"
+YOLO_MEAN_PICKLE = "./ki/input/yolo/mean_image_rgb.pickle"
+
+# Konstanten YOLO
+DNN_DIM = (416, 416)
+PROBABILITY_MINIMUM = 0.25
+THRESHOLD = 0.25
+BOXSIZE_THRESHOLD = 20
+
+# Konstanten CNN
+MIN_POINT_OFFSET = 0.998
+BOXSIZE_OFFSET = 1.2

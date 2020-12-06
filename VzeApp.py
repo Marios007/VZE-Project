@@ -132,19 +132,36 @@ class VzeController(GuiInterface):
             sign_input = int(self.getDataArray(array_count, DATA_ARRAY_SIGN_INPUT))
             sign_detected = int(self.getDataArray(array_count, DATA_ARRAY_SIGN_DETECTED))
 
+
             if sign_input == 0 and sign_detected == 0:
                 percentage_count = percentage_count + 0
+                #print("Sign " + sign_id + " is not relevant for analyzis")
+            
+            elif sign_input == sign_detected:
+                percentage_count = percentage_count + 0
+                sign_count = sign_count + sign_input
+                print("Sign " + sign_id + " was detected correct")
+                print("PercentageCount: " + str(percentage_count) + " SignCount: " + str(sign_count))
 
             elif sign_detected > sign_input:
-                percentage_count = percentage_count + 0
+                sum = sign_input - sign_detected
+                diff = abs(sum / sign_detected)
+                percentage = diff * 100
+                percentage_mult = sign_detected * percentage
+                percentage_count = percentage_count + percentage_mult
                 sign_count = sign_count + sign_detected
+                print("Sign " + sign_id + ": detected: " + str(sign_detected) + " input: " + str(sign_input))
+                print("PercentageCount: " + str(percentage_count) + " SignCount: " + str(sign_count))
 
             else:
-                sum = sign_detected - sign_input
+                sum = sign_detected - sign_input 
                 diff = abs(sum / sign_input)
                 percentage = diff * 100
-                percentage_count = percentage_count + percentage
+                percentage_mult = sign_input * percentage
+                percentage_count = percentage_count + percentage_mult
                 sign_count = sign_count + sign_input
+                print("Sign " + sign_id + ": detected: " + str(sign_detected) + " input: " + str(sign_input))
+                print("PercentageCount: " + str(percentage_count) + " SignCount: " + str(sign_count))
 
         percentage_result = int(round(percentage_count / sign_count, 0))
         percentage_result = 100 - percentage_result

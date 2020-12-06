@@ -357,6 +357,7 @@ class VideoThreadKI(QThread):
                 break
         self.cap.release()
         self.gui.activateResultBtn()
+        self.gui.analyzescreen.changeLabelFinish(2)
         print("done")
 
 

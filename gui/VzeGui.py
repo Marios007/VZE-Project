@@ -271,6 +271,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.initRingBuffer()
         self.change_screen(START_SCREEN)
         self.isPicture = False
+        self.analyzescreen.changeLabelFinish(1)
         self.countArrLeft = np.empty((0, 4), float)
         self.countArrRight = np.empty((0, 4), float)
 
@@ -358,18 +359,18 @@ class VzeGui(QtWidgets.QMainWindow):
 
     def startVideo(self):
         self.thread = VideoThreadKI(self.logic.getFilePath(), self)
+        self.analyzescreen.changeLabelFinish(1)
         # start the thread
         self.thread.start()
 
     def activateResultBtn(self):
         self.analyzescreen.btn_showResult.setEnabled(True)
         self.analyzescreen.changeButtonEnabled()
-        self.analyzescreen.changeLabelFinish(1)
+        
 
     def deactivateResultBtn(self):
         self.analyzescreen.btn_showResult.setEnabled(False)
         self.analyzescreen.changeButtonEnabled()
-        self.analyzescreen.changeLabelFinish(2)
 
     def initRingBuffer(self):
         self.ringBuffer = RingBuffer(3)
@@ -1453,9 +1454,9 @@ class Ui_analyzeScreen(QtWidgets.QWidget):
         """
         change label after analysis is finished and set back
         """
-        if val==1:
-            self.label_Analyze.setText("Analyse beendet")
         if val==2:
+            self.label_Analyze.setText("Analyse beendet")
+        if val==1:
             self.label_Analyze.setText("Analyse läuft…")
 
     def deleteSignLabel(self):

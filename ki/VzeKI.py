@@ -185,14 +185,10 @@ class VzeImageProcessing():
 
 
 class VzeKI:
-    # Klassenkonstanten
-
 
     def __init__(self, videoPath: str):
         # Konstruktor lädt Labels, CNN-Model und YOLO-Modell
         # Definition Konstanten zur Initialisierung
-
-
         self.VzeIP = VzeImageProcessing(None)
         self.videoPath = videoPath
         self.previousTime = cv2.getTickCount()
@@ -213,12 +209,13 @@ class VzeKI:
 
         # CNN-Modell laden
         try:
-            self.model = load_model(CNN_MODEL_PATH)
+            #self.model = load_model(CNN_MODEL_PATH)
+            self.model = load_model("./hh")
         except OSError:
             print("CNN-Modell kann nicht geladen werden. Programm wird beendet.")
             quit()
 
-        # Pickle laden
+        # Mean filter image laden
         try:
             self.mean = pickle.load(open(YOLO_MEAN_PICKLE, "rb"), encoding='latin1')
         except OSError:
@@ -253,7 +250,6 @@ class VzeKI:
 
         # Abrufen der Ergebnisse aus der YOLO-Verarbeitung
         # Filterung der Ergebnisse: nur Ergebnisse, die über der minimalen Wahrscheinlichkeit liegen, werden in das CNN eingespeist
-
         output_from_yolo_network = self.yolo_detection(image)
         arr_output_layers = np.vstack((np.array(output_from_yolo_network[0], dtype=np.float32), np.array(output_from_yolo_network[1], dtype=np.float32), np.array(output_from_yolo_network[2], dtype=np.float32)))
         max_output_layers = np.argwhere(arr_output_layers[:, 5:] > PROBABILITY_MINIMUM)
@@ -268,15 +264,12 @@ class VzeKI:
 
             box_current = arr_output_layers_relevant[:, :4] * np.array([width, height, width, height])
             
-
-
             bounding_boxes = np.array([(box_current[:, 0]-(box_current[:, 2]/2))*MIN_POINT_OFFSET, #x-Min
                                     (box_current[:, 1]-(box_current[:, 3]/2))*MIN_POINT_OFFSET, # y-Min
                                     box_current[:, 2]*BOXSIZE_OFFSET, #box_width
                                     box_current[:, 3]*BOXSIZE_OFFSET], dtype=int).T.clip(min=0) # box_height
 
             # Selektieren aller Boxen und deren Wahrscheinlichkeit, deren Boxbreite und -höhe größer als der untere Schwellwert ist
-
             min_size_bounding_boxes = np.argwhere(bounding_boxes[:, 2:]>BOXSIZE_THRESHOLD)
             if min_size_bounding_boxes.size == 0:
                 returnObject = VzeObject(image)
@@ -284,8 +277,6 @@ class VzeKI:
                 bounding_boxes = bounding_boxes[min_size_bounding_boxes[:,0]]
                 confidences = confidences[min_size_bounding_boxes[:,0]]
     
-
-                
                 results = cv2.dnn.NMSBoxes(np.ndarray.tolist(bounding_boxes), confidences, PROBABILITY_MINIMUM, THRESHOLD)
                 
                 bounding_boxes_final = bounding_boxes[results.flatten()]
@@ -296,11 +287,8 @@ class VzeKI:
                 for i in range(len(bounding_boxes_final)):
                     captured_sign = image[bounding_boxes_final[i, 1]:bounding_boxes_final[i, 1]+bounding_boxes_final[i, 3],
                                         bounding_boxes_final[i, 0]:bounding_boxes_final[i, 0]+bounding_boxes_final[i, 2],:]
-
                     captured_sign = self.VzeIP.preprocessing_sign(captured_sign)
- 
                     captured_signs_array = np.vstack([captured_signs_array,captured_sign]) if captured_signs_array.size else captured_sign
-
 
                 # Auswertung der erkannten Bildausschnitte im CNN
                 probabilities_all = self.model.predict(captured_signs_array)
@@ -312,15 +300,12 @@ class VzeKI:
                 #prediction ist ein Array der detektierten Schilder-IDs
                 #probablity enthält die Wahrscheinlichkeit der einzelnen Schilder
                 #bounding_boxes enthält die jeweiligen den XY-Wert der Box sowie Breite und Höhe der Box
-
                 returnObject = VzeObject(self.VzeIP.print_boxes_on_image(image, bounding_boxes_final, sign_names, probabilities))
                 for i in range(len(bounding_boxes_final)):
                     returnObject.addSign(TrafficSign(prediction[i],(bounding_boxes_final[i][2],bounding_boxes_final[i][3]),(bounding_boxes_final[i][0],bounding_boxes_final[i][1]),probabilities[i][0]))
-
         return returnObject
 
     ### Hilfsmethoden
-
     def calculate_time(self, currentTime):
 
         timeDifference = (currentTime - self.previousTime)/self.tickFrequency
@@ -331,8 +316,7 @@ class VzeKI:
 
     def processFrame(self, frame):
         
-        # Bild wird zur besseren Verarbeitung verkleinert, anschließend dann verarbeitet
-        
+        # Bild wird zur besseren Verarbeitung verkleinert, anschließend verarbeitet
         frame = self.VzeIP.resize_image(frame, 50)           
         height, width = self.VzeIP.get_dimensions(frame)
         returnedObject = self.detect_signs(frame, height, width)

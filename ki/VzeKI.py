@@ -209,8 +209,7 @@ class VzeKI:
 
         # CNN-Modell laden
         try:
-            #self.model = load_model(CNN_MODEL_PATH)
-            self.model = load_model("./hh")
+            self.model = load_model(CNN_MODEL_PATH)
         except OSError:
             print("CNN-Modell kann nicht geladen werden. Programm wird beendet.")
             quit()

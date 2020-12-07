@@ -61,22 +61,30 @@ class VzeController(GuiInterface):
             if status_type == 2:
                 self.isPicture = False
             if status_type == -1:
-                return -1, "Dieser Dateityp wird nicht unterstützt.\nUnterstütze Dateitypen:\n*.jpg *.jpeg *.gif *.png *.bmp *.avi *.mov *.mp4 *.mpeg", None
+                return -1, "Dieser Dateityp wird nicht unterstützt.\nUnterstütze Dateitypen: *.jpg *.jpeg *.gif *.png *.bmp *.avi *.mov *.mp4 *.mpeg", None
             print("File-Type-Check passed")
 
-            # Status 1 --> resolution OK, Status -1 --> resolution too high, Status -2 --> resolution too low
+            # Status 1 --> resolution OK, 
+            # Status -1 --> video resolution too high, 
+            # Status -2 --> video resolution too low
+            # Status -3 --> image resolution too high, 
+            # Status -4 --> image resolution too low
             status_res = self.preprocessor.check_fileResolution(status_type, filePath)
             if status_res == -1:
-                return -1, "Die Auflösung ist zu hoch", None
-            if status_res == -2:
-                return -1, "Die Auflösung ist zu gering", None
+                return -1, "Die Auflösung ist zu hoch. Die maximale Auflösung beträgt 1920x1080.", None
+            elif status_res == -2:
+                return -1, "Die Auflösung ist zu gering. Die Mindestauflösung beträgt 800x600.", None
+            elif status_res == -3:
+                return -1, "Die Auflösung ist zu hoch. Die maximale Auflösung beträgt 6000x4000.", None
+            elif status_res == -4:
+                return -1, "Die Auflösung ist zu gering. Die Mindestauflösung beträgt 800x600.", None
 
             print("File-Resolution-Check passed")
             if status_type == 2:
                 # Status 1 --> length OK, Status -1 --> video too long
                 status_len = self.preprocessor.check_fileLength(filePath)
                 if status_len == -1:
-                    return -1, "Das Video ist leider zu lang", None
+                    return -1, "Das Video ist zu lang. Die maximale Videolänge beträgt 10 Minuten.", None
 
             print("File-Length-Check passed")
             self.setFilePath(filePath)

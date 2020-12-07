@@ -144,9 +144,9 @@ class VzeImageProcessing():
             print("ImageResolution: " + str(width) + "x" + str(heigth))
 
             if (width < IMAGE_MIN_WIDTH or heigth < IMAGE_MIN_HEIGTH):
-                return -2
+                return -4
             elif (width > IMAGE_MAX_WIDTH or heigth > IMAGE_MAX_HEIGTH):
-                return -1
+                return -3
 
         elif fileType == 2:
             # File is a video

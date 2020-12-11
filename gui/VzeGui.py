@@ -347,6 +347,7 @@ class VzeGui(QtWidgets.QMainWindow):
         self.ringBuffer.append(detetedSignID)
         list = self.ringBuffer.get()
         revList = list[::-1]
+
         if len(revList) > 0:
             self.analyzescreen.label_IconTop.setPixmap(QtGui.QPixmap(revList[0]))
         if len(revList) > 1:
